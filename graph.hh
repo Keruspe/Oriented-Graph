@@ -19,8 +19,8 @@ public:
     virtual int node_count () = 0;
     virtual int arcs_count () = 0;
 private:
-    int last_node_id;
-    int last_arc_id;
+    int next_node_id;
+    int next_arc_id;
 };
 
 #endif /*__GRAPH_HH__*/
