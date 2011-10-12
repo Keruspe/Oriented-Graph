@@ -1,28 +1,26 @@
 #ifndef __GRAPH_HH__
 #define __GRAPH_HH__
 
-#include <string>
+#include <set>
 
-using std::string;
-using std::map;
-using std::pair;
+using std::set;
 
 class Graph
 {
 public:
-    virtual void add_node (string &label) = 0;
-    virtual void delete_node (string &label) = 0;
-    virtual void add_arc (string &label, int ponderation, string &from, string &to) = 0;
-    virtual void remove_arc (string &label) = 0;
-    virtual void list_successors (string &label) = 0;
-    virtual void list_ancestors (string &label) = 0;
-    virtual void list_arcs_from (string &label) = 0;
-    virtual void list_arcs_to (string &label) = 0;
-    virtual void node_count () = 0;
-    virtual void arcs_count () = 0;
+    virtual int add_node () = 0;
+    virtual void delete_node (int id) = 0;
+    virtual int add_arc (int from, int to) = 0;
+    virtual void remove_arc (int id) = 0;
+    virtual set<int> list_successors (int id) = 0;
+    virtual set<int> list_ancestors (int id) = 0;
+    virtual set<int> list_arcs_from (int id) = 0;
+    virtual set<int> list_arcs_to (int id) = 0;
+    virtual int node_count () = 0;
+    virtual int arcs_count () = 0;
 private:
-    map<string, int> nodes; /* label -> id */
-    map<string, pair<int, int> > arcs; /* label -> id/ponderation */
+    int last_node_id;
+    int last_arc_id;
 };
 
 #endif /*__GRAPH_HH__*/
