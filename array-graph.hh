@@ -3,8 +3,10 @@
 
 #include "graph.hh"
 
+#include <map>
 #include <vector>
 
+using std::map;
 using std::vector;
 
 class ArrayGraph : public Graph
@@ -25,6 +27,7 @@ public:
     unsigned int node_count ();
     unsigned int arcs_count ();
 private:
+    map <unsigned int, unsigned int> nodes_alias;
     /* Start node, finish node, arcs */
     vector < vector < vector <unsigned int> > > matrice;
 };

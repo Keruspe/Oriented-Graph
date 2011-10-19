@@ -21,11 +21,11 @@ public:
     virtual unsigned int node_count () = 0;
     virtual unsigned int arcs_count () = 0;
 private:
-    unsigned int next_node_id;
-    unsigned int next_arc_id;
+    unsigned int current_node_id;
+    unsigned int current_arc_id;
 protected:
-    unsigned int get_next_node_id () { return next_node_id++; }
-    unsigned int get_next_arc_id () { return next_arc_id++; }
+    unsigned int get_next_node_id () { return ++current_node_id; }
+    unsigned int get_next_arc_id () { return ++current_arc_id; }
 };
 
 #endif /*__GRAPH_HH__*/
