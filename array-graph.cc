@@ -8,71 +8,71 @@ ArrayGraph::~ArrayGraph ()
 {
 }
 
-int
+unsigned int
 ArrayGraph::add_node ()
 {
     return get_next_node_id (); 
 }
 
 void
-ArrayGraph::delete_node (int id)
+ArrayGraph::delete_node (unsigned int id)
 {
 }
 
-int
-ArrayGraph::add_arc (int from, int to)
+unsigned int
+ArrayGraph::add_arc (unsigned int from, unsigned int to)
 {
     return get_next_arc_id ();
 }
 
 void
-ArrayGraph::remove_arc (int id)
+ArrayGraph::remove_arc (unsigned int id)
 {
 }
 
-set<int>
-ArrayGraph::list_successors (int id)
+set<unsigned int>
+ArrayGraph::list_successors (unsigned int id)
 {
-    return set<int>();
+    return set<unsigned int>();
 }
 
-set<int>
-ArrayGraph::list_ancestors (int id)
+set<unsigned int>
+ArrayGraph::list_ancestors (unsigned int id)
 {
-    return set<int>();
+    return set<unsigned int>();
 }
 
-set<int>
+set<unsigned int>
 ArrayGraph::list_nodes ()
 {
-    return set<int>();
+    return set<unsigned int>();
 }
 
-set<int>
-ArrayGraph::list_arcs_from (int id)
+set<unsigned int>
+ArrayGraph::list_arcs_from (unsigned int id)
 {
-    return set<int>();
+    return set<unsigned int>();
 }
 
-set<int>
-ArrayGraph::list_arcs_to (int id)
+set<unsigned int>
+ArrayGraph::list_arcs_to (unsigned int id)
 {
-    return set<int>();
+    return set<unsigned int>();
 }
 
-set<int>
+set<unsigned int>
 ArrayGraph::list_arcs ()
 {
-    return set<int>();
+    return set<unsigned int>();
 }
 
-int
+unsigned int
 ArrayGraph::node_count ()
 {
-    return 0;
+    return matrice.size();
 }
 
-int
+unsigned int
 ArrayGraph::arcs_count ()
 {
     return 0;
