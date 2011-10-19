@@ -1,6 +1,8 @@
-#include "graph-dummy-impl.hh"
+#include "array-graph.hh"
 
-int main() {
-    Graph2 g;
+int
+main()
+{
+    ArrayGraph g;
     return 0;
 }

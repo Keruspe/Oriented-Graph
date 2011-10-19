@@ -22,8 +22,9 @@ public:
     virtual int arcs_count () = 0;
 private:
     int next_node_id;
-    int get_next_node_id () { return next_node_id++; }
     int next_arc_id;
+protected:
+    int get_next_node_id () { return next_node_id++; }
     int get_next_arc_id () { return next_arc_id++; }
 };
 
