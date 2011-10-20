@@ -5,14 +5,14 @@ ListGraph::ListGraph() : Graph()
 	
 }
 
-int ListGraph::add_node () 
+unsigned int ListGraph::add_node () 
 {
-	int r = list_links.size();
+	unsigned int r = list_links.size();
 	list_links.push_back(ListGraphItem(r));
 	return r;
 }
 
-void ListGraph::delete_node (int id) 
+void ListGraph::delete_node (unsigned int id) 
 {
 	bool found = false;
 
@@ -28,7 +28,7 @@ void ListGraph::delete_node (int id)
 	}
 }
 
-int ListGraph::add_arc (int from, int to)
+unsigned int ListGraph::add_arc (unsigned int from, unsigned int to)
 {
 	bool found = false;
 
@@ -44,34 +44,34 @@ int ListGraph::add_arc (int from, int to)
 	}
 }
 
-void ListGraph::remove_arc (int id)
+void ListGraph::remove_arc (unsigned int id)
 {
 	//probleme de O(N*M)? (N=list_links.size() && M = listLinkedArcs.size())
 }
 
-set<int> ListGraph::list_successors (int id)
+set<unsigned int> ListGraph::list_successors (unsigned int id)
 {
 }
 
-set<int> ListGraph::list_ancestors (int id)
+set<unsigned int> ListGraph::list_ancestors (unsigned int id)
 {}
 
-set<int> ListGraph::list_arcs_from (int id)
+set<unsigned int> ListGraph::list_arcs_from (unsigned int id)
 {}
 
-set<int> ListGraph::list_arcs()
+set<unsigned int> ListGraph::list_arcs()
 {}
 
-set<int> ListGraph::list_nodes()
+set<unsigned int> ListGraph::list_nodes()
 {}
 
-set<int> ListGraph::list_arcs_to (int id)
+set<unsigned int> ListGraph::list_arcs_to (unsigned int id)
 {}
 
-int ListGraph::node_count () 
+unsigned int ListGraph::node_count () 
 {}
 
-int ListGraph::arcs_count () 
+unsigned int ListGraph::arcs_count () 
 {}
 
 
