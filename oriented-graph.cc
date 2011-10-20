@@ -1,4 +1,4 @@
-#include "array-graph.hh"
+#include "array-graph/array-graph.hh"
 
 int
 main()
