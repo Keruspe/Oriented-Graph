@@ -7,6 +7,7 @@
 #include <vector>
 
 using std::map;
+using std::pair;
 using std::vector;
 
 class ArrayGraph : public Graph
@@ -31,8 +32,10 @@ private:
     map <unsigned int, bool> node_exists;
     /* Start node, finish node, arcs */
     vector < vector < vector <unsigned int> > > matrice;
-    unsigned int nodes_count;
-    unsigned int arcs_count;
+    /* Arc id, node ids */
+    map < unsigned int, pair <unsigned int, unsigned int> > arcs;
+    unsigned int _nodes_count;
+    unsigned int _arcs_count;
 };
 
 #endif /*__ARRAY_GRAPH_HH__*/
