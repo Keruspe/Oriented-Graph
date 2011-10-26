@@ -30,6 +30,11 @@ ArrayGraph::delete_node (unsigned int id)
         return;
     node_exists[id] = false;
     --_nodes_count;
+    vector < set <unsigned int> > &node = matrice[id];
+    for (vector < set <unsigned int> >::iterator i = node.begin (), i_end = node.end (); i != i_end; ++i)
+        _arcs_count -= i->size ();
+    for (vector < vector < set <unsigned int> > >::iterator i = matrice.begin (), i_end = matrice.end (); i != i_end; ++i)
+        _arcs_count -= (*i)[id].size ();
 }
 
 unsigned int
