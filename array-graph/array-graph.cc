@@ -11,48 +11,48 @@ ArrayGraph::~ArrayGraph ()
 {
 }
 
-unsigned int
+NodeId
 ArrayGraph::add_node ()
 {
-    unsigned int id = get_new_node_id ();
+    NodeId id = get_new_node_id ();
     node_exists[id] = true;
     ++_nodes_count;
-    matrice.push_back (vector < set <unsigned int> >(_nodes_count - 1));
-    for (vector < vector < set <unsigned int> > >::iterator i = matrice.begin (), i_end = matrice.end (); i != i_end; ++i)
-        i->push_back (set <unsigned int> ());
+    matrice.push_back (StartNode(_nodes_count - 1));
+    for (StartNodes::iterator i = matrice.begin (), i_end = matrice.end (); i != i_end; ++i)
+        i->push_back (ArcIds ());
     return id;
 }
 
 void
-ArrayGraph::delete_node (unsigned int id)
+ArrayGraph::delete_node (NodeId id)
 {
     if (!node_exists[id])
         return;
     node_exists[id] = false;
     --_nodes_count;
-    vector < set <unsigned int> > &node = matrice[id];
-    for (vector < set <unsigned int> >::iterator i = node.begin (), i_end = node.end (); i != i_end; ++i)
+    StartNode &node = matrice[id];
+    for (EndNode i = node.begin (), i_end = node.end (); i != i_end; ++i)
         _arcs_count -= i->size ();
-    for (vector < vector < set <unsigned int> > >::iterator i = matrice.begin (), i_end = matrice.end (); i != i_end; ++i)
+    for (StartNodes::iterator i = matrice.begin (), i_end = matrice.end (); i != i_end; ++i)
         _arcs_count -= (*i)[id].size ();
 }
 
-unsigned int
-ArrayGraph::add_arc (unsigned int from, unsigned int to)
+ArcId
+ArrayGraph::add_arc (NodeId from, NodeId to)
 {
-    unsigned int id = get_new_arc_id ();
+    ArcId id = get_new_arc_id ();
     ++_arcs_count;
     matrice[from][to].insert (id);
-    arcs[id] = std::make_pair <unsigned int> (from, to);
+    arcs[id] = std::make_pair <NodeId, NodeId> (from, to);
     return id;
 }
 
 void
-ArrayGraph::remove_arc (unsigned int id)
+ArrayGraph::remove_arc (ArcId id)
 {
-    pair <unsigned int, unsigned int> &nodes = arcs[id];
-    set <unsigned int> &tmp = matrice[nodes.first][nodes.second];
-    for (set <unsigned int>::iterator i = tmp.begin (), i_end = tmp.end (); i != i_end; ++i)
+    pair <NodeId, NodeId> &nodes = arcs[id];
+    ArcIds &tmp = matrice[nodes.first][nodes.second];
+    for (ArcIds::iterator i = tmp.begin (), i_end = tmp.end (); i != i_end; ++i)
     {
         if (*i != id)
             continue;
@@ -62,16 +62,16 @@ ArrayGraph::remove_arc (unsigned int id)
     }
 }
 
-set <unsigned int>
-ArrayGraph::list_successors (unsigned int id)
+NodeIds
+ArrayGraph::list_successors (NodeId id)
 {
-    set <unsigned int> successors;
+    NodeIds successors;
     if (!node_exists[id])
         return successors;
 
-    vector < set <unsigned int> > &node = matrice[id];
-    unsigned int tmp = 0;
-    for (vector < set <unsigned int> >::iterator i = node.begin (), i_end = node.end (); i != i_end; ++i, ++tmp)
+    StartNode &node = matrice[id];
+    NodeId tmp = 0;
+    for (EndNode i = node.begin (), i_end = node.end (); i != i_end; ++i, ++tmp)
     {
         if (!node_exists[tmp])
             continue;
@@ -81,15 +81,15 @@ ArrayGraph::list_successors (unsigned int id)
     return successors;
 }
 
-set <unsigned int>
-ArrayGraph::list_ancestors (unsigned int id)
+NodeIds
+ArrayGraph::list_ancestors (NodeId id)
 {
-    set <unsigned int> ancestors;
+    NodeIds ancestors;
     if (!node_exists[id])
         return ancestors;
 
-    unsigned int tmp = 0;
-    for (vector < vector < set <unsigned int> > >::iterator i = matrice.begin (), i_end = matrice.end (); i != i_end; ++i, ++tmp)
+    NodeId tmp = 0;
+    for (StartNodes::iterator i = matrice.begin (), i_end = matrice.end (); i != i_end; ++i, ++tmp)
     {
         if (!node_exists[tmp])
             continue;
@@ -99,11 +99,11 @@ ArrayGraph::list_ancestors (unsigned int id)
     return ancestors;
 }
 
-set <unsigned int>
+NodeIds
 ArrayGraph::list_nodes ()
 {
-    set <unsigned int> nodes;
-    for (unsigned int i = 0; i < matrice.size (); ++i)
+    NodeIds nodes;
+    for (NodeId i = 0; i < matrice.size (); ++i)
     {
         if (node_exists[i])
             nodes.insert (i);
@@ -111,53 +111,53 @@ ArrayGraph::list_nodes ()
     return nodes;
 }
 
-set <unsigned int>
-ArrayGraph::list_arcs_from (unsigned int id)
+ArcIds
+ArrayGraph::list_arcs_from (NodeId id)
 {
-    set <unsigned int> arcs_from;
+    ArcIds arcs_from;
     if (!node_exists[id])
         return arcs_from;
 
-    vector < set <unsigned int> > &node = matrice[id];
-    unsigned int tmp = 0;
-    for (vector < set <unsigned int> >::iterator i = node.begin (), i_end = node.end (); i != i_end; ++i, ++tmp)
+    StartNode &node = matrice[id];
+    NodeId tmp = 0;
+    for (EndNode i = node.begin (), i_end = node.end (); i != i_end; ++i, ++tmp)
     {
         if (!node_exists[tmp])
             continue;
-        for (set <unsigned int>::iterator j = i->begin (), j_end = i->end (); j != j_end; ++j)
+        for (ArcIds::iterator j = i->begin (), j_end = i->end (); j != j_end; ++j)
             arcs_from.insert (*j);
     }
     return arcs_from;
 }
 
-set <unsigned int>
-ArrayGraph::list_arcs_to (unsigned int id)
+ArcIds
+ArrayGraph::list_arcs_to (NodeId id)
 {
-    set <unsigned int> arcs_to;
+    ArcIds arcs_to;
     if (!node_exists[id])
         return arcs_to;
 
-    unsigned int tmp = 0;
-    for (vector < vector < set <unsigned int> > >::iterator i = matrice.begin (), i_end = matrice.end (); i != i_end; ++i, ++tmp)
+    NodeId tmp = 0;
+    for (StartNodes::iterator i = matrice.begin (), i_end = matrice.end (); i != i_end; ++i, ++tmp)
     {
         if (!node_exists[tmp])
             continue;
-        set <unsigned int> &tmp = (*i)[id];
-        for (set <unsigned int>::iterator j = tmp.begin (), j_end = tmp.end (); j != j_end; ++j)
+        ArcIds &tmp = (*i)[id];
+        for (ArcIds::iterator j = tmp.begin (), j_end = tmp.end (); j != j_end; ++j)
             arcs_to.insert (*j);
     }
     return arcs_to;
 }
 
-set <unsigned int>
+ArcIds
 ArrayGraph::list_arcs ()
 {
-    set <unsigned int> arc_ids; 
-    for (vector < vector < set <unsigned int> > >::iterator i = matrice.begin (), i_end = matrice.end (); i != i_end; ++i)
+    ArcIds arc_ids; 
+    for (StartNodes::iterator i = matrice.begin (), i_end = matrice.end (); i != i_end; ++i)
     {
-        for (vector < set <unsigned int> >::iterator j = i->begin (), j_end = i->end (); j != j_end; ++j)
+        for (EndNode j = i->begin (), j_end = i->end (); j != j_end; ++j)
         {
-            for (set <unsigned int>::iterator k = j->begin (), k_end = j->end (); k != k_end; ++k)
+            for (ArcIds::iterator k = j->begin (), k_end = j->end (); k != k_end; ++k)
                 arc_ids.insert (*k);
         }
     }

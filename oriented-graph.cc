@@ -6,9 +6,9 @@ using std::cout;
 using std::endl;
 
 void
-print_set (const set <unsigned int> &set)
+print_set (const set <ArcId> &ids)
 {
-    for (set <unsigned int>::iterator i = set.begin (), i_end = set.end (); i != i_end; ++i)
+    for (set <ArcId>::iterator i = ids.begin (), i_end = ids.end (); i != i_end; ++i)
         cout << *i << " ";
     cout << endl;
 }
@@ -18,21 +18,21 @@ main()
 {
     ArrayGraph g;
 
-    unsigned int a = g.add_node ();
-    unsigned int b = g.add_node ();
-    unsigned int c = g.add_node ();
-    unsigned int d = g.add_node ();
-    unsigned int e = g.add_node ();
-    unsigned int f = g.add_node ();
+    NodeId a = g.add_node ();
+    NodeId b = g.add_node ();
+    NodeId c = g.add_node ();
+    NodeId d = g.add_node ();
+    NodeId e = g.add_node ();
+    NodeId f = g.add_node ();
 
-    unsigned int aa = g.add_arc (a, a);
-    unsigned int ab = g.add_arc (a, b);
-    unsigned int ac = g.add_arc (a, c);
-    unsigned int ad = g.add_arc (a, d);
-    unsigned int cd = g.add_arc (c, d);
-    unsigned int de = g.add_arc (d, e);
-    unsigned int ef = g.add_arc (e, f);
-    unsigned int fd = g.add_arc (f, d);
+    ArcId aa = g.add_arc (a, a);
+    ArcId ab = g.add_arc (a, b);
+    ArcId ac = g.add_arc (a, c);
+    ArcId ad = g.add_arc (a, d);
+    ArcId cd = g.add_arc (c, d);
+    ArcId de = g.add_arc (d, e);
+    ArcId ef = g.add_arc (e, f);
+    ArcId fd = g.add_arc (f, d);
 
     cout << "Nodes: (Expected " << a << " " << b << " " << c << " " << d << " " << e << " " << f << ")" << endl;
     print_set (g.list_nodes ());
