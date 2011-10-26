@@ -56,8 +56,11 @@ ArrayGraph::remove_arc (unsigned int id)
 set <unsigned int>
 ArrayGraph::list_successors (unsigned int id)
 {
-    vector < set <unsigned int> > &node = matrice[id];
     set <unsigned int> successors;
+    if (!node_exists[id])
+        return successors;
+
+    vector < set <unsigned int> > &node = matrice[id];
     unsigned int tmp = 0;
     for (vector < set <unsigned int> >::iterator i = node.begin (), i_end = node.end (); i != i_end; ++i, ++tmp)
     {
@@ -102,7 +105,20 @@ ArrayGraph::list_nodes ()
 set <unsigned int>
 ArrayGraph::list_arcs_from (unsigned int id)
 {
-    return set<unsigned int>();
+    set <unsigned int> arcs_from;
+    if (!node_exists[id])
+        return arcs_from;
+
+    vector < vector <unsigned int> > &node = matrice[id];
+    unsigned int tmp = 0;
+    for (vector < set <unsigned int> >::iterator i = node.begin (), i_end = node.end (); i != i_end; ++i, ++tmp)
+    {
+        if (!node_exists[tmp])
+            continue;
+        for (set <unsigned int>::iterator j = i->begin (), j_end = i->end (); j != j_end; ++i)
+            arcs_from.insert (*j);
+    }
+    return arcs_from;
 }
 
 set <unsigned int>
@@ -114,7 +130,8 @@ ArrayGraph::list_arcs_to (unsigned int id)
 set <unsigned int>
 ArrayGraph::list_arcs ()
 {
-    return set<unsigned int>();
+    // Do we really need this ?
+    return set <unsigned int>();
 }
 
 unsigned int
