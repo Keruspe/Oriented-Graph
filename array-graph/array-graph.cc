@@ -14,10 +14,12 @@ ArrayGraph::~ArrayGraph ()
 unsigned int
 ArrayGraph::add_node ()
 {
-    unsigned int id = get_next_node_id ();
+    unsigned int id = get_new_node_id ();
     node_exists[id] = true;
     ++_nodes_count;
-    matrice.push_back(vector < set <unsigned int> >(_nodes_count));
+    matrice.push_back (vector < set <unsigned int> >(_nodes_count - 1));
+    for (vector < vector < set <unsigned int> > >::iterator i = matrice.begin (), i_end = matrice.end (); i != i_end; ++i)
+        i->push_back (set <unsigned int> ());
     return id;
 }
 
@@ -33,7 +35,7 @@ ArrayGraph::delete_node (unsigned int id)
 unsigned int
 ArrayGraph::add_arc (unsigned int from, unsigned int to)
 {
-    unsigned int id = get_next_arc_id ();
+    unsigned int id = get_new_arc_id ();
     ++_arcs_count;
     matrice[from][to].insert (id);
     arcs[id] = std::make_pair <unsigned int> (from, to);

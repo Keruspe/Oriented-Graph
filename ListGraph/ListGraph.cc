@@ -7,7 +7,7 @@ ListGraph::ListGraph() : Graph()
 
 unsigned int ListGraph::add_node () 
 {
-	unsigned int r = get_next_node_id ();
+	unsigned int r = get_new_node_id ();
 	list_links.push_back(ListGraphItem(r));
 	return r;
 }
@@ -43,7 +43,7 @@ unsigned int ListGraph::add_arc (unsigned int from, unsigned int to)
 		}
 	}
 
-        // TODO: return id   (get_next_arc_id ())
+        // TODO: return id   (get_new_arc_id ())
 }
 
 void ListGraph::remove_arc (unsigned int id)

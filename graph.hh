@@ -25,8 +25,8 @@ private:
     unsigned int current_node_id;
     unsigned int current_arc_id;
 protected:
-    unsigned int get_next_node_id () { return ++current_node_id; }
-    unsigned int get_next_arc_id () { return ++current_arc_id; }
+    unsigned int get_new_node_id () { return current_node_id++; }
+    unsigned int get_new_arc_id ()  { return current_arc_id++;  }
 };
 
 #endif /*__GRAPH_HH__*/
