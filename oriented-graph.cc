@@ -10,7 +10,7 @@ print_set (const ArcIds &ids)
 {
     for (ArcIdIter i = ids.begin (), i_end = ids.end (); i != i_end; ++i)
         cout << *i << " ";
-    cout << endl;
+    cout << endl << endl;
 }
 
 int
@@ -34,51 +34,79 @@ main()
     ArcId ef = g.add_arc (e, f);
     ArcId fd = g.add_arc (f, d);
 
-    cout << "Nodes: (Expected " << a << " " << b << " " << c << " " << d << " " << e << " " << f << ")" << endl;
+    cout << "Nodes:" << endl
+         << "Expected: " << a << " " << b << " " << c << " " << d << " " << e << " " << f << endl
+         << "Got:      ";
     print_set (g.list_nodes ());
 
-    cout << "Arcs: (Expected " << aa << " " << ab << " " << ac << " " << ad << " " << cd << " " << de << " " << ef << " " << fd << ")" << endl;
+    cout << "Arcs:" << endl
+         << "Expected: " << aa << " " << ab << " " << ac << " " << ad << " " << cd << " " << de << " " << ef << " " << fd << endl
+         << "Got:      ";
     print_set (g.list_arcs ());
 
-    cout << "Nodes from a: (Expected " << a << " " << b << " " << c << " " << d << ")" << endl;
+    cout << "Nodes from a:" << endl
+         << "Expected: " << a << " " << b << " " << c << " " << d << endl
+         << "Got:      ";
     print_set (g.list_successors (a));
 
-    cout << "Nodes to d: (Expected " << a << " " << c << " " << f << ")" << endl;
+    cout << "Nodes to d:" << endl
+         << "Expected: " << a << " " << c << " " << f << endl
+         << "Got:      ";
     print_set (g.list_ancestors (d));
 
-    cout << "Arcs from a: (Expected " << aa << " " << ab << " " << ac << " " << ad << ")" << endl;
+    cout << "Arcs from a:" << endl
+         << "Expected: " << aa << " " << ab << " " << ac << " " << ad << endl
+         << "Got:      ";
     print_set (g.list_arcs_from (a));
 
-    cout << "Arcs to d: (Expected " << ad << " " << cd << " " << fd << ")" << endl;
+    cout << "Arcs to d:" << endl
+         << "Expected: " << ad << " " << cd << " " << fd << endl
+         << "Got:      ";
     print_set (g.list_arcs_to (d));
 
-    cout << "Remove the ab arc" << endl;
+    cout << "--- ab arc removal ---" << endl << endl;
     g.remove_arc (ab);
 
-    cout << "Arcs: (Expected " << aa << " " << ac << " " << ad << " " << cd << " " << de << " " << ef << " " << fd << ")" << endl;
+    cout << "Arcs:" << endl
+         << "Expected: " << aa << " " << ac << " " << ad << " " << cd << " " << de << " " << ef << " " << fd << endl
+         << "Got:      ";
     print_set (g.list_arcs ());
 
-    cout << "Arcs from a: (Expected " << aa << " " << ac << " " << ad << ")" << endl;
+    cout << "Arcs from a:" << endl
+         << "Expected: " << aa << " " << ac << " " << ad << endl
+         << "Got:      ";
     print_set (g.list_arcs_from (a));
 
-    cout << "Nodes from a: (Expected " << a << " " << c << " " << d << ")" << endl;
+    cout << "Nodes from a:" << endl
+         << "Expected: " << a << " " << c << " " << d << endl
+         << "Got:      ";
     print_set (g.list_successors (a));
 
-    cout << "Remove the c node" << endl;
+    cout << "--- c node removal ---" << endl << endl;
     g.delete_node (c);
 
-    cout << "Nodes: (Expected " << a << " " << b << " " << d << " " << e << " " << f << ")" << endl;
+    cout << "Nodes:" << endl
+         << "Expected: " << a << " " << b << " " << d << " " << e << " " << f << endl
+         << "Got:      ";
     print_set (g.list_nodes ());
 
-    cout << "Nodes from a: (Expected " << a << " " << d << ")" << endl;
+    cout << "Nodes from a:" << endl
+         << "Expected: " << a << " " << d << endl
+         << "Got:      ";
     print_set (g.list_successors (a));
 
-    cout << "Nodes to d: (Expected " << a << " " << f << ")" << endl;
+    cout << "Nodes to d:" << endl
+         << "Expected: " << a << " " << f << endl
+         << "Got:      ";
     print_set (g.list_ancestors (d));
 
-    cout << "Nodes count: (Expected 5)" << endl << g.nodes_count () << endl;
+    cout << "Nodes count:" << endl
+         << "Expected: 5" << endl 
+         << "Got:      " << g.nodes_count () << endl << endl;
 
-    cout << "Arcs count: (Expected 5)" << endl << g.arcs_count () << endl;
+    cout << "Arcs count:" << endl
+         << "Expected: 5" << endl
+         << "Got:      " << g.arcs_count () << endl;
 
     return 0;
 }
