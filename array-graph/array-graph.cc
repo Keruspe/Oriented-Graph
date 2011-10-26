@@ -18,7 +18,7 @@ ArrayGraph::add_node ()
     node_exists[id] = true;
     ++_nodes_count;
     matrice.push_back (StartNode(_nodes_count - 1));
-    for (StartNodes::iterator i = matrice.begin (), i_end = matrice.end (); i != i_end; ++i)
+    for (StartNodeIter i = matrice.begin (), i_end = matrice.end (); i != i_end; ++i)
         i->push_back (ArcIds ());
     return id;
 }
@@ -31,9 +31,9 @@ ArrayGraph::delete_node (NodeId id)
     node_exists[id] = false;
     --_nodes_count;
     StartNode &node = matrice[id];
-    for (EndNode i = node.begin (), i_end = node.end (); i != i_end; ++i)
+    for (EndNodeIter i = node.begin (), i_end = node.end (); i != i_end; ++i)
         _arcs_count -= i->size ();
-    for (StartNodes::iterator i = matrice.begin (), i_end = matrice.end (); i != i_end; ++i)
+    for (StartNodeIter i = matrice.begin (), i_end = matrice.end (); i != i_end; ++i)
         _arcs_count -= (*i)[id].size ();
 }
 
@@ -52,7 +52,7 @@ ArrayGraph::remove_arc (ArcId id)
 {
     pair <NodeId, NodeId> &nodes = arcs[id];
     ArcIds &tmp = matrice[nodes.first][nodes.second];
-    for (ArcIds::iterator i = tmp.begin (), i_end = tmp.end (); i != i_end; ++i)
+    for (ArcIdIter i = tmp.begin (), i_end = tmp.end (); i != i_end; ++i)
     {
         if (*i != id)
             continue;
@@ -71,7 +71,7 @@ ArrayGraph::list_successors (NodeId id)
 
     StartNode &node = matrice[id];
     NodeId tmp = 0;
-    for (EndNode i = node.begin (), i_end = node.end (); i != i_end; ++i, ++tmp)
+    for (EndNodeIter i = node.begin (), i_end = node.end (); i != i_end; ++i, ++tmp)
     {
         if (!node_exists[tmp])
             continue;
@@ -89,7 +89,7 @@ ArrayGraph::list_ancestors (NodeId id)
         return ancestors;
 
     NodeId tmp = 0;
-    for (StartNodes::iterator i = matrice.begin (), i_end = matrice.end (); i != i_end; ++i, ++tmp)
+    for (StartNodeIter i = matrice.begin (), i_end = matrice.end (); i != i_end; ++i, ++tmp)
     {
         if (!node_exists[tmp])
             continue;
@@ -120,11 +120,11 @@ ArrayGraph::list_arcs_from (NodeId id)
 
     StartNode &node = matrice[id];
     NodeId tmp = 0;
-    for (EndNode i = node.begin (), i_end = node.end (); i != i_end; ++i, ++tmp)
+    for (EndNodeIter i = node.begin (), i_end = node.end (); i != i_end; ++i, ++tmp)
     {
         if (!node_exists[tmp])
             continue;
-        for (ArcIds::iterator j = i->begin (), j_end = i->end (); j != j_end; ++j)
+        for (ArcIdIter j = i->begin (), j_end = i->end (); j != j_end; ++j)
             arcs_from.insert (*j);
     }
     return arcs_from;
@@ -138,12 +138,12 @@ ArrayGraph::list_arcs_to (NodeId id)
         return arcs_to;
 
     NodeId tmp = 0;
-    for (StartNodes::iterator i = matrice.begin (), i_end = matrice.end (); i != i_end; ++i, ++tmp)
+    for (StartNodeIter i = matrice.begin (), i_end = matrice.end (); i != i_end; ++i, ++tmp)
     {
         if (!node_exists[tmp])
             continue;
         ArcIds &tmp = (*i)[id];
-        for (ArcIds::iterator j = tmp.begin (), j_end = tmp.end (); j != j_end; ++j)
+        for (ArcIdIter j = tmp.begin (), j_end = tmp.end (); j != j_end; ++j)
             arcs_to.insert (*j);
     }
     return arcs_to;
@@ -153,11 +153,11 @@ ArcIds
 ArrayGraph::list_arcs ()
 {
     ArcIds arc_ids; 
-    for (StartNodes::iterator i = matrice.begin (), i_end = matrice.end (); i != i_end; ++i)
+    for (StartNodeIter i = matrice.begin (), i_end = matrice.end (); i != i_end; ++i)
     {
-        for (EndNode j = i->begin (), j_end = i->end (); j != j_end; ++j)
+        for (EndNodeIter j = i->begin (), j_end = i->end (); j != j_end; ++j)
         {
-            for (ArcIds::iterator k = j->begin (), k_end = j->end (); k != k_end; ++k)
+            for (ArcIdIter k = j->begin (), k_end = j->end (); k != k_end; ++k)
                 arc_ids.insert (*k);
         }
     }

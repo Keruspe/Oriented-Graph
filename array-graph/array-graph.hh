@@ -12,7 +12,8 @@ using std::vector;
 
 typedef vector <ArcIds> StartNode;
 typedef vector <StartNode> StartNodes;
-typedef StartNode::iterator EndNode;
+typedef StartNodes::iterator StartNodeIter;
+typedef StartNode::iterator EndNodeIter;
 
 class ArrayGraph : public Graph
 {

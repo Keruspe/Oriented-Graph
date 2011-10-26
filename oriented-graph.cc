@@ -6,9 +6,9 @@ using std::cout;
 using std::endl;
 
 void
-print_set (const set <ArcId> &ids)
+print_set (const ArcIds &ids)
 {
-    for (set <ArcId>::iterator i = ids.begin (), i_end = ids.end (); i != i_end; ++i)
+    for (ArcIdIter i = ids.begin (), i_end = ids.end (); i != i_end; ++i)
         cout << *i << " ";
     cout << endl;
 }

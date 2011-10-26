@@ -9,6 +9,7 @@ typedef unsigned int NodeId;
 typedef set <NodeId> NodeIds;
 typedef unsigned int ArcId;
 typedef set <ArcId> ArcIds;
+typedef ArcIds::iterator ArcIdIter;
 
 class Graph
 {
