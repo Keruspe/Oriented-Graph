@@ -146,8 +146,16 @@ ArrayGraph::list_arcs_to (unsigned int id)
 set <unsigned int>
 ArrayGraph::list_arcs ()
 {
-    // Do we really need this ?
-    return set <unsigned int>();
+    set <unsigned int> arc_ids; 
+    for (vector < vector < set <unsigned int> > >::iterator i = matrice.begin (), i_end = matrice.end (); i != i_end; ++i)
+    {
+        for (vector < set <unsigned int> >::iterator j = i->begin (), j_end = i->end (); j != j_end; ++j)
+        {
+            for (set <unsigned int>::iterator k = j->begin (), k_end = j->end (); k != k_end; ++k)
+                arc_ids.insert (*k);
+        }
+    }
+    return arc_ids;
 }
 
 unsigned int
