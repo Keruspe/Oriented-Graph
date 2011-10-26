@@ -8,6 +8,7 @@ using std::set;
 class Graph
 {
 public:
+    Graph () : current_node_id (0), current_arc_id (0) {}
     virtual unsigned int add_node () = 0;
     virtual void delete_node (unsigned int id) = 0;
     virtual unsigned int add_arc (unsigned int from, unsigned int to) = 0;

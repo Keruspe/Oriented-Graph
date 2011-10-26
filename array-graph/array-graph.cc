@@ -1,6 +1,7 @@
 #include "array-graph.hh"
 
 ArrayGraph::ArrayGraph () :
+    Graph (),
     _nodes_count (0),
     _arcs_count (0)
 {
