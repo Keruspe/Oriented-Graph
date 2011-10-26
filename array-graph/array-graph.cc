@@ -53,7 +53,7 @@ ArrayGraph::remove_arc (unsigned int id)
     }
 }
 
-set<unsigned int>
+set <unsigned int>
 ArrayGraph::list_successors (unsigned int id)
 {
     vector < vector <unsigned int> > &node = matrice[id];
@@ -69,7 +69,7 @@ ArrayGraph::list_successors (unsigned int id)
     return successors;
 }
 
-set<unsigned int>
+set <unsigned int>
 ArrayGraph::list_ancestors (unsigned int id)
 {
     set <unsigned int> ancestors;
@@ -87,25 +87,31 @@ ArrayGraph::list_ancestors (unsigned int id)
     return ancestors;
 }
 
-set<unsigned int>
+set <unsigned int>
 ArrayGraph::list_nodes ()
 {
-    return set<unsigned int>();
+    set <unsigned int> nodes;
+    for (unsigned int i = 0; i < matrice.size (); ++i)
+    {
+        if (node_exists[i])
+            nodes.insert (i);
+    }
+    return nodes;
 }
 
-set<unsigned int>
+set <unsigned int>
 ArrayGraph::list_arcs_from (unsigned int id)
 {
     return set<unsigned int>();
 }
 
-set<unsigned int>
+set <unsigned int>
 ArrayGraph::list_arcs_to (unsigned int id)
 {
     return set<unsigned int>();
 }
 
-set<unsigned int>
+set <unsigned int>
 ArrayGraph::list_arcs ()
 {
     return set<unsigned int>();

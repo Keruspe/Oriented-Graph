@@ -19,12 +19,12 @@ public:
     void delete_node (unsigned int id);
     unsigned int add_arc (unsigned int from, unsigned int to);
     void remove_arc (unsigned int id);
-    set<unsigned int> list_successors (unsigned int id);
-    set<unsigned int> list_ancestors (unsigned int id);
-    set<unsigned int> list_nodes ();
-    set<unsigned int> list_arcs_from (unsigned int id);
-    set<unsigned int> list_arcs_to (unsigned int id);
-    set<unsigned int> list_arcs ();
+    set <unsigned int> list_successors (unsigned int id);
+    set <unsigned int> list_ancestors (unsigned int id);
+    set <unsigned int> list_nodes ();
+    set <unsigned int> list_arcs_from (unsigned int id);
+    set <unsigned int> list_arcs_to (unsigned int id);
+    set <unsigned int> list_arcs ();
     unsigned int nodes_count ();
     unsigned int arcs_count ();
 private:
