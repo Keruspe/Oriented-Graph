@@ -27,9 +27,12 @@ public:
     unsigned int node_count ();
     unsigned int arcs_count ();
 private:
-    map <unsigned int, unsigned int> nodes_alias;
+    /* To always get node X at index X (no deletion) */
+    map <unsigned int, bool> node_exists;
     /* Start node, finish node, arcs */
     vector < vector < vector <unsigned int> > > matrice;
+    unsigned int nodes_count;
+    unsigned int arcs_count;
 };
 
 #endif /*__ARRAY_GRAPH_HH__*/
