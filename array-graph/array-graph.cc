@@ -23,6 +23,8 @@ ArrayGraph::add_node ()
 void
 ArrayGraph::delete_node (unsigned int id)
 {
+    if (!node_exists[id])
+        return;
     node_exists[id] = false;
     --_nodes_count;
 }
@@ -41,7 +43,7 @@ ArrayGraph::remove_arc (unsigned int id)
 {
     pair <unsigned int, unsigned int> &nodes = arcs[id];
     vector <unsigned int> &tmp = matrice[nodes.first][nodes.second];
-    for (vector <unsigned int>::iterator i = tmp.begin(), i_end = tmp.end(); i != i_end; ++i)
+    for (vector <unsigned int>::iterator i = tmp.begin (), i_end = tmp.end (); i != i_end; ++i)
     {
         if (*i != id)
             continue;
@@ -54,13 +56,35 @@ ArrayGraph::remove_arc (unsigned int id)
 set<unsigned int>
 ArrayGraph::list_successors (unsigned int id)
 {
-    return set<unsigned int>();
+    vector < vector <unsigned int> > &node = matrice[id];
+    set <unsigned int> successors;
+    unsigned int tmp = 0;
+    for (vector < vector <unsigned int> >::iterator i = node.begin (), i_end = node.end (); i != i_end; ++i, ++tmp)
+    {
+        if (!node_exists[tmp])
+            continue;
+        if (i->size () != 0)
+            successors.insert (tmp);
+    }
+    return successors;
 }
 
 set<unsigned int>
 ArrayGraph::list_ancestors (unsigned int id)
 {
-    return set<unsigned int>();
+    set <unsigned int> ancestors;
+    if (!node_exists[id])
+        return ancestors;
+
+    unsigned int tmp = 0;
+    for (vector < vector < vector <unsigned int> > >::iterator i = matrice.begin (), i_end = matrice.end (); i != i_end; ++i, ++tmp)
+    {
+        if (!node_exists[tmp])
+            continue;
+        if ((*i)[id].size () != 0)
+            ancestors.insert (tmp);
+    }
+    return ancestors;
 }
 
 set<unsigned int>
