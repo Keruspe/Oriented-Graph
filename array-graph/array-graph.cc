@@ -39,6 +39,7 @@ ArrayGraph::add_arc (unsigned int from, unsigned int to)
     ++_arcs_count;
     matrice[from][to].insert (id);
     arcs[id] = std::make_pair <unsigned int> (from, to);
+    return id;
 }
 
 void
