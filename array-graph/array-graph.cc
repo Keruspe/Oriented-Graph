@@ -112,13 +112,13 @@ ArrayGraph::list_arcs ()
 }
 
 unsigned int
-ArrayGraph::node_count ()
+ArrayGraph::nodes_count ()
 {
-    return matrice.size();
+    return _nodes_count;
 }
 
 unsigned int
 ArrayGraph::arcs_count ()
 {
-    return 0;
+    return _arcs_count;
 }

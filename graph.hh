@@ -18,7 +18,7 @@ public:
     virtual set<unsigned int> list_arcs_from (unsigned int id) = 0;
     virtual set<unsigned int> list_arcs_to (unsigned int id) = 0;
     virtual set<unsigned int> list_arcs () = 0;
-    virtual unsigned int node_count () = 0;
+    virtual unsigned int nodes_count () = 0;
     virtual unsigned int arcs_count () = 0;
 private:
     unsigned int current_node_id;

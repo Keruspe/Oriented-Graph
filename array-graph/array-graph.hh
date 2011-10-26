@@ -25,7 +25,7 @@ public:
     set<unsigned int> list_arcs_from (unsigned int id);
     set<unsigned int> list_arcs_to (unsigned int id);
     set<unsigned int> list_arcs ();
-    unsigned int node_count ();
+    unsigned int nodes_count ();
     unsigned int arcs_count ();
 private:
     /* To always get node X at index X (no deletion) */
