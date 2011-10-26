@@ -31,7 +31,7 @@ private:
     /* To always get node X at index X (no deletion) */
     map <unsigned int, bool> node_exists;
     /* Start node, finish node, arcs */
-    vector < vector < vector <unsigned int> > > matrice;
+    vector < vector < set <unsigned int> > > matrice;
     /* Arc id, node ids */
     map < unsigned int, pair <unsigned int, unsigned int> > arcs;
     unsigned int _nodes_count;

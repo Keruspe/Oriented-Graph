@@ -16,7 +16,7 @@ ArrayGraph::add_node ()
     unsigned int id = get_next_node_id ();
     node_exists[id] = true;
     ++_nodes_count;
-    matrice.push_back(vector < vector <unsigned int> >(_nodes_count));
+    matrice.push_back(vector < set <unsigned int> >(_nodes_count));
     return id;
 }
 
@@ -34,7 +34,7 @@ ArrayGraph::add_arc (unsigned int from, unsigned int to)
 {
     unsigned int id = get_next_arc_id ();
     ++_arcs_count;
-    matrice[from][to].push_back (id);
+    matrice[from][to].insert (id);
     arcs[id] = std::make_pair <unsigned int> (from, to);
 }
 
@@ -42,8 +42,8 @@ void
 ArrayGraph::remove_arc (unsigned int id)
 {
     pair <unsigned int, unsigned int> &nodes = arcs[id];
-    vector <unsigned int> &tmp = matrice[nodes.first][nodes.second];
-    for (vector <unsigned int>::iterator i = tmp.begin (), i_end = tmp.end (); i != i_end; ++i)
+    set <unsigned int> &tmp = matrice[nodes.first][nodes.second];
+    for (set <unsigned int>::iterator i = tmp.begin (), i_end = tmp.end (); i != i_end; ++i)
     {
         if (*i != id)
             continue;
@@ -56,14 +56,14 @@ ArrayGraph::remove_arc (unsigned int id)
 set <unsigned int>
 ArrayGraph::list_successors (unsigned int id)
 {
-    vector < vector <unsigned int> > &node = matrice[id];
+    vector < set <unsigned int> > &node = matrice[id];
     set <unsigned int> successors;
     unsigned int tmp = 0;
-    for (vector < vector <unsigned int> >::iterator i = node.begin (), i_end = node.end (); i != i_end; ++i, ++tmp)
+    for (vector < set <unsigned int> >::iterator i = node.begin (), i_end = node.end (); i != i_end; ++i, ++tmp)
     {
         if (!node_exists[tmp])
             continue;
-        if (i->size () != 0)
+        if (!i->empty ())
             successors.insert (tmp);
     }
     return successors;
@@ -77,11 +77,11 @@ ArrayGraph::list_ancestors (unsigned int id)
         return ancestors;
 
     unsigned int tmp = 0;
-    for (vector < vector < vector <unsigned int> > >::iterator i = matrice.begin (), i_end = matrice.end (); i != i_end; ++i, ++tmp)
+    for (vector < vector < set <unsigned int> > >::iterator i = matrice.begin (), i_end = matrice.end (); i != i_end; ++i, ++tmp)
     {
         if (!node_exists[tmp])
             continue;
-        if ((*i)[id].size () != 0)
+        if (!(*i)[id].empty ())
             ancestors.insert (tmp);
     }
     return ancestors;
