@@ -1,7 +1,7 @@
 all: oriented-graph
 
 oriented-graph: oriented-graph.cc array-graph/array-graph.cc
-	g++ -I. -I.. -g -ggdb3 $^ -o $@
+	g++ -Wall -Wextra -O3 -march=native -I. -I.. -g -ggdb3 $^ -o $@ -Wl,--as-needed -Wl,-O3
 
 clean:
 	rm -f oriented-graph
