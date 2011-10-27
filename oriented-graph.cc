@@ -83,7 +83,7 @@ main()
     print_set (g.list_successors (a));
 
     cout << "--- c node removal ---" << endl << endl;
-    g.delete_node (c);
+    g.remove_node (c);
 
     cout << "Nodes:" << endl
          << "Expected: " << a << " " << b << " " << d << " " << e << " " << f << endl

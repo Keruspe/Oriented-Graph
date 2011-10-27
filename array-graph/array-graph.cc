@@ -17,14 +17,14 @@ ArrayGraph::add_node ()
     NodeId id = get_new_node_id ();
     node_exists[id] = true;
     ++_nodes_count;
-    matrice.push_back (StartNode(_nodes_count - 1));
+    matrice.push_back (StartNode (_nodes_count - 1));
     for (StartNodeIter i = matrice.begin (), i_end = matrice.end (); i != i_end; ++i)
         i->push_back (ArcIds ());
     return id;
 }
 
 void
-ArrayGraph::delete_node (NodeId id)
+ArrayGraph::remove_node (NodeId id)
 {
     if (!node_exists[id])
         return;
@@ -103,7 +103,7 @@ NodeIds
 ArrayGraph::list_nodes ()
 {
     NodeIds nodes;
-    for (NodeId i = 0; i < matrice.size (); ++i)
+    for (NodeId i = 0; i < next_node_id (); ++i)
     {
         if (node_exists[i])
             nodes.insert (i);
@@ -162,16 +162,4 @@ ArrayGraph::list_arcs ()
         }
     }
     return arc_ids;
-}
-
-unsigned int
-ArrayGraph::nodes_count ()
-{
-    return _nodes_count;
-}
-
-unsigned int
-ArrayGraph::arcs_count ()
-{
-    return _arcs_count;
 }

@@ -17,21 +17,6 @@ typedef StartNode::iterator EndNodeIter;
 
 class ArrayGraph : public Graph
 {
-public:
-    ArrayGraph ();
-    ~ArrayGraph ();
-    NodeId add_node ();
-    void delete_node (NodeId id);
-    ArcId add_arc (NodeId from, NodeId to);
-    void remove_arc (ArcId id);
-    NodeIds list_successors (NodeId id);
-    NodeIds list_ancestors (NodeId id);
-    NodeIds list_nodes ();
-    ArcIds list_arcs_from (NodeId id);
-    ArcIds list_arcs_to (NodeId id);
-    ArcIds list_arcs ();
-    unsigned int nodes_count ();
-    unsigned int arcs_count ();
 private:
     /* To always get node X at index X (no deletion) */
     map <NodeId, bool> node_exists;
@@ -41,6 +26,21 @@ private:
     map < ArcId, pair <NodeId, NodeId> > arcs;
     unsigned int _nodes_count;
     unsigned int _arcs_count;
+public:
+    ArrayGraph ();
+    ~ArrayGraph ();
+    NodeId add_node ();
+    void remove_node (NodeId id);
+    ArcId add_arc (NodeId from, NodeId to);
+    void remove_arc (ArcId id);
+    NodeIds list_successors (NodeId id);
+    NodeIds list_ancestors (NodeId id);
+    NodeIds list_nodes ();
+    ArcIds list_arcs_from (NodeId id);
+    ArcIds list_arcs_to (NodeId id);
+    ArcIds list_arcs ();
+    unsigned int nodes_count () { return _nodes_count; }
+    unsigned int arcs_count () { return _arcs_count; }
 };
 
 #endif /*__ARRAY_GRAPH_HH__*/
