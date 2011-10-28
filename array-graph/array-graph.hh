@@ -3,10 +3,13 @@
 
 #include "graph.hh"
 
+#include <iostream>
 #include <map>
 #include <vector>
 
+using std::endl;
 using std::map;
+using std::ostream;
 using std::pair;
 using std::vector;
 
@@ -41,6 +44,7 @@ public:
     ArcIds list_arcs ();
     unsigned int nodes_count () { return _nodes_count; }
     unsigned int arcs_count () { return _arcs_count; }
+    friend ostream &operator<< (ostream &os, ArrayGraph &graph);
 };
 
 #endif /*__ARRAY_GRAPH_HH__*/

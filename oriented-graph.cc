@@ -1,9 +1,6 @@
 #include "array-graph/array-graph.hh"
 
-#include <iostream>
-
 using std::cout;
-using std::endl;
 
 void
 print_set (const ArcIds &ids)
@@ -26,6 +23,7 @@ main()
     NodeId f = g.add_node ();
 
     ArcId aa = g.add_arc (a, a);
+    ArcId aa_bis = g.add_arc (a, a);
     ArcId ab = g.add_arc (a, b);
     ArcId ac = g.add_arc (a, c);
     ArcId ad = g.add_arc (a, d);
@@ -34,13 +32,15 @@ main()
     ArcId ef = g.add_arc (e, f);
     ArcId fd = g.add_arc (f, d);
 
+    cout << "Graph:" << endl << g << endl;
+
     cout << "Nodes:" << endl
          << "Expected: " << a << " " << b << " " << c << " " << d << " " << e << " " << f << endl
          << "Got:      ";
     print_set (g.list_nodes ());
 
     cout << "Arcs:" << endl
-         << "Expected: " << aa << " " << ab << " " << ac << " " << ad << " " << cd << " " << de << " " << ef << " " << fd << endl
+         << "Expected: " << aa << " " << aa_bis << " " << ab << " " << ac << " " << ad << " " << cd << " " << de << " " << ef << " " << fd << endl
          << "Got:      ";
     print_set (g.list_arcs ());
 
@@ -55,7 +55,7 @@ main()
     print_set (g.list_ancestors (d));
 
     cout << "Arcs from a:" << endl
-         << "Expected: " << aa << " " << ab << " " << ac << " " << ad << endl
+         << "Expected: " << aa << " " << aa_bis << " " << ab << " " << ac << " " << ad << endl
          << "Got:      ";
     print_set (g.list_arcs_from (a));
 
@@ -68,12 +68,12 @@ main()
     g.remove_arc (ab);
 
     cout << "Arcs:" << endl
-         << "Expected: " << aa << " " << ac << " " << ad << " " << cd << " " << de << " " << ef << " " << fd << endl
+         << "Expected: " << aa << " " << aa_bis << " " << ac << " " << ad << " " << cd << " " << de << " " << ef << " " << fd << endl
          << "Got:      ";
     print_set (g.list_arcs ());
 
     cout << "Arcs from a:" << endl
-         << "Expected: " << aa << " " << ac << " " << ad << endl
+         << "Expected: " << aa << " " << aa_bis << " " << ac << " " << ad << endl
          << "Got:      ";
     print_set (g.list_arcs_from (a));
 
@@ -105,7 +105,7 @@ main()
          << "Got:      " << g.nodes_count () << endl << endl;
 
     cout << "Arcs count:" << endl
-         << "Expected: 5" << endl
+         << "Expected: 6" << endl
          << "Got:      " << g.arcs_count () << endl;
 
     return 0;

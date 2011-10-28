@@ -163,3 +163,22 @@ ArrayGraph::list_arcs ()
     }
     return arc_ids;
 }
+
+ostream &
+operator<< (ostream &os, ArrayGraph &graph)
+{
+    os << " ";
+    NodeIds nodes = graph.list_nodes ();
+    for (NodeIdIter i = nodes.begin (), i_end = nodes.end (); i != i_end; ++i)
+        os << "   " << *i;
+    os << endl;
+    for (NodeIdIter i = nodes.begin (), i_end = nodes.end (); i != i_end; ++i)
+    {
+        os << *i;
+        // TODO: Make it pretty with big numbers or replace with true/false
+        for (NodeIdIter j = nodes.begin (), j_end = nodes.end (); j != j_end; ++j)
+            os << "   " << graph.matrice[*i][*j].size ();
+        os << endl;
+    }
+    return os;
+}
