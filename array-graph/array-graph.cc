@@ -1,5 +1,7 @@
 #include "array-graph.hh"
 
+#include <queue>
+
 ArrayGraph::ArrayGraph () :
     Graph (),
     _nodes_count (0),
@@ -165,10 +167,10 @@ ArrayGraph::list_arcs ()
 }
 
 static void
-print_helper (NodeIds &nodes, NodeId *others)
+print_helper (NodeIds &nodes, unsigned int *data)
 {
     NodeIdIter node = nodes.begin ();
-    unsigned int tmp = others[*node];
+    unsigned int tmp = data[*node];
     cout << "{";
     if (tmp == ((unsigned int) -1))
         cout << 'n';
@@ -177,7 +179,7 @@ print_helper (NodeIds &nodes, NodeId *others)
     ++node;
     for (NodeIdIter node_end = nodes.end (); node != node_end; ++node)
     {
-        tmp = others[*node];
+        tmp = data[*node];
         cout << ",";
         if (tmp == ((unsigned int) -1))
             cout << 'n';
@@ -249,8 +251,8 @@ ArrayGraph::depth_first_search (NodeId start)
     map <NodeId, Color> colors;
     unsigned int count = this->next_node_id ();
     NodeId *ances = new NodeId[count];
-    NodeId *starts = new NodeId[count];
-    NodeId *ends = new NodeId[count];
+    NodeId *starts = new unsigned int[count];
+    NodeId *ends = new unsigned int[count];
     unsigned int id = 0;
     for (StartNodeIter i = matrice.begin (), i_end = matrice.end (); i != i_end; ++i, ++id)
     {
@@ -288,8 +290,111 @@ ArrayGraph::depth_first_search (NodeId start)
 }
 
 void
-ArrayGraph::breadth_first_search (NodeId)
+ArrayGraph::breadth_first_search (NodeId start)
 {
+    map <NodeId, Color> colors;
+    unsigned int count = this->next_node_id ();
+    std::queue <NodeId> nexts;
+    NodeId *ances = new NodeId[count];
+    NodeId *deltas = new unsigned int[count];
+    NodeId *starts = new unsigned int[count];
+    NodeId *ends = new unsigned int[count];
+    unsigned int id = 0;
+    for (StartNodeIter i = matrice.begin (), i_end = matrice.end (); i != i_end; ++i, ++id)
+    {
+        if (!node_exists[id])
+            continue;
+        ances[id] = -1;
+        deltas[id] = -1;
+        starts[id] = -1;
+        ends[id] = -1;
+        colors[id] = WHITE;
+    }
+    unsigned int time = 0;
+    ances[start] = start;
+    colors[start] = GREY;
+    deltas[start] = 0;
+    nexts.push (start);
+
+    // Print stuff
+    std::queue <NodeId> copy = nexts;
+    cout << " - | - | {" << copy.front ();
+    copy.pop ();
+    while (!copy.empty ())
+    {
+        cout << "," << copy.front ();
+        copy.pop ();
+    }
+    cout << "} | {";
+    NodeIds nodes = this->list_nodes ();
+    NodeIdIter nod = nodes.begin ();
+    cout << static_cast <char> (colors[*nod]);
+    ++nod;
+    for (NodeIdIter nod_end = nodes.end (); nod != nod_end; ++nod)
+        cout << "," << static_cast <char> (colors[*nod]);
+    cout << "} | ";
+    print_helper (nodes, ances);
+    cout << " | ";
+    print_helper (nodes, deltas);
+    cout << " | ";
+    print_helper (nodes, starts);
+    cout << " | ";
+    print_helper (nodes, ends);
+    cout << endl;
+    // End of print stuff
+
+    while (!nexts.empty ())
+    {
+        NodeId node = nexts.front ();
+        nexts.pop ();
+        deltas[node] = time;
+
+        // Print stuff
+        copy = nexts;
+        cout << " " << time << " | " << node<< " | {";
+        if (!copy.empty ())
+        {
+            cout << copy.front ();
+            copy.pop ();
+        }
+        while (!copy.empty ())
+        {
+            cout << "," << copy.front ();
+            copy.pop ();
+        }
+        cout << "} | {";
+        NodeIdIter nod = nodes.begin ();
+        cout << static_cast <char> (colors[*nod]);
+        ++nod;
+        for (NodeIdIter nod_end = nodes.end (); nod != nod_end; ++nod)
+            cout << "," << static_cast <char> (colors[*nod]);
+        cout << "} | ";
+        print_helper (nodes, ances);
+        cout << " | ";
+        print_helper (nodes, deltas);
+        cout << " | ";
+        print_helper (nodes, starts);
+        cout << " | ";
+        print_helper (nodes, ends);
+        cout << endl;
+        // End of print stuff
+
+        ++time;
+        NodeIds successors = this->list_successors (node);
+        for (NodeIdIter i = successors.begin (), i_end = successors.end (); i != i_end; ++i)
+        {
+            if (colors[*i] == WHITE)
+            {
+                colors[*i] = GREY;
+                ances[*i] = node;
+                deltas[*i] = deltas[node] + 1;
+                nexts.push (*i);
+            }
+        }
+        colors[node] = BLACK;
+        ends[node] = time;
+    }
+
 }
 
 ostream &
