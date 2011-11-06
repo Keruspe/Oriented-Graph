@@ -7,6 +7,7 @@
 #include <map>
 #include <vector>
 
+using std::cout;
 using std::endl;
 using std::map;
 using std::ostream;
@@ -17,6 +18,12 @@ typedef vector <ArcIds> StartNode;
 typedef vector <StartNode> StartNodes;
 typedef StartNodes::iterator StartNodeIter;
 typedef StartNode::iterator EndNodeIter;
+
+typedef enum {
+    WHITE = 'w',
+    GREY = 'g',
+    BLACK = 'b'
+} Color;
 
 class ArrayGraph : public Graph
 {
@@ -29,6 +36,7 @@ private:
     map < ArcId, pair <NodeId, NodeId> > arcs;
     unsigned int _nodes_count;
     unsigned int _arcs_count;
+    void visit (NodeId node, unsigned int &time, map <NodeId, Color> &colors, NodeId **ances, NodeId **starts, NodeId **ends);
 public:
     ArrayGraph ();
     ~ArrayGraph ();
@@ -44,6 +52,8 @@ public:
     ArcIds list_arcs ();
     unsigned int nodes_count () { return _nodes_count; }
     unsigned int arcs_count () { return _arcs_count; }
+    void depth_first_search (NodeId start);
+    void breadth_first_search (NodeId start);
     friend ostream &operator<< (ostream &os, ArrayGraph &graph);
 };
 

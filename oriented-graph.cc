@@ -1,7 +1,5 @@
 #include "array-graph/array-graph.hh"
 
-using std::cout;
-
 void
 print_set (const ArcIds &ids)
 {
@@ -64,6 +62,14 @@ main()
          << "Got:      ";
     print_set (g.list_arcs_to (d));
 
+    cout << "--- Depth-first search ---" << endl << endl;
+    g.depth_first_search (a);
+    cout << endl;
+
+    cout << "--- Breadth-first search ---" << endl << endl;
+    g.breadth_first_search (a);
+    cout << endl;
+
     cout << "--- ab arc removal ---" << endl << endl;
     g.remove_arc (ab);
 
@@ -106,7 +112,7 @@ main()
 
     cout << "Arcs count:" << endl
          << "Expected: 6" << endl
-         << "Got:      " << g.arcs_count () << endl;
+         << "Got:      " << g.arcs_count () << endl << endl;
 
     return 0;
 }

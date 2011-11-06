@@ -164,6 +164,134 @@ ArrayGraph::list_arcs ()
     return arc_ids;
 }
 
+static void
+print_helper (NodeIds &nodes, NodeId *others)
+{
+    NodeIdIter node = nodes.begin ();
+    unsigned int tmp = others[*node];
+    cout << "{";
+    if (tmp == ((unsigned int) -1))
+        cout << 'n';
+    else
+        cout << tmp;
+    ++node;
+    for (NodeIdIter node_end = nodes.end (); node != node_end; ++node)
+    {
+        tmp = others[*node];
+        cout << ",";
+        if (tmp == ((unsigned int) -1))
+            cout << 'n';
+        else
+            cout << tmp;
+    }
+    cout << "}";
+}
+
+
+void
+ArrayGraph::visit (NodeId node, unsigned int &time, map <NodeId, Color> &colors, NodeId **ances, NodeId **starts, NodeId **ends)
+{
+    colors[node] = GREY;
+    (*starts)[node] = time;
+
+    // Print stuff
+    cout << " " << time << " | " << node << " | {";
+    NodeIds nodes = this->list_nodes ();
+    NodeIdIter nod = nodes.begin ();
+    cout << static_cast <char> (colors[*nod]);
+    ++nod;
+    for (NodeIdIter nod_end = nodes.end (); nod != nod_end; ++nod)
+        cout << "," << static_cast <char> (colors[*nod]);
+    cout << "} | ";
+    print_helper (nodes, *ances);
+    cout << " | ";
+    print_helper (nodes, *starts);
+    cout << " | ";
+    print_helper (nodes, *ends);
+    cout << endl;
+    // End of print stuff
+
+    ++time;
+    NodeIds successors = this->list_successors (node);
+    for (NodeIdIter i = successors.begin (), i_end = successors.end (); i != i_end; ++i)
+    {
+        if (colors[*i] == WHITE)
+        {
+            (*ances)[*i] = node;
+            visit (*i, time, colors, ances, starts, ends);
+        }
+    }
+    colors[node] = BLACK;
+    (*ends)[node] = time;
+
+    // Print stuff
+    cout << " " << time << " | " << node << " | {";
+    nod = nodes.begin ();
+    cout << static_cast <char> (colors[*nod]);
+    ++nod;
+    for (NodeIdIter nod_end = nodes.end (); nod != nod_end; ++nod)
+        cout << "," << static_cast <char> (colors[*nod]);
+    cout << "} | ";
+    print_helper (nodes, *ances);
+    cout << " | ";
+    print_helper (nodes, *starts);
+    cout << " | ";
+    print_helper (nodes, *ends);
+    cout << endl;
+    // End of print stuff
+
+    ++time;
+}
+
+void
+ArrayGraph::depth_first_search (NodeId start)
+{
+    map <NodeId, Color> colors;
+    unsigned int count = this->next_node_id ();
+    NodeId *ances = new NodeId[count];
+    NodeId *starts = new NodeId[count];
+    NodeId *ends = new NodeId[count];
+    unsigned int id = 0;
+    for (StartNodeIter i = matrice.begin (), i_end = matrice.end (); i != i_end; ++i, ++id)
+    {
+        if (!node_exists[id])
+            continue;
+        ances[id] = -1;
+        starts[id] = -1;
+        ends[id] = -1;
+        colors[id] = WHITE;
+    }
+    unsigned int time = 0;
+    ances[start] = start;
+
+    // Print stuff
+    cout << " - | - | {";
+    NodeIds nodes = this->list_nodes ();
+    NodeIdIter node = nodes.begin ();
+    cout << static_cast <char> (colors[*node]);
+    ++node;
+    for (NodeIdIter node_end = nodes.end (); node != node_end; ++node)
+        cout << "," << static_cast <char> (colors[*node]);
+    cout << "} | ";
+    print_helper (nodes, ances);
+    cout << " | ";
+    print_helper (nodes, starts);
+    cout << " | ";
+    print_helper (nodes, ends);
+    cout << endl;
+    // End of print stuff
+
+    visit (start, time, colors, &ances, &starts, &ends);
+    delete[] (ances);
+    delete[] (starts);
+    delete[] (ends);
+}
+
+void
+ArrayGraph::breadth_first_search (NodeId)
+{
+}
+
 ostream &
 operator<< (ostream &os, ArrayGraph &graph)
 {

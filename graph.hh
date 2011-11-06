@@ -29,6 +29,8 @@ public:
     virtual ArcIds list_arcs () = 0;
     virtual unsigned int nodes_count () = 0;
     virtual unsigned int arcs_count () = 0;
+    virtual void depth_first_search (NodeId start) = 0;
+    virtual void breadth_first_search (NodeId start) = 0;
 private:
     ArcId _next_arc_id;
     NodeId _next_node_id;
