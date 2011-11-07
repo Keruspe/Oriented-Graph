@@ -46,7 +46,7 @@ ArrayGraph::add_arc (NodeId from, NodeId to)
 {
     ArcId id = get_new_arc_id ();
     ++_arcs_count;
-    matrice[from][to].push_front (id);
+    matrice[from][to].push_back (id);
     arcs[id] = std::make_pair <NodeId, NodeId> (from, to);
     return id;
 }
@@ -80,7 +80,7 @@ ArrayGraph::list_successors (NodeId id)
         if (!node_exists[tmp])
             continue;
         if (!i->empty ())
-            successors.push_front (tmp);
+            successors.push_back (tmp);
     }
     return successors;
 }
@@ -98,7 +98,7 @@ ArrayGraph::list_ancestors (NodeId id)
         if (!node_exists[tmp])
             continue;
         if (!(*i)[id].empty ())
-            ancestors.push_front (tmp);
+            ancestors.push_back (tmp);
     }
     return ancestors;
 }
@@ -110,7 +110,7 @@ ArrayGraph::list_nodes ()
     for (NodeId i = 0; i < next_node_id (); ++i)
     {
         if (node_exists[i])
-            nodes.push_front (i);
+            nodes.push_back (i);
     }
     return nodes;
 }
@@ -129,7 +129,7 @@ ArrayGraph::list_arcs_from (NodeId id)
         if (!node_exists[tmp])
             continue;
         for (ArcIdIter j = i->begin (), j_end = i->end (); j != j_end; ++j)
-            arcs_from.push_front (*j);
+            arcs_from.push_back (*j);
     }
     return arcs_from;
 }
@@ -148,7 +148,7 @@ ArrayGraph::list_arcs_to (NodeId id)
             continue;
         ArcIds &tmp = (*i)[id];
         for (ArcIdIter j = tmp.begin (), j_end = tmp.end (); j != j_end; ++j)
-            arcs_to.push_front (*j);
+            arcs_to.push_back (*j);
     }
     return arcs_to;
 }
@@ -162,7 +162,7 @@ ArrayGraph::list_arcs ()
         for (EndNodeIter j = i->begin (), j_end = i->end (); j != j_end; ++j)
         {
             for (ArcIdIter k = j->begin (), k_end = j->end (); k != k_end; ++k)
-                arc_ids.push_front (*k);
+                arc_ids.push_back (*k);
         }
     }
     return arc_ids;
