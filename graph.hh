@@ -1,16 +1,19 @@
 #ifndef __GRAPH_HH__
 #define __GRAPH_HH__
 
-#include <set>
+#include <list>
 
-using std::set;
+using std::list;
 
 typedef unsigned int NodeId;
-typedef set <NodeId> NodeIds;
+typedef list <NodeId> NodeIds;
 typedef unsigned int ArcId;
-typedef set <ArcId> ArcIds;
+typedef list <ArcId> ArcIds;
 typedef NodeIds::iterator NodeIdIter;
 typedef ArcIds::iterator ArcIdIter;
+
+typedef const list <unsigned int> ConstIds;
+typedef ConstIds::const_iterator ConstIdIter;
 
 class Graph
 {
