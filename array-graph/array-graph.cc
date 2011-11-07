@@ -347,7 +347,18 @@ ArrayGraph::breadth_first_search (NodeId start)
     {
         NodeId node = nexts.front ();
         nexts.pop ();
-        deltas[node] = time;
+        starts[node] = time;
+        NodeIds successors = this->list_successors (node);
+        for (NodeIdIter i = successors.begin (), i_end = successors.end (); i != i_end; ++i)
+        {
+            if (colors[*i] == WHITE)
+            {
+                colors[*i] = GREY;
+                ances[*i] = node;
+                deltas[*i] = deltas[node] + 1;
+                nexts.push (*i);
+            }
+        }
 
         // Print stuff
         copy = nexts;
@@ -380,19 +391,40 @@ ArrayGraph::breadth_first_search (NodeId start)
         // End of print stuff
 
         ++time;
-        NodeIds successors = this->list_successors (node);
-        for (NodeIdIter i = successors.begin (), i_end = successors.end (); i != i_end; ++i)
-        {
-            if (colors[*i] == WHITE)
-            {
-                colors[*i] = GREY;
-                ances[*i] = node;
-                deltas[*i] = deltas[node] + 1;
-                nexts.push (*i);
-            }
-        }
         colors[node] = BLACK;
         ends[node] = time;
+
+        // Print stuff
+        copy = nexts;
+        cout << " " << time << " | " << node<< " | {";
+        if (!copy.empty ())
+        {
+            cout << copy.front ();
+            copy.pop ();
+        }
+        while (!copy.empty ())
+        {
+            cout << "," << copy.front ();
+            copy.pop ();
+        }
+        cout << "} | {";
+        nod = nodes.begin ();
+        cout << static_cast <char> (colors[*nod]);
+        ++nod;
+        for (NodeIdIter nod_end = nodes.end (); nod != nod_end; ++nod)
+            cout << "," << static_cast <char> (colors[*nod]);
+        cout << "} | ";
+        print_helper (nodes, ances);
+        cout << " | ";
+        print_helper (nodes, deltas);
+        cout << " | ";
+        print_helper (nodes, starts);
+        cout << " | ";
+        print_helper (nodes, ends);
+        cout << endl;
+        // End of print stuff
+
+        ++time;
     }
 
 }
