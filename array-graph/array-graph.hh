@@ -36,7 +36,7 @@ private:
     map < ArcId, pair <NodeId, NodeId> > arcs;
     unsigned int _nodes_count;
     unsigned int _arcs_count;
-    void visit (NodeId node, unsigned int &time, map <NodeId, Color> &colors, NodeId **ances, NodeId **starts, NodeId **ends);
+    void visit (NodeId node, unsigned int &time, map <NodeId, Color> &colors, NodeId **ances, NodeId **starts, NodeId **ends, NodeIds &nodes);
 public:
     ArrayGraph ();
     ~ArrayGraph ();

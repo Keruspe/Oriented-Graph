@@ -191,29 +191,60 @@ print_helper (NodeIds &nodes, unsigned int *data)
     cout << "}";
 }
 
-
-void
-ArrayGraph::visit (NodeId node, unsigned int &time, map <NodeId, Color> &colors, NodeId **ances, NodeId **starts, NodeId **ends)
+static void
+search_print (queue <NodeId> nexts, unsigned int time, NodeId node, NodeIds &nodes, map <NodeId, Color> &colors, NodeId *ances, NodeId *deltas, NodeId *starts, NodeId *ends)
 {
-    colors[node] = GREY;
-    (*starts)[node] = time;
-
-    // Print stuff
-    cout << " " << time << " | " << node << " | {";
-    NodeIds nodes = this->list_nodes ();
+    cout << " ";
+    if (time == (unsigned int) -1)
+        cout << "-";
+    else
+        cout << time;
+    cout << " | ";
+    if (node == (NodeId) -1)
+        cout << "-";
+    else
+        cout << node;
+    cout << " | {";
+    if (deltas != 0) /* deltas is null for depth-first, not for breadth-first */
+    {
+        if (!nexts.empty ())
+        {
+            cout << nexts.front ();
+            nexts.pop ();
+        }
+        while (!nexts.empty ())
+        {
+            cout << "," << nexts.front ();
+            nexts.pop ();
+        }
+        cout << "} | {";
+    }
     NodeIdIter nod = nodes.begin ();
     cout << static_cast <char> (colors[*nod]);
     ++nod;
     for (NodeIdIter nod_end = nodes.end (); nod != nod_end; ++nod)
         cout << "," << static_cast <char> (colors[*nod]);
     cout << "} | ";
-    print_helper (nodes, *ances);
+    print_helper (nodes, ances);
     cout << " | ";
-    print_helper (nodes, *starts);
+    if (deltas != 0)
+    {
+        print_helper (nodes, deltas);
+        cout << " | ";
+    }
+    print_helper (nodes, starts);
     cout << " | ";
-    print_helper (nodes, *ends);
+    print_helper (nodes, ends);
     cout << endl;
-    // End of print stuff
+}
+
+void
+ArrayGraph::visit (NodeId node, unsigned int &time, map <NodeId, Color> &colors, NodeId **ances, NodeId **starts, NodeId **ends, NodeIds &nodes)
+{
+    colors[node] = GREY;
+    (*starts)[node] = time;
+
+    search_print (queue <NodeId> (), time, node, nodes, colors, *ances, 0, *starts, *ends);
 
     ++time;
     NodeIds successors = this->list_successors (node);
@@ -222,27 +253,13 @@ ArrayGraph::visit (NodeId node, unsigned int &time, map <NodeId, Color> &colors,
         if (colors[*i] == WHITE)
         {
             (*ances)[*i] = node;
-            visit (*i, time, colors, ances, starts, ends);
+            visit (*i, time, colors, ances, starts, ends, nodes);
         }
     }
     colors[node] = BLACK;
     (*ends)[node] = time;
 
-    // Print stuff
-    cout << " " << time << " | " << node << " | {";
-    nod = nodes.begin ();
-    cout << static_cast <char> (colors[*nod]);
-    ++nod;
-    for (NodeIdIter nod_end = nodes.end (); nod != nod_end; ++nod)
-        cout << "," << static_cast <char> (colors[*nod]);
-    cout << "} | ";
-    print_helper (nodes, *ances);
-    cout << " | ";
-    print_helper (nodes, *starts);
-    cout << " | ";
-    print_helper (nodes, *ends);
-    cout << endl;
-    // End of print stuff
+    search_print (queue <NodeId> (), time, node, nodes, colors, *ances, 0, *starts, *ends);
 
     ++time;
 }
@@ -268,68 +285,14 @@ ArrayGraph::depth_first_search (NodeId start)
     unsigned int time = 0;
     ances[start] = start;
 
-    // Print stuff
-    cout << " - | - | {";
     NodeIds nodes = this->list_nodes ();
-    NodeIdIter node = nodes.begin ();
-    cout << static_cast <char> (colors[*node]);
-    ++node;
-    for (NodeIdIter node_end = nodes.end (); node != node_end; ++node)
-        cout << "," << static_cast <char> (colors[*node]);
-    cout << "} | ";
-    print_helper (nodes, ances);
-    cout << " | ";
-    print_helper (nodes, starts);
-    cout << " | ";
-    print_helper (nodes, ends);
-    cout << endl;
-    // End of print stuff
+    search_print (queue <NodeId> (), -1, -1, nodes, colors, ances, 0, starts, ends);
 
-    visit (start, time, colors, &ances, &starts, &ends);
+    visit (start, time, colors, &ances, &starts, &ends, nodes);
+
     delete[] (ances);
     delete[] (starts);
     delete[] (ends);
-}
-
-static void
-breadth_first_search_print (queue <NodeId> nexts, unsigned int time, NodeId node, NodeIds nodes, map <NodeId, Color> &colors, NodeId *ances, NodeId *deltas, NodeId *starts, NodeId *ends)
-{
-        cout << " ";
-        if (time == (unsigned int) -1)
-            cout << "-";
-        else
-            cout << time;
-        cout << " | ";
-        if (node == (NodeId) -1)
-            cout << "-";
-        else
-            cout << node;
-        cout << " | {";
-        if (!nexts.empty ())
-        {
-            cout << nexts.front ();
-            nexts.pop ();
-        }
-        while (!nexts.empty ())
-        {
-            cout << "," << nexts.front ();
-            nexts.pop ();
-        }
-        cout << "} | {";
-        NodeIdIter nod = nodes.begin ();
-        cout << static_cast <char> (colors[*nod]);
-        ++nod;
-        for (NodeIdIter nod_end = nodes.end (); nod != nod_end; ++nod)
-            cout << "," << static_cast <char> (colors[*nod]);
-        cout << "} | ";
-        print_helper (nodes, ances);
-        cout << " | ";
-        print_helper (nodes, deltas);
-        cout << " | ";
-        print_helper (nodes, starts);
-        cout << " | ";
-        print_helper (nodes, ends);
-        cout << endl;
 }
 
 void
@@ -360,7 +323,7 @@ ArrayGraph::breadth_first_search (NodeId start)
     nexts.push (start);
 
     NodeIds nodes = this->list_nodes ();
-    breadth_first_search_print (nexts, -1, -1, nodes, colors, ances, deltas, starts, ends);
+    search_print (nexts, -1, -1, nodes, colors, ances, deltas, starts, ends);
 
     while (!nexts.empty ())
     {
@@ -379,13 +342,13 @@ ArrayGraph::breadth_first_search (NodeId start)
             }
         }
 
-        breadth_first_search_print (nexts, time, node, nodes, colors, ances, deltas, starts, ends);
+        search_print (nexts, time, node, nodes, colors, ances, deltas, starts, ends);
 
         ++time;
         colors[node] = BLACK;
         ends[node] = time;
 
-        breadth_first_search_print (nexts, time, node, nodes, colors, ances, deltas, starts, ends);
+        search_print (nexts, time, node, nodes, colors, ances, deltas, starts, ends);
 
         ++time;
     }
