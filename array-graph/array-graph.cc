@@ -2,6 +2,8 @@
 
 #include <queue>
 
+using std::queue;
+
 ArrayGraph::ArrayGraph () :
     Graph (),
     _nodes_count (0),
@@ -181,7 +183,7 @@ print_helper (NodeIds &nodes, unsigned int *data)
     {
         tmp = data[*node];
         cout << ",";
-        if (tmp == ((unsigned int) -1))
+        if (tmp == (unsigned int) -1)
             cout << 'n';
         else
             cout << tmp;
@@ -289,6 +291,47 @@ ArrayGraph::depth_first_search (NodeId start)
     delete[] (ends);
 }
 
+static void
+breadth_first_search_print (queue <NodeId> nexts, unsigned int time, NodeId node, NodeIds nodes, map <NodeId, Color> &colors, NodeId *ances, NodeId *deltas, NodeId *starts, NodeId *ends)
+{
+        cout << " ";
+        if (time == (unsigned int) -1)
+            cout << "-";
+        else
+            cout << time;
+        cout << " | ";
+        if (node == (NodeId) -1)
+            cout << "-";
+        else
+            cout << node;
+        cout << " | {";
+        if (!nexts.empty ())
+        {
+            cout << nexts.front ();
+            nexts.pop ();
+        }
+        while (!nexts.empty ())
+        {
+            cout << "," << nexts.front ();
+            nexts.pop ();
+        }
+        cout << "} | {";
+        NodeIdIter nod = nodes.begin ();
+        cout << static_cast <char> (colors[*nod]);
+        ++nod;
+        for (NodeIdIter nod_end = nodes.end (); nod != nod_end; ++nod)
+            cout << "," << static_cast <char> (colors[*nod]);
+        cout << "} | ";
+        print_helper (nodes, ances);
+        cout << " | ";
+        print_helper (nodes, deltas);
+        cout << " | ";
+        print_helper (nodes, starts);
+        cout << " | ";
+        print_helper (nodes, ends);
+        cout << endl;
+}
+
 void
 ArrayGraph::breadth_first_search (NodeId start)
 {
@@ -316,32 +359,8 @@ ArrayGraph::breadth_first_search (NodeId start)
     deltas[start] = 0;
     nexts.push (start);
 
-    // Print stuff
-    std::queue <NodeId> copy = nexts;
-    cout << " - | - | {" << copy.front ();
-    copy.pop ();
-    while (!copy.empty ())
-    {
-        cout << "," << copy.front ();
-        copy.pop ();
-    }
-    cout << "} | {";
     NodeIds nodes = this->list_nodes ();
-    NodeIdIter nod = nodes.begin ();
-    cout << static_cast <char> (colors[*nod]);
-    ++nod;
-    for (NodeIdIter nod_end = nodes.end (); nod != nod_end; ++nod)
-        cout << "," << static_cast <char> (colors[*nod]);
-    cout << "} | ";
-    print_helper (nodes, ances);
-    cout << " | ";
-    print_helper (nodes, deltas);
-    cout << " | ";
-    print_helper (nodes, starts);
-    cout << " | ";
-    print_helper (nodes, ends);
-    cout << endl;
-    // End of print stuff
+    breadth_first_search_print (nexts, -1, -1, nodes, colors, ances, deltas, starts, ends);
 
     while (!nexts.empty ())
     {
@@ -360,72 +379,21 @@ ArrayGraph::breadth_first_search (NodeId start)
             }
         }
 
-        // Print stuff
-        copy = nexts;
-        cout << " " << time << " | " << node<< " | {";
-        if (!copy.empty ())
-        {
-            cout << copy.front ();
-            copy.pop ();
-        }
-        while (!copy.empty ())
-        {
-            cout << "," << copy.front ();
-            copy.pop ();
-        }
-        cout << "} | {";
-        NodeIdIter nod = nodes.begin ();
-        cout << static_cast <char> (colors[*nod]);
-        ++nod;
-        for (NodeIdIter nod_end = nodes.end (); nod != nod_end; ++nod)
-            cout << "," << static_cast <char> (colors[*nod]);
-        cout << "} | ";
-        print_helper (nodes, ances);
-        cout << " | ";
-        print_helper (nodes, deltas);
-        cout << " | ";
-        print_helper (nodes, starts);
-        cout << " | ";
-        print_helper (nodes, ends);
-        cout << endl;
-        // End of print stuff
+        breadth_first_search_print (nexts, time, node, nodes, colors, ances, deltas, starts, ends);
 
         ++time;
         colors[node] = BLACK;
         ends[node] = time;
 
-        // Print stuff
-        copy = nexts;
-        cout << " " << time << " | " << node<< " | {";
-        if (!copy.empty ())
-        {
-            cout << copy.front ();
-            copy.pop ();
-        }
-        while (!copy.empty ())
-        {
-            cout << "," << copy.front ();
-            copy.pop ();
-        }
-        cout << "} | {";
-        nod = nodes.begin ();
-        cout << static_cast <char> (colors[*nod]);
-        ++nod;
-        for (NodeIdIter nod_end = nodes.end (); nod != nod_end; ++nod)
-            cout << "," << static_cast <char> (colors[*nod]);
-        cout << "} | ";
-        print_helper (nodes, ances);
-        cout << " | ";
-        print_helper (nodes, deltas);
-        cout << " | ";
-        print_helper (nodes, starts);
-        cout << " | ";
-        print_helper (nodes, ends);
-        cout << endl;
-        // End of print stuff
+        breadth_first_search_print (nexts, time, node, nodes, colors, ances, deltas, starts, ends);
 
         ++time;
     }
+
+    delete[] (ances);
+    delete[] (deltas);
+    delete[] (starts);
+    delete[] (ends);
 
 }
 
@@ -440,7 +408,6 @@ operator<< (ostream &os, ArrayGraph &graph)
     for (NodeIdIter i = nodes.begin (), i_end = nodes.end (); i != i_end; ++i)
     {
         os << *i;
-        // TODO: Make it pretty with big numbers or replace with true/false
         for (NodeIdIter j = nodes.begin (), j_end = nodes.end (); j != j_end; ++j)
             os << "   " << graph.matrice[*i][*j].size ();
         os << endl;
