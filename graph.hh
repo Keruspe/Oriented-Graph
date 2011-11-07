@@ -15,6 +15,12 @@ typedef ArcIds::iterator ArcIdIter;
 typedef const list <unsigned int> ConstIds;
 typedef ConstIds::const_iterator ConstIdIter;
 
+typedef enum {
+    WHITE = 'w',
+    GREY = 'g',
+    BLACK = 'b'
+} NodeColor;
+
 class Graph
 {
 public:

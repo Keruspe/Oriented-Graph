@@ -192,7 +192,7 @@ print_helper (NodeIds &nodes, unsigned int *data)
 }
 
 static void
-search_print (queue <NodeId> nexts, unsigned int time, NodeId node, NodeIds &nodes, map <NodeId, Color> &colors, NodeId *ances, NodeId *deltas, NodeId *starts, NodeId *ends)
+search_print (queue <NodeId> nexts, unsigned int time, NodeId node, NodeIds &nodes, map <NodeId, NodeColor> &colors, NodeId *ances, NodeId *deltas, NodeId *starts, NodeId *ends)
 {
     cout << " ";
     if (time == (unsigned int) -1)
@@ -239,7 +239,7 @@ search_print (queue <NodeId> nexts, unsigned int time, NodeId node, NodeIds &nod
 }
 
 void
-ArrayGraph::visit (NodeId node, unsigned int &time, map <NodeId, Color> &colors, NodeId **ances, NodeId **starts, NodeId **ends, NodeIds &nodes)
+ArrayGraph::visit (NodeId node, unsigned int &time, map <NodeId, NodeColor> &colors, NodeId **ances, NodeId **starts, NodeId **ends, NodeIds &nodes)
 {
     colors[node] = GREY;
     (*starts)[node] = time;
@@ -267,7 +267,7 @@ ArrayGraph::visit (NodeId node, unsigned int &time, map <NodeId, Color> &colors,
 void
 ArrayGraph::depth_first_search (NodeId start)
 {
-    map <NodeId, Color> colors;
+    map <NodeId, NodeColor> colors;
     unsigned int count = this->next_node_id ();
     NodeId *ances = new NodeId[count];
     NodeId *starts = new unsigned int[count];
@@ -298,7 +298,7 @@ ArrayGraph::depth_first_search (NodeId start)
 void
 ArrayGraph::breadth_first_search (NodeId start)
 {
-    map <NodeId, Color> colors;
+    map <NodeId, NodeColor> colors;
     unsigned int count = this->next_node_id ();
     std::queue <NodeId> nexts;
     NodeId *ances = new NodeId[count];

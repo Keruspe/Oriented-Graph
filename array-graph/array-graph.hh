@@ -19,12 +19,6 @@ typedef vector <StartNode> StartNodes;
 typedef StartNodes::iterator StartNodeIter;
 typedef StartNode::iterator EndNodeIter;
 
-typedef enum {
-    WHITE = 'w',
-    GREY = 'g',
-    BLACK = 'b'
-} Color;
-
 class ArrayGraph : public Graph
 {
 private:
@@ -36,7 +30,7 @@ private:
     map < ArcId, pair <NodeId, NodeId> > arcs;
     unsigned int _nodes_count;
     unsigned int _arcs_count;
-    void visit (NodeId node, unsigned int &time, map <NodeId, Color> &colors, NodeId **ances, NodeId **starts, NodeId **ends, NodeIds &nodes);
+    void visit (NodeId node, unsigned int &time, map <NodeId, NodeColor> &colors, NodeId **ances, NodeId **starts, NodeId **ends, NodeIds &nodes);
 public:
     ArrayGraph ();
     ~ArrayGraph ();
