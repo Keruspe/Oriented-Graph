@@ -238,13 +238,19 @@ search_print (queue <NodeId> nexts, unsigned int time, NodeId node, NodeIds &nod
     cout << endl;
 }
 
+static void
+depth_first_search_print (unsigned int time, NodeId node, NodeIds &nodes, map <NodeId, NodeColor> &colors, NodeId *ances, NodeId *starts, NodeId *ends)
+{
+    search_print (queue <NodeId> (), time, node, nodes, colors, ances, 0, starts, ends);
+}
+
 void
 ArrayGraph::visit (NodeId node, unsigned int &time, map <NodeId, NodeColor> &colors, NodeId **ances, NodeId **starts, NodeId **ends, NodeIds &nodes)
 {
     colors[node] = GREY;
     (*starts)[node] = time;
 
-    search_print (queue <NodeId> (), time, node, nodes, colors, *ances, 0, *starts, *ends);
+    depth_first_search_print (time, node, nodes, colors, *ances, *starts, *ends);
 
     ++time;
     NodeIds successors = this->list_successors (node);
@@ -259,7 +265,7 @@ ArrayGraph::visit (NodeId node, unsigned int &time, map <NodeId, NodeColor> &col
     colors[node] = BLACK;
     (*ends)[node] = time;
 
-    search_print (queue <NodeId> (), time, node, nodes, colors, *ances, 0, *starts, *ends);
+    depth_first_search_print (time, node, nodes, colors, *ances, *starts, *ends);
 
     ++time;
 }
@@ -286,7 +292,7 @@ ArrayGraph::depth_first_search (NodeId start)
     ances[start] = start;
 
     NodeIds nodes = this->list_nodes ();
-    search_print (queue <NodeId> (), -1, -1, nodes, colors, ances, 0, starts, ends);
+    depth_first_search_print (-1, -1, nodes, colors, ances, starts, ends);
 
     visit (start, time, colors, &ances, &starts, &ends, nodes);
 
