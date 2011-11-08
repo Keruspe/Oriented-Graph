@@ -14,10 +14,10 @@ using std::ostream;
 using std::pair;
 using std::vector;
 
-typedef vector <ArcIds> StartNode;
-typedef vector <StartNode> StartNodes;
+typedef vector <ArcIds> EndNodes;
+typedef vector <EndNodes> StartNodes;
+typedef EndNodes::iterator EndNodeIter;
 typedef StartNodes::iterator StartNodeIter;
-typedef StartNode::iterator EndNodeIter;
 
 class ArrayGraph : public Graph
 {

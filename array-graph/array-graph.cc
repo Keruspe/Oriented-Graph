@@ -21,7 +21,7 @@ ArrayGraph::add_node ()
     NodeId id = get_new_node_id ();
     node_exists[id] = true;
     ++_nodes_count;
-    matrice.push_back (StartNode (_nodes_count - 1));
+    matrice.push_back (EndNodes (_nodes_count - 1));
     for (StartNodeIter i = matrice.begin (), i_end = matrice.end (); i != i_end; ++i)
         i->push_back (ArcIds ());
     return id;
@@ -34,7 +34,7 @@ ArrayGraph::remove_node (NodeId id)
         return;
     node_exists[id] = false;
     --_nodes_count;
-    StartNode &node = matrice[id];
+    EndNodes &node = matrice[id];
     for (EndNodeIter i = node.begin (), i_end = node.end (); i != i_end; ++i)
         _arcs_count -= i->size ();
     for (StartNodeIter i = matrice.begin (), i_end = matrice.end (); i != i_end; ++i)
@@ -73,7 +73,7 @@ ArrayGraph::list_successors (NodeId id)
     if (!node_exists[id])
         return successors;
 
-    StartNode &node = matrice[id];
+    EndNodes &node = matrice[id];
     NodeId tmp = 0;
     for (EndNodeIter i = node.begin (), i_end = node.end (); i != i_end; ++i, ++tmp)
     {
@@ -122,7 +122,7 @@ ArrayGraph::list_arcs_from (NodeId id)
     if (!node_exists[id])
         return arcs_from;
 
-    StartNode &node = matrice[id];
+    EndNodes &node = matrice[id];
     NodeId tmp = 0;
     for (EndNodeIter i = node.begin (), i_end = node.end (); i != i_end; ++i, ++tmp)
     {
