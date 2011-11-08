@@ -1,9 +1,5 @@
 #include "array-graph.hh"
 
-#include <queue>
-
-using std::queue;
-
 ArrayGraph::ArrayGraph () :
     Graph (),
     _nodes_count (0),
@@ -103,18 +99,6 @@ ArrayGraph::list_ancestors (NodeId id)
     return ancestors;
 }
 
-NodeIds
-ArrayGraph::list_nodes ()
-{
-    NodeIds nodes;
-    for (NodeId i = 0; i < next_node_id (); ++i)
-    {
-        if (node_exists[i])
-            nodes.push_back (i);
-    }
-    return nodes;
-}
-
 ArcIds
 ArrayGraph::list_arcs_from (NodeId id)
 {
@@ -153,35 +137,23 @@ ArrayGraph::list_arcs_to (NodeId id)
     return arcs_to;
 }
 
-ArcIds
-ArrayGraph::list_arcs ()
+void
+ArrayGraph::print_helper (unsigned int *data)
 {
-    ArcIds arc_ids; 
-    for (StartNodeIter i = matrice.begin (), i_end = matrice.end (); i != i_end; ++i)
-    {
-        for (EndNodeIter j = i->begin (), j_end = i->end (); j != j_end; ++j)
-        {
-            for (ArcIdIter k = j->begin (), k_end = j->end (); k != k_end; ++k)
-                arc_ids.push_back (*k);
-        }
-    }
-    return arc_ids;
-}
-
-static void
-print_helper (NodeIds &nodes, unsigned int *data)
-{
-    NodeIdIter node = nodes.begin ();
-    unsigned int tmp = data[*node];
+    NodeId node_id = 0;
+    StartNodeIter node = matrice.begin (), node_end = matrice.end ();
+    for (; !node_exists[node_id] && node != node_end; ++node, ++node_id);
+    unsigned int tmp = data[node_id];
     cout << "{";
     if (tmp == ((unsigned int) -1))
         cout << 'n';
     else
         cout << tmp;
-    ++node;
-    for (NodeIdIter node_end = nodes.end (); node != node_end; ++node)
+    for (++node, ++node_id; node != node_end; ++node, ++node_id)
     {
-        tmp = data[*node];
+        if (!node_exists[node_id])
+            continue;
+        tmp = data[node_id];
         cout << ",";
         if (tmp == (unsigned int) -1)
             cout << 'n';
@@ -191,8 +163,8 @@ print_helper (NodeIds &nodes, unsigned int *data)
     cout << "}";
 }
 
-static void
-search_print (queue <NodeId> nexts, unsigned int time, NodeId node, NodeIds &nodes, map <NodeId, NodeColor> &colors, NodeId *ances, NodeId *deltas, NodeId *starts, NodeId *ends)
+void
+ArrayGraph::search_print (queue <NodeId> nexts, unsigned int time, NodeId node, map <NodeId, NodeColor> &colors, NodeId *ances, NodeId *deltas, NodeId *starts, NodeId *ends)
 {
     cout << " ";
     if (time == (unsigned int) -1)
@@ -219,38 +191,37 @@ search_print (queue <NodeId> nexts, unsigned int time, NodeId node, NodeIds &nod
         }
         cout << "} | {";
     }
-    NodeIdIter nod = nodes.begin ();
-    cout << static_cast <char> (colors[*nod]);
-    ++nod;
-    for (NodeIdIter nod_end = nodes.end (); nod != nod_end; ++nod)
-        cout << "," << static_cast <char> (colors[*nod]);
+    NodeId node_id = 0;
+    StartNodeIter nod = matrice.begin (), nod_end = matrice.end ();
+    for (; !node_exists[node_id] && nod != nod_end; ++nod, ++node_id);
+    cout << static_cast <char> (colors[node_id]);
+    for (++nod, ++node_id; nod != nod_end; ++nod, ++node_id)
+    {
+        if (!node_exists[node_id])
+            continue;
+        cout << "," << static_cast <char> (colors[node_id]);
+    }
     cout << "} | ";
-    print_helper (nodes, ances);
+    print_helper (ances);
     cout << " | ";
     if (deltas != 0)
     {
-        print_helper (nodes, deltas);
+        print_helper (deltas);
         cout << " | ";
     }
-    print_helper (nodes, starts);
+    print_helper (starts);
     cout << " | ";
-    print_helper (nodes, ends);
+    print_helper (ends);
     cout << endl;
 }
 
-static void
-depth_first_search_print (unsigned int time, NodeId node, NodeIds &nodes, map <NodeId, NodeColor> &colors, NodeId *ances, NodeId *starts, NodeId *ends)
-{
-    search_print (queue <NodeId> (), time, node, nodes, colors, ances, 0, starts, ends);
-}
-
 void
-ArrayGraph::visit (NodeId node, unsigned int &time, map <NodeId, NodeColor> &colors, NodeId **ances, NodeId **starts, NodeId **ends, NodeIds &nodes)
+ArrayGraph::visit (NodeId node, unsigned int &time, map <NodeId, NodeColor> &colors, NodeId **ances, NodeId **starts, NodeId **ends)
 {
     colors[node] = GREY;
     (*starts)[node] = time;
 
-    depth_first_search_print (time, node, nodes, colors, *ances, *starts, *ends);
+    depth_first_search_print (time, node, colors, *ances, *starts, *ends);
 
     ++time;
     NodeIds successors = this->list_successors (node);
@@ -259,13 +230,13 @@ ArrayGraph::visit (NodeId node, unsigned int &time, map <NodeId, NodeColor> &col
         if (colors[*i] == WHITE)
         {
             (*ances)[*i] = node;
-            visit (*i, time, colors, ances, starts, ends, nodes);
+            visit (*i, time, colors, ances, starts, ends);
         }
     }
     colors[node] = BLACK;
     (*ends)[node] = time;
 
-    depth_first_search_print (time, node, nodes, colors, *ances, *starts, *ends);
+    depth_first_search_print (time, node, colors, *ances, *starts, *ends);
 
     ++time;
 }
@@ -291,10 +262,9 @@ ArrayGraph::depth_first_search (NodeId start)
     unsigned int time = 0;
     ances[start] = start;
 
-    NodeIds nodes = this->list_nodes ();
-    depth_first_search_print (-1, -1, nodes, colors, ances, starts, ends);
+    depth_first_search_print (-1, -1, colors, ances, starts, ends);
 
-    visit (start, time, colors, &ances, &starts, &ends, nodes);
+    visit (start, time, colors, &ances, &starts, &ends);
 
     delete[] (ances);
     delete[] (starts);
@@ -328,8 +298,7 @@ ArrayGraph::breadth_first_search (NodeId start)
     deltas[start] = 0;
     nexts.push (start);
 
-    NodeIds nodes = this->list_nodes ();
-    search_print (nexts, -1, -1, nodes, colors, ances, deltas, starts, ends);
+    search_print (nexts, -1, -1, colors, ances, deltas, starts, ends);
 
     while (!nexts.empty ())
     {
@@ -348,13 +317,13 @@ ArrayGraph::breadth_first_search (NodeId start)
             }
         }
 
-        search_print (nexts, time, node, nodes, colors, ances, deltas, starts, ends);
+        search_print (nexts, time, node, colors, ances, deltas, starts, ends);
 
         ++time;
         colors[node] = BLACK;
         ends[node] = time;
 
-        search_print (nexts, time, node, nodes, colors, ances, deltas, starts, ends);
+        search_print (nexts, time, node, colors, ances, deltas, starts, ends);
 
         ++time;
     }
@@ -370,15 +339,27 @@ ostream &
 operator<< (ostream &os, ArrayGraph &graph)
 {
     os << " ";
-    NodeIds nodes = graph.list_nodes ();
-    for (NodeIdIter i = nodes.begin (), i_end = nodes.end (); i != i_end; ++i)
-        os << "   " << *i;
-    os << endl;
-    for (NodeIdIter i = nodes.begin (), i_end = nodes.end (); i != i_end; ++i)
+    NodeId node_id = 0;
+    for (StartNodeIter i = graph.matrice.begin (), i_end = graph.matrice.end (); i != i_end; ++i, ++node_id)
     {
-        os << *i;
-        for (NodeIdIter j = nodes.begin (), j_end = nodes.end (); j != j_end; ++j)
-            os << "   " << graph.matrice[*i][*j].size ();
+        if (!graph.node_exists[node_id])
+            continue;
+        os << "   " << node_id;
+    }
+    os << endl;
+    node_id = 0;
+    for (StartNodeIter i = graph.matrice.begin (), i_end = graph.matrice.end (); i != i_end; ++i, ++node_id)
+    {
+        if (!graph.node_exists[node_id])
+            continue;
+        os << node_id;
+        NodeId ni = 0;
+        for (EndNodeIter j = i->begin (), j_end = i->end (); j != j_end; ++j, ++ni)
+        {
+            if (!graph.node_exists[ni])
+                continue;
+            os << "   " << j->size ();
+        }
         os << endl;
     }
     return os;
