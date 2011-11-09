@@ -1,9 +1,17 @@
 #ifndef __GRAPH_HH__
 #define __GRAPH_HH__
 
+#include <iostream>
 #include <list>
+#include <map>
+#include <queue>
 
+using std::cout;
+using std::endl;
+using std::ostream;
 using std::list;
+using std::map;
+using std::queue;
 
 typedef unsigned int NodeId;
 typedef list <NodeId> NodeIds;
@@ -38,11 +46,21 @@ public:
     virtual ArcIds list_arcs () = 0;
     virtual unsigned int nodes_count () = 0;
     virtual unsigned int arcs_count () = 0;
-    virtual void depth_first_search (NodeId start) = 0;
-    virtual void breadth_first_search (NodeId start) = 0;
+    void depth_first_search (NodeId start);
+    void breadth_first_search (NodeId start);
 private:
     ArcId _next_arc_id;
     NodeId _next_node_id;
+    /* For depth_first_search */
+    void visit (NodeIds &nodes, NodeId node, unsigned int &time, map <NodeId, NodeColor> &colors, NodeId **ances, NodeId **starts, NodeId **ends);
+    /* for search_print */
+    void print_helper (NodeIds &nodes, unsigned int *data);
+    void search_print (NodeIds &nodes, queue <NodeId> nexts, unsigned int time, NodeId node, map <NodeId, NodeColor> &colors, NodeId *ances, NodeId *deltas, NodeId *starts, NodeId *ends);
+    /* Wrapper */
+    void depth_first_search_print (NodeIds &nodes, unsigned int time, NodeId node, map <NodeId, NodeColor> &colors, NodeId *ances, NodeId *starts, NodeId *ends)
+        {
+            search_print (nodes, queue <NodeId> (), time, node, colors, ances, 0, starts, ends);
+        }
 protected:
     ArcId get_new_arc_id ()  { return _next_arc_id++;  }
     NodeId get_new_node_id () { return _next_node_id++; }
