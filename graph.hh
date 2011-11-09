@@ -11,6 +11,7 @@ using std::endl;
 using std::ostream;
 using std::list;
 using std::map;
+using std::pair;
 using std::queue;
 
 typedef unsigned int NodeId;
@@ -47,6 +48,7 @@ public:
     virtual unsigned int arcs_count () = 0;
     void depth_first_search (NodeId start, bool print);
     void breadth_first_search (NodeId start, bool print);
+    bool connex ();
 private:
     ArcId _next_arc_id;
     NodeId _next_node_id;
@@ -65,6 +67,8 @@ protected:
     NodeId get_new_node_id () { return _next_node_id++; }
     /* Used in ArrayGraph */
     NodeId next_node_id () { return _next_node_id; }
+    /* Arc id, node ids */
+    map < ArcId, pair <NodeId, NodeId> > arcs;
 };
 
 #endif /*__GRAPH_HH__*/

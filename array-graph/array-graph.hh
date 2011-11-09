@@ -5,7 +5,6 @@
 
 #include <vector>
 
-using std::pair;
 using std::vector;
 
 typedef vector <ArcIds> EndNodes;
@@ -20,8 +19,6 @@ private:
     map <NodeId, bool> node_exists;
     /* Start node, end node, arcs */
     StartNodes matrice;
-    /* Arc id, node ids */
-    map < ArcId, pair <NodeId, NodeId> > arcs;
     unsigned int _nodes_count;
     unsigned int _arcs_count;
 public:

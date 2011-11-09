@@ -32,6 +32,10 @@ main()
 
     cout << "Graph:" << endl << g << endl;
 
+    cout << "Connexity:" << endl
+         << "Expected: yes" << endl
+         << "Got:      " << (g.connex () ? "yes" : "no") << endl << endl;
+
     cout << "Nodes:" << endl
          << "Expected: " << a << " " << b << " " << c << " " << d << " " << e << " " << f << endl
          << "Got:      ";

@@ -189,3 +189,43 @@ Graph::breadth_first_search (NodeId start, bool print)
     delete[] (ends);
 
 }
+
+bool
+Graph::connex ()
+{
+    NodeIds nodes = this->list_nodes ();
+    unsigned int unreachable_count = 0; /* 1 is acceptable, if there are no cycle, if some arcs are from here */
+    for (NodeIdIter node = nodes.begin (), node_end = nodes.end (); node != node_end; ++node)
+    {
+        ArcIds arcs = this->list_arcs_to (*node);
+        if (arcs.empty () && ++unreachable_count > 1)
+            return false;
+        bool reachable = false;
+        for (ArcIdIter arc = arcs.begin (), arc_end = arcs.end (); arc != arc_end; ++arc)
+        {
+            if (this->arcs[*arc].first != *node)
+            {
+                reachable = true;
+                break;
+            }
+        }
+        if (!reachable)
+        {
+            if (++unreachable_count > 1)
+                return false;
+            arcs = this->list_arcs_from (*node);
+            bool ok = false;
+            for (ArcIdIter arc = arcs.begin (), arc_end = arcs.end (); arc != arc_end; ++arc)
+            {
+                if (this->arcs[*arc].second != *node)
+                {
+                    ok = true;
+                    break;
+                }
+            }
+            if (!ok)
+                return false;
+        }
+    }
+    return true;
+}
