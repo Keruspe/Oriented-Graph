@@ -43,7 +43,6 @@ public:
     virtual NodeIds list_nodes () = 0;
     virtual ArcIds list_arcs_from (NodeId id) = 0;
     virtual ArcIds list_arcs_to (NodeId id) = 0;
-    virtual ArcIds list_arcs () = 0;
     virtual unsigned int nodes_count () = 0;
     virtual unsigned int arcs_count () = 0;
     void depth_first_search (NodeId start, bool print);

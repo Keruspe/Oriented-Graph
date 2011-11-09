@@ -153,21 +153,6 @@ ArrayGraph::list_arcs_to (NodeId id)
     return arcs_to;
 }
 
-ArcIds
-ArrayGraph::list_arcs ()
-{
-    ArcIds arc_ids;
-    for (StartNodeIter i = matrice.begin (), i_end = matrice.end (); i != i_end; ++i)
-    {
-        for (EndNodeIter j = i->begin (), j_end = i->end (); j != j_end; ++j)
-        {
-            for (ArcIdIter k = j->begin (), k_end = j->end (); k != k_end; ++k)
-                arc_ids.push_back (*k);
-        }
-    }
-    return arc_ids;
-}
-
 ostream &
 operator<< (ostream &os, ArrayGraph &graph)
 {

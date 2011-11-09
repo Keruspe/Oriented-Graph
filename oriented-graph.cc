@@ -26,8 +26,8 @@ main()
     ArcId ac = g.add_arc (a, c);
     ArcId ad = g.add_arc (a, d);
     ArcId cd = g.add_arc (c, d);
-    ArcId de = g.add_arc (d, e);
-    ArcId ef = g.add_arc (e, f);
+    g.add_arc (d, e);
+    g.add_arc (e, f);
     ArcId fd = g.add_arc (f, d);
 
     cout << "Graph:" << endl << g << endl;
@@ -36,11 +36,6 @@ main()
          << "Expected: " << a << " " << b << " " << c << " " << d << " " << e << " " << f << endl
          << "Got:      ";
     print_ids (g.list_nodes ());
-
-    cout << "Arcs:" << endl
-         << "Expected: " << aa << " " << aa_bis << " " << ab << " " << ac << " " << ad << " " << cd << " " << de << " " << ef << " " << fd << endl
-         << "Got:      ";
-    print_ids (g.list_arcs ());
 
     cout << "Nodes from a:" << endl
          << "Expected: " << a << " " << b << " " << c << " " << d << endl
@@ -72,11 +67,6 @@ main()
 
     cout << "--- ab arc removal ---" << endl << endl;
     g.remove_arc (ab);
-
-    cout << "Arcs:" << endl
-         << "Expected: " << aa << " " << aa_bis << " " << ac << " " << ad << " " << cd << " " << de << " " << ef << " " << fd << endl
-         << "Got:      ";
-    print_ids (g.list_arcs ());
 
     cout << "Arcs from a:" << endl
          << "Expected: " << aa << " " << aa_bis << " " << ac << " " << ad << endl
