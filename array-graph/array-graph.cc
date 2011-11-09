@@ -1,5 +1,9 @@
 #include "array-graph.hh"
 
+#include <queue>
+
+using std::queue;
+
 ArrayGraph::ArrayGraph () :
     Graph (),
     _nodes_count (0),
@@ -99,6 +103,18 @@ ArrayGraph::list_ancestors (NodeId id)
     return ancestors;
 }
 
+NodeIds
+ArrayGraph::list_nodes ()
+{
+    NodeIds nodes;
+    for (NodeId i = 0; i < next_node_id (); ++i)
+    {
+        if (node_exists[i])
+            nodes.push_back (i);
+    }
+    return nodes;
+}
+
 ArcIds
 ArrayGraph::list_arcs_from (NodeId id)
 {
@@ -135,6 +151,21 @@ ArrayGraph::list_arcs_to (NodeId id)
             arcs_to.push_back (*j);
     }
     return arcs_to;
+}
+
+ArcIds
+ArrayGraph::list_arcs ()
+{
+    ArcIds arc_ids;
+    for (StartNodeIter i = matrice.begin (), i_end = matrice.end (); i != i_end; ++i)
+    {
+        for (EndNodeIter j = i->begin (), j_end = i->end (); j != j_end; ++j)
+        {
+            for (ArcIdIter k = j->begin (), k_end = j->end (); k != k_end; ++k)
+                arc_ids.push_back (*k);
+        }
+    }
+    return arc_ids;
 }
 
 void

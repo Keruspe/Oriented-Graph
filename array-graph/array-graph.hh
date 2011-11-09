@@ -52,8 +52,10 @@ public:
     void remove_arc (ArcId id);
     NodeIds list_successors (NodeId id);
     NodeIds list_ancestors (NodeId id);
+    NodeIds list_nodes ();
     ArcIds list_arcs_from (NodeId id);
     ArcIds list_arcs_to (NodeId id);
+    ArcIds list_arcs ();
     unsigned int nodes_count () { return _nodes_count; }
     unsigned int arcs_count () { return _arcs_count; }
     void depth_first_search (NodeId start);

@@ -32,8 +32,10 @@ public:
     virtual void remove_arc (ArcId id) = 0;
     virtual NodeIds list_successors (NodeId id) = 0;
     virtual NodeIds list_ancestors (NodeId id) = 0;
+    virtual NodeIds list_nodes () = 0;
     virtual ArcIds list_arcs_from (NodeId id) = 0;
     virtual ArcIds list_arcs_to (NodeId id) = 0;
+    virtual ArcIds list_arcs () = 0;
     virtual unsigned int nodes_count () = 0;
     virtual unsigned int arcs_count () = 0;
     virtual void depth_first_search (NodeId start) = 0;
