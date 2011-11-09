@@ -46,13 +46,13 @@ public:
     virtual ArcIds list_arcs () = 0;
     virtual unsigned int nodes_count () = 0;
     virtual unsigned int arcs_count () = 0;
-    void depth_first_search (NodeId start);
-    void breadth_first_search (NodeId start);
+    void depth_first_search (NodeId start, bool print);
+    void breadth_first_search (NodeId start, bool print);
 private:
     ArcId _next_arc_id;
     NodeId _next_node_id;
     /* For depth_first_search */
-    void visit (NodeIds &nodes, NodeId node, unsigned int &time, map <NodeId, NodeColor> &colors, NodeId **ances, NodeId **starts, NodeId **ends);
+    void visit (NodeIds &nodes, NodeId node, unsigned int &time, map <NodeId, NodeColor> &colors, NodeId **ances, NodeId **starts, NodeId **ends, bool print);
     /* for search_print */
     void print_helper (NodeIds &nodes, unsigned int *data);
     void search_print (NodeIds &nodes, queue <NodeId> nexts, unsigned int time, NodeId node, map <NodeId, NodeColor> &colors, NodeId *ances, NodeId *deltas, NodeId *starts, NodeId *ends);

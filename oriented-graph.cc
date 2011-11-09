@@ -63,11 +63,11 @@ main()
     print_ids (g.list_arcs_to (d));
 
     cout << "--- Depth-first search ---" << endl << endl;
-    g.depth_first_search (a);
+    g.depth_first_search (a, true);
     cout << endl;
 
     cout << "--- Breadth-first search ---" << endl << endl;
-    g.breadth_first_search (a);
+    g.breadth_first_search (a, true);
     cout << endl;
 
     cout << "--- ab arc removal ---" << endl << endl;
