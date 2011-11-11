@@ -65,6 +65,10 @@ main()
     g.depth_first_search (a, true);
     cout << endl;
 
+    cout << "--- Complete Depth-first search ---" << endl << endl;
+    g.depth_first_search (-1, true);
+    cout << endl;
+
     cout << "--- Breadth-first search ---" << endl << endl;
     g.breadth_first_search (a, true);
     cout << endl;

@@ -113,12 +113,25 @@ Graph::depth_first_search (NodeId start, bool print)
         colors[*i] = WHITE;
     }
     unsigned int time = 0;
+
+    bool explore_all = (start == (NodeId) -1);
+    if (explore_all)
+        start = *(nodes.begin ());
+
     ances[start] = start;
 
     if (print)
         this->depth_first_search_print (nodes, -1, -1, colors, ances, starts, ends);
 
     this->visit (nodes, start, time, colors, &ances, &starts, &ends, print);
+    if (explore_all)
+    {
+        for (NodeIdIter i = nodes.begin (), i_end = nodes.end (); i != i_end; ++i)
+        {
+            if (colors[*i] != BLACK)
+                this->visit (nodes, *i, time, colors, &ances, &starts, &ends, print);
+        }
+    }
 
     delete[] (ances);
     delete[] (starts);
