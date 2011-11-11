@@ -21,8 +21,8 @@ ArrayGraph::add_node ()
     NodeId id = this->get_new_node_id ();
     this->node_exists[id] = true;
     this->matrix.push_back (EndNodes (this->_nodes_count));
-    for (StartNodeIter i = this->matrix.begin (), i_end = this->matrix.end (); i != i_end; ++i)
-        i->push_back (ArcIds ());
+    for (StartNodeIter from = this->matrix.begin (), from_end = this->matrix.end (); from != from_end; ++from)
+        from->push_back (ArcIds ());
     ++this->_nodes_count;
     return id;
 }
@@ -33,11 +33,11 @@ ArrayGraph::remove_node (NodeId id)
     if (!this->node_exists[id])
         return;
     this->node_exists[id] = false;
-    EndNodes &node = this->matrix[id];
-    for (EndNodeIter i = node.begin (), i_end = node.end (); i != i_end; ++i)
-        this->_arcs_count -= i->size ();
-    for (StartNodeIter i = this->matrix.begin (), i_end = this->matrix.end (); i != i_end; ++i)
-        this->_arcs_count -= (*i)[id].size ();
+    EndNodes &nodes = this->matrix[id];
+    for (EndNodeIter to = nodes.begin (), to_end = nodes.end (); to != to_end; ++to)
+        this->_arcs_count -= to->size ();
+    for (StartNodeIter from = this->matrix.begin (), from_end = this->matrix.end (); from != from_end; ++from)
+        this->_arcs_count -= (*from)[id].size ();
     --this->_nodes_count;
 }
 
@@ -55,14 +55,15 @@ void
 ArrayGraph::remove_arc (ArcId id)
 {
     pair <NodeId, NodeId> &nodes = this->arcs[id];
-    ArcIds &tmp = this->matrix[nodes.first][nodes.second];
-    for (ArcIdIter i = tmp.begin (), i_end = tmp.end (); i != i_end; ++i)
+    ArcIds &arcs = this->matrix[nodes.first][nodes.second];
+    for (ArcIdIter arc = arcs.begin (), arc_end = arcs.end (); arc != arc_end; ++arc)
     {
-        if (*i != id)
-            continue;
-        tmp.erase (i);
-        --this->_arcs_count;
-        break;
+        if (*arc == id)
+        {
+            arcs.erase (arc);
+            --this->_arcs_count;
+            break;
+        }
     }
 }
 
@@ -73,14 +74,15 @@ ArrayGraph::list_successors (NodeId id)
     if (!this->node_exists[id])
         return successors;
 
-    EndNodes &node = this->matrix[id];
-    NodeId tmp = 0;
-    for (EndNodeIter i = node.begin (), i_end = node.end (); i != i_end; ++i, ++tmp)
+    EndNodes &nodes = this->matrix[id];
+    unsigned int index = 0;
+    EndNodeIter start_iter = nodes.begin ();
+    for (EndNodeIter to = start_iter, to_end = nodes.end (); to != to_end; to = start_iter + ++index)
     {
-        if (!this->node_exists[tmp])
+        if (!this->node_exists[index])
             continue;
-        if (!i->empty ())
-            successors.push_back (tmp);
+        if (!to->empty ())
+            successors.push_back (index);
     }
     return successors;
 }
@@ -92,13 +94,14 @@ ArrayGraph::list_ancestors (NodeId id)
     if (!this->node_exists[id])
         return ancestors;
 
-    NodeId tmp = 0;
-    for (StartNodeIter i = this->matrix.begin (), i_end = this->matrix.end (); i != i_end; ++i, ++tmp)
+    unsigned int index = 0;
+    StartNodeIter start_iter = this->matrix.begin ();
+    for (StartNodeIter from = start_iter, from_end = this->matrix.end (); from != from_end; from = start_iter + ++index)
     {
-        if (!this->node_exists[tmp])
+        if (!this->node_exists[index])
             continue;
-        if (!(*i)[id].empty ())
-            ancestors.push_back (tmp);
+        if (!(*from)[id].empty ())
+            ancestors.push_back (index);
     }
     return ancestors;
 }
@@ -107,10 +110,12 @@ NodeIds
 ArrayGraph::list_nodes ()
 {
     NodeIds nodes;
-    for (NodeId i = 0; i < this->next_node_id (); ++i)
+    unsigned int index = 0;
+    StartNodeIter start_iter = this->matrix.begin ();
+    for (StartNodeIter from = start_iter, from_end = this->matrix.end (); from != from_end; from = start_iter + ++index)
     {
-        if (this->node_exists[i])
-            nodes.push_back (i);
+        if (this->node_exists[index])
+            nodes.push_back (index);
     }
     return nodes;
 }
@@ -122,14 +127,15 @@ ArrayGraph::list_arcs_from (NodeId id)
     if (!this->node_exists[id])
         return arcs_from;
 
-    EndNodes &node = this->matrix[id];
-    NodeId tmp = 0;
-    for (EndNodeIter i = node.begin (), i_end = node.end (); i != i_end; ++i, ++tmp)
+    EndNodes &nodes = this->matrix[id];
+    unsigned int index = 0;
+    EndNodeIter start_iter = nodes.begin ();
+    for (EndNodeIter to = start_iter, to_end = nodes.end (); to != to_end; to = start_iter + ++index)
     {
-        if (!this->node_exists[tmp])
+        if (!this->node_exists[index])
             continue;
-        for (ArcIdIter j = i->begin (), j_end = i->end (); j != j_end; ++j)
-            arcs_from.push_back (*j);
+        for (ArcIdIter arc = to->begin (), arc_end = to->end (); arc != arc_end; ++arc)
+            arcs_from.push_back (*arc);
     }
     return arcs_from;
 }
@@ -141,14 +147,15 @@ ArrayGraph::list_arcs_to (NodeId id)
     if (!this->node_exists[id])
         return arcs_to;
 
-    NodeId tmp = 0;
-    for (StartNodeIter i = this->matrix.begin (), i_end = this->matrix.end (); i != i_end; ++i, ++tmp)
+    unsigned int index = 0;
+    StartNodeIter start_iter = this->matrix.begin ();
+    for (StartNodeIter from = start_iter, from_end = this->matrix.end (); from != from_end; from = start_iter + ++index)
     {
-        if (!this->node_exists[tmp])
+        if (!this->node_exists[index])
             continue;
-        ArcIds &tmp = (*i)[id];
-        for (ArcIdIter j = tmp.begin (), j_end = tmp.end (); j != j_end; ++j)
-            arcs_to.push_back (*j);
+        ArcIds &arcs = (*from)[id];
+        for (ArcIdIter arc = arcs.begin (), arc_end = arcs.end (); arc != arc_end; ++arc)
+            arcs_to.push_back (*arc);
     }
     return arcs_to;
 }
@@ -165,26 +172,28 @@ ostream &
 operator<< (ostream &os, ArrayGraph &graph)
 {
     os << " ";
-    NodeId node_id = 0;
-    for (StartNodeIter i = graph.matrix.begin (), i_end = graph.matrix.end (); i != i_end; ++i, ++node_id)
+    unsigned int index = 0;
+    StartNodeIter start_iter = graph.matrix.begin ();
+    for (StartNodeIter from = start_iter, from_end = graph.matrix.end (); from != from_end; from = start_iter + ++index)
     {
-        if (!graph.node_exists[node_id])
+        if (!graph.node_exists[index])
             continue;
-        os << "   " << node_id;
+        os << "   " << index;
     }
     os << endl;
-    node_id = 0;
-    for (StartNodeIter i = graph.matrix.begin (), i_end = graph.matrix.end (); i != i_end; ++i, ++node_id)
+    index = 0;
+    for (StartNodeIter from = start_iter, from_end = graph.matrix.end (); from != from_end; from = start_iter + ++index)
     {
-        if (!graph.node_exists[node_id])
+        if (!graph.node_exists[index])
             continue;
-        os << node_id;
-        NodeId ni = 0;
-        for (EndNodeIter j = i->begin (), j_end = i->end (); j != j_end; ++j, ++ni)
+        os << index;
+        unsigned int _index = 0;
+        EndNodeIter _start_iter = from->begin ();
+        for (EndNodeIter to = _start_iter, to_end = from->end (); to != to_end; to = _start_iter + ++_index)
         {
-            if (!graph.node_exists[ni])
+            if (!graph.node_exists[_index])
                 continue;
-            os << "   " << j->size ();
+            os << "   " << to->size ();
         }
         os << endl;
     }
