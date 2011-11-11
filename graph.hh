@@ -60,13 +60,13 @@ private:
     /* Wrapper */
     void depth_first_search_print (NodeIds &nodes, unsigned int time, NodeId node, map <NodeId, NodeColor> &colors, NodeId *ances, NodeId *starts, NodeId *ends)
         {
-            search_print (nodes, queue <NodeId> (), time, node, colors, ances, 0, starts, ends);
+            this->search_print (nodes, queue <NodeId> (), time, node, colors, ances, 0, starts, ends);
         }
 protected:
-    ArcId get_new_arc_id ()  { return _next_arc_id++;  }
-    NodeId get_new_node_id () { return _next_node_id++; }
+    ArcId get_new_arc_id ()  { return this->_next_arc_id++;  }
+    NodeId get_new_node_id () { return this->_next_node_id++; }
     /* Used in ArrayGraph */
-    NodeId next_node_id () { return _next_node_id; }
+    NodeId next_node_id () { return this->_next_node_id; }
     /* Arc id, node ids */
     map < ArcId, pair <NodeId, NodeId> > arcs;
 };

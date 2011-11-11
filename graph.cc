@@ -55,16 +55,16 @@ Graph::search_print (NodeIds &nodes, queue <NodeId> nexts, unsigned int time, No
     for (++nod; nod != nod_end; ++nod)
         cout << "," << static_cast <char> (colors[*nod]);
     cout << "} | ";
-    print_helper (nodes, ances);
+    this->print_helper (nodes, ances);
     cout << " | ";
     if (deltas != 0)
     {
-        print_helper (nodes, deltas);
+        this->print_helper (nodes, deltas);
         cout << " | ";
     }
-    print_helper (nodes, starts);
+    this->print_helper (nodes, starts);
     cout << " | ";
-    print_helper (nodes, ends);
+    this->print_helper (nodes, ends);
     cout << endl;
 }
 
@@ -75,7 +75,7 @@ Graph::visit (NodeIds &nodes, NodeId node, unsigned int &time, map <NodeId, Node
     (*starts)[node] = time;
 
     if (print)
-        depth_first_search_print (nodes, time, node, colors, *ances, *starts, *ends);
+        this->depth_first_search_print (nodes, time, node, colors, *ances, *starts, *ends);
 
     ++time;
     NodeIds successors = this->list_successors (node);
@@ -84,14 +84,14 @@ Graph::visit (NodeIds &nodes, NodeId node, unsigned int &time, map <NodeId, Node
         if (colors[*i] == WHITE)
         {
             (*ances)[*i] = node;
-            visit (nodes, *i, time, colors, ances, starts, ends, print);
+            this->visit (nodes, *i, time, colors, ances, starts, ends, print);
         }
     }
     colors[node] = BLACK;
     (*ends)[node] = time;
 
     if (print)
-        depth_first_search_print (nodes, time, node, colors, *ances, *starts, *ends);
+        this->depth_first_search_print (nodes, time, node, colors, *ances, *starts, *ends);
 
     ++time;
 }
@@ -116,9 +116,9 @@ Graph::depth_first_search (NodeId start, bool print)
     ances[start] = start;
 
     if (print)
-        depth_first_search_print (nodes, -1, -1, colors, ances, starts, ends);
+        this->depth_first_search_print (nodes, -1, -1, colors, ances, starts, ends);
 
-    visit (nodes, start, time, colors, &ances, &starts, &ends, print);
+    this->visit (nodes, start, time, colors, &ances, &starts, &ends, print);
 
     delete[] (ances);
     delete[] (starts);
@@ -151,7 +151,7 @@ Graph::breadth_first_search (NodeId start, bool print)
     nexts.push (start);
 
     if (print)
-        search_print (nodes, nexts, -1, -1, colors, ances, deltas, starts, ends);
+        this->search_print (nodes, nexts, -1, -1, colors, ances, deltas, starts, ends);
 
     while (!nexts.empty ())
     {
@@ -171,14 +171,14 @@ Graph::breadth_first_search (NodeId start, bool print)
         }
 
         if (print)
-            search_print (nodes, nexts, time, node, colors, ances, deltas, starts, ends);
+            this->search_print (nodes, nexts, time, node, colors, ances, deltas, starts, ends);
 
         ++time;
         colors[node] = BLACK;
         ends[node] = time;
 
         if (print)
-            search_print (nodes, nexts, time, node, colors, ances, deltas, starts, ends);
+            this->search_print (nodes, nexts, time, node, colors, ances, deltas, starts, ends);
 
         ++time;
     }

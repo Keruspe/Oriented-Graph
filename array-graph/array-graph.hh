@@ -18,7 +18,7 @@ private:
     /* To always get node X at index X (no deletion) */
     map <NodeId, bool> node_exists;
     /* Start node, end node, arcs */
-    StartNodes matrice;
+    StartNodes matrix;
     unsigned int _nodes_count;
     unsigned int _arcs_count;
 public:
@@ -33,8 +33,8 @@ public:
     NodeIds list_nodes ();
     ArcIds list_arcs_from (NodeId id);
     ArcIds list_arcs_to (NodeId id);
-    unsigned int nodes_count () { return _nodes_count; }
-    unsigned int arcs_count () { return _arcs_count; }
+    unsigned int nodes_count () { return this->_nodes_count; }
+    unsigned int arcs_count () { return this->_arcs_count; }
     friend ostream &operator<< (ostream &os, ArrayGraph &graph);
 };
 
