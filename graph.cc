@@ -115,22 +115,25 @@ Graph::depth_first_search (NodeId start, bool print)
     unsigned int time = 0;
 
     bool explore_all = (start == (NodeId) -1);
+    NodeIdIter start_iter = nodes.begin ();
     if (explore_all)
-        start = *(nodes.begin ());
+        start = *start_iter;
 
-    ances[start] = start;
-
-    if (print)
-        this->depth_first_search_print (nodes, -1, -1, colors, ances, starts, ends);
-
-    this->visit (nodes, start, time, colors, &ances, &starts, &ends, print);
-    if (explore_all)
+    for (NodeIdIter i = start_iter, i_end = nodes.end (); i != i_end;)
     {
-        for (NodeIdIter i = nodes.begin (), i_end = nodes.end (); i != i_end; ++i)
-        {
-            if (colors[*i] != BLACK)
-                this->visit (nodes, *i, time, colors, &ances, &starts, &ends, print);
-        }
+        ances[start] = start;
+
+        if (print)
+            this->depth_first_search_print (nodes, -1, -1, colors, ances, starts, ends);
+
+        this->visit (nodes, start, time, colors, &ances, &starts, &ends, print);
+
+        if (!explore_all)
+            break;
+        while (++i != i_end && colors[*i] == BLACK);
+        if (i == i_end)
+            break;
+        start = *i;
     }
 
     delete[] (ances);
@@ -164,7 +167,7 @@ Graph::breadth_first_search (NodeId start, bool print)
     if (explore_all)
         start = *start_iter;
 
-    for (NodeIdIter sn = start_iter, sn_end = nodes.end (); sn != sn_end; ++sn)
+    for (NodeIdIter sn = start_iter, sn_end = nodes.end (); sn != sn_end;)
     {
         ances[start] = start;
         colors[start] = GREY;
