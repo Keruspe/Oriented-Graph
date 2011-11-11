@@ -153,6 +153,14 @@ ArrayGraph::list_arcs_to (NodeId id)
     return arcs_to;
 }
 
+ArcIds
+ArrayGraph::list_arcs_from_to (NodeId from, NodeId to)
+{
+    if (!this->node_exists[from] || !this->node_exists[to])
+        return ArcIds ();
+    return this->matrix[from][to];
+}
+
 ostream &
 operator<< (ostream &os, ArrayGraph &graph)
 {

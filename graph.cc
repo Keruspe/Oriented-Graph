@@ -260,3 +260,29 @@ Graph::connex ()
     }
     return true;
 }
+
+bool
+Graph::acyclic ()
+{
+    // TODO
+    return true;
+}
+
+bool
+Graph::simple ()
+{
+    if (!this->acyclic ())
+        return false;
+
+    NodeIds nodes = this->list_nodes ();
+    for (NodeIdIter from = nodes.begin (), from_end = nodes.end (); from != from_end; ++from)
+    {
+        for (NodeIdIter to = nodes.begin (), to_end = nodes.end (); to != to_end; ++to)
+        {
+            if (this->list_arcs_from_to (*from, *to).size () > 1)
+                return false;
+        }
+    }
+
+    return true;
+}

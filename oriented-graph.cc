@@ -36,6 +36,14 @@ main()
          << "Expected: yes" << endl
          << "Got:      " << (g.connex () ? "yes" : "no") << endl << endl;
 
+    cout << "Acyclicity:" << endl
+         << "Expected: no" << endl
+         << "Got:      " << (g.acyclic () ? "yes" : "no") << " (not implemented yet)" << endl << endl;
+
+    cout << "Simplicity:" << endl
+         << "Expected: no" << endl
+         << "Got:      " << (g.simple () ? "yes" : "no") << endl << endl;
+
     cout << "Nodes:" << endl
          << "Expected: " << a << " " << b << " " << c << " " << d << " " << e << " " << f << endl
          << "Got:      ";

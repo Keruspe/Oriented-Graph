@@ -44,11 +44,14 @@ public:
     virtual NodeIds list_nodes () = 0;
     virtual ArcIds list_arcs_from (NodeId id) = 0;
     virtual ArcIds list_arcs_to (NodeId id) = 0;
+    virtual ArcIds list_arcs_from_to (NodeId from, NodeId to) = 0;
     virtual unsigned int nodes_count () = 0;
     virtual unsigned int arcs_count () = 0;
     void depth_first_search (NodeId start, bool print);
     void breadth_first_search (NodeId start, bool print);
     bool connex ();
+    bool acyclic ();
+    bool simple ();
 private:
     ArcId _next_arc_id;
     NodeId _next_node_id;
