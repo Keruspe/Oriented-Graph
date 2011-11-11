@@ -45,7 +45,7 @@ main()
          << "Got:      " << (g.simple () ? "yes" : "no") << endl << endl;
 
     cout << "Nodes:" << endl
-         << "Expected: " << a << " " << b << " " << c << " " << d << " " << e << " " << f << endl
+         << "Expected: " << e << " " << a << " " << b << " " << c << " " << d << " " << f << endl
          << "Got:      ";
     print_ids (g.list_nodes ());
 
@@ -102,7 +102,7 @@ main()
     g.remove_node (c);
 
     cout << "Nodes:" << endl
-         << "Expected: " << a << " " << b << " " << d << " " << e << " " << f << endl
+         << "Expected: " << e << " " << a << " " << b << " " << d << " " << f << endl
          << "Got:      ";
     print_ids (g.list_nodes ());
 
