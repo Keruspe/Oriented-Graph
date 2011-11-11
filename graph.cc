@@ -158,42 +158,57 @@ Graph::breadth_first_search (NodeId start, bool print)
         colors[*i] = WHITE;
     }
     unsigned int time = 0;
-    ances[start] = start;
-    colors[start] = GREY;
-    deltas[start] = 0;
-    nexts.push (start);
 
-    if (print)
-        this->search_print (nodes, nexts, -1, -1, colors, ances, deltas, starts, ends);
+    bool explore_all = (start == (NodeId) -1);
+    NodeIdIter start_iter = nodes.begin ();
+    if (explore_all)
+        start = *start_iter;
 
-    while (!nexts.empty ())
+    for (NodeIdIter sn = start_iter, sn_end = nodes.end (); sn != sn_end; ++sn)
     {
-        NodeId node = nexts.front ();
-        nexts.pop ();
-        starts[node] = time;
-        NodeIds successors = this->list_successors (node);
-        for (NodeIdIter i = successors.begin (), i_end = successors.end (); i != i_end; ++i)
+        ances[start] = start;
+        colors[start] = GREY;
+        deltas[start] = 0;
+        nexts.push (start);
+
+        if (print)
+            this->search_print (nodes, nexts, -1, -1, colors, ances, deltas, starts, ends);
+
+        while (!nexts.empty ())
         {
-            if (colors[*i] == WHITE)
+            NodeId node = nexts.front ();
+            nexts.pop ();
+            starts[node] = time;
+            NodeIds successors = this->list_successors (node);
+            for (NodeIdIter i = successors.begin (), i_end = successors.end (); i != i_end; ++i)
             {
-                colors[*i] = GREY;
-                ances[*i] = node;
-                deltas[*i] = deltas[node] + 1;
-                nexts.push (*i);
+                if (colors[*i] == WHITE)
+                {
+                    colors[*i] = GREY;
+                    ances[*i] = node;
+                    deltas[*i] = deltas[node] + 1;
+                    nexts.push (*i);
+                }
             }
+
+            if (print)
+                this->search_print (nodes, nexts, time, node, colors, ances, deltas, starts, ends);
+
+            ++time;
+            colors[node] = BLACK;
+            ends[node] = time;
+
+            if (print)
+                this->search_print (nodes, nexts, time, node, colors, ances, deltas, starts, ends);
+
+            ++time;
         }
-
-        if (print)
-            this->search_print (nodes, nexts, time, node, colors, ances, deltas, starts, ends);
-
-        ++time;
-        colors[node] = BLACK;
-        ends[node] = time;
-
-        if (print)
-            this->search_print (nodes, nexts, time, node, colors, ances, deltas, starts, ends);
-
-        ++time;
+        if (!explore_all)
+            break;
+        while (++sn != sn_end && colors[*sn] == BLACK);
+        if (sn == sn_end)
+            break;
+        start = *sn;
     }
 
     delete[] (ances);

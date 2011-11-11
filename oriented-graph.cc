@@ -13,11 +13,11 @@ main()
 {
     ArrayGraph g;
 
+    NodeId e = g.add_node ();
     NodeId a = g.add_node ();
     NodeId b = g.add_node ();
     NodeId c = g.add_node ();
     NodeId d = g.add_node ();
-    NodeId e = g.add_node ();
     NodeId f = g.add_node ();
 
     ArcId aa = g.add_arc (a, a);
@@ -62,15 +62,19 @@ main()
     print_ids (g.list_arcs_to (d));
 
     cout << "--- Depth-first search ---" << endl << endl;
-    g.depth_first_search (a, true);
+    g.depth_first_search (e, true);
     cout << endl;
 
-    cout << "--- Complete Depth-first search ---" << endl << endl;
+    cout << "--- Complete depth-first search ---" << endl << endl;
     g.depth_first_search (-1, true);
     cout << endl;
 
     cout << "--- Breadth-first search ---" << endl << endl;
-    g.breadth_first_search (a, true);
+    g.breadth_first_search (e, true);
+    cout << endl;
+
+    cout << "--- Complete breadth-first search ---" << endl << endl;
+    g.breadth_first_search (-1, true);
     cout << endl;
 
     cout << "--- ab arc removal ---" << endl << endl;
