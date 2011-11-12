@@ -44,9 +44,8 @@ ArrayGraph::remove_node (NodeId id)
 ArcId
 ArrayGraph::add_arc (NodeId from, NodeId to)
 {
-    ArcId id = this->get_new_arc_id ();
+    ArcId id = this->get_new_arc_id (from, to);
     this->matrix[from][to].push_back (id);
-    this->arcs[id] = std::make_pair <NodeId, NodeId> (from, to);
     ++this->_arcs_count;
     return id;
 }

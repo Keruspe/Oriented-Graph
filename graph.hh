@@ -66,7 +66,7 @@ private:
             this->search_print (nodes, queue <NodeId> (), time, id, colors, ancestors, 0, starts, ends);
         }
 protected:
-    ArcId get_new_arc_id ()  { return this->_next_arc_id++;  }
+    ArcId get_new_arc_id (NodeId from, NodeId to);
     NodeId get_new_node_id () { return this->_next_node_id++; }
     /* Used in ArrayGraph */
     NodeId next_node_id () { return this->_next_node_id; }

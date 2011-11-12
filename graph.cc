@@ -1,5 +1,12 @@
 #include "graph.hh"
 
+ArcId
+Graph::get_new_arc_id (NodeId from, NodeId to)
+{
+    this->arcs[this->_next_arc_id] = std::make_pair <NodeId, NodeId> (from, to);
+    return this->_next_arc_id++;
+}
+
 void
 Graph::print_helper (NodeIds &nodes, unsigned int *data)
 {
