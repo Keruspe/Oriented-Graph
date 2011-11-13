@@ -1,4 +1,5 @@
 #include "array-graph/array-graph.hh"
+#include "ListGraph/ListGraph.hh"
 
 void
 print_ids (ConstIds &ids)
@@ -12,6 +13,8 @@ int
 main()
 {
     ArrayGraph g;
+    ListGraph dummy; // Here to link against both, exchange names to use
+    dummy = dummy; // silence warning
 
     NodeId e = g.add_node ();
     NodeId a = g.add_node ();

@@ -29,20 +29,22 @@ class Arc
 
 //----------------------------------------------------------------------
 		
-class ListGraph
+class ListGraph : Graph
 {
 	public:
 		ListGraph();
 		~ListGraph();
 		virtual unsigned add_node () ;
-		virtual void delete_node (unsigned Nid) ;
+		virtual void remove_node (unsigned Nid) ;
 		virtual unsigned add_arc (unsigned NidFrom, unsigned NidTo) ;
 		virtual void remove_arc (unsigned Aid) ;
 		virtual std::list<unsigned> list_successors (unsigned Nid) ; // doit etre remplace par std::list<unsigned> list_successors (Node* n) ; 
 		virtual std::list<unsigned> list_ancestors (unsigned Nid) ; // doit etre remplace par std::list<unsigned> list_successors (Node* n) ; 
+		virtual std::list<unsigned> list_nodes () ;
 		virtual std::list<unsigned> list_arcs_from (unsigned Nid) ;
 		virtual std::list<unsigned> list_arcs_to (unsigned Nid) ;
-		virtual unsigned int node_count () ;
+		virtual std::list<unsigned> list_arcs_from_to (unsigned NidFrom, unsigned NidTo) ;
+		virtual unsigned int nodes_count () ;
 		virtual unsigned int arcs_count () ;
 
 	private:

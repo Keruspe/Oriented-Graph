@@ -16,7 +16,7 @@ ListGraph::~ListGraph() //O(n+m)
 
 unsigned int ListGraph::add_node () //O(1)
 {
-	unsigned tempId = get_next_node_id ();
+	unsigned tempId = get_new_node_id ();
 	listNodes.at(tempId) = Node(tempId);
 	
 	nodes_nb++;
@@ -24,7 +24,7 @@ unsigned int ListGraph::add_node () //O(1)
 	return tempId;
 }
 
-void ListGraph::delete_node (unsigned Nid) 
+void ListGraph::remove_node (unsigned Nid) 
 {	
 	listNodes.erase(listNodes.begin() + Nid);
 	for(std::vector<Arc>::iterator it= listArcs.begin();it!=listArcs.end();it++)
@@ -38,7 +38,7 @@ void ListGraph::delete_node (unsigned Nid)
 
 unsigned int ListGraph::add_arc (unsigned NidFrom, unsigned NidTo) //O(1) ok
 {
-	unsigned tempId = get_next_arc_id ();
+	unsigned tempId = get_new_arc_id (NidFrom, NidTo);
 	get_node(NidFrom)->successors.push_back(NidTo);
 	listArcs.at(current_arc_id) = Arc(tempId,NidFrom,NidTo);
 	
@@ -72,6 +72,12 @@ std::list<unsigned> ListGraph::list_ancestors (unsigned Nid)
 	return r;
 }
 
+std::list<unsigned> ListGraph::list_nodes ()
+{
+    // TODO: implement this
+    return std::list<unsigned> ();
+}
+
 std::list<unsigned> ListGraph::list_arcs_from (unsigned Nid) //O(m)
 {
 	std::list<unsigned> lA;
@@ -94,7 +100,13 @@ std::list<unsigned> ListGraph::list_arcs_to (unsigned Nid) //O(m)
 	return lA;
 }
 
-unsigned int ListGraph::node_count () //O(1)
+std::list<unsigned> ListGraph::list_arcs_from_to (unsigned NidFrom, unsigned NidTo)
+{
+    //TODO: implement this
+    return std::list<unsigned> ();
+}
+
+unsigned int ListGraph::nodes_count () //O(1)
 {
 	return nodes_nb;
 }
