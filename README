@@ -1,0 +1,7 @@
+Student project to handle oriented graphs
+
+./autogen.sh
+./configure --prefix=/usr
+make
+sudo make install
+oriented-graph-test
