@@ -6,14 +6,17 @@ LIBGRAPH_AGE=0
 
 AM_CXXFLAGS = -Wall -Wextra -Wno-unused-but-set-variable -Wno-unused-parameter --include config.hh -O3 -march=native
 AM_LDFLAGS = -Wl,--as-needed -Wl,-O3
-#	-I $(top_srcdir)/include/ \
-#	-I $(top_builddir)/include/
 
 bin_PROGRAMS = oriented-graph-test
-pkglib_LTLIBRARIES = libgraph.la
+
+graph_libdir = $(libdir)/graph
+graph_lib_LTLIBRARIES = libgraph.la
+
+graph_includedir = $(includedir)/graph
+graph_include_HEADERS = graph/graph.hh graph/array-graph.hh graph/list-graph.hh
 
 CLEANFILES =
-EXTRA_DIST = graph/graph.hh graph/array-graph.hh graph/list-graph.hh
+EXTRA_DIST = $(graph_include_HEADERS)
 
 libgraph_la_SOURCES = \
 	graph/graph.cc \
@@ -29,5 +32,5 @@ oriented_graph_test_LDADD = libgraph.la
 install-data-hook: la-files-removal
 
 la-files-removal:
-	cd $(DESTDIR)/$(pkglibdir) && \
-		rm $(pkglib_LTLIBRARIES)
+	cd $(DESTDIR)/$(graph_libdir) && \
+		rm $(graph_lib_LTLIBRARIES)
