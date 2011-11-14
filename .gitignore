@@ -1,1 +1,9 @@
-oriented-graph
+config.hh.in
+configure
+Makefile
+config.hh
+*.lo
+libtool
+.libs
+*.la
+oriented-graph-test

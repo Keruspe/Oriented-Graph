@@ -1,5 +1,5 @@
-#include "array-graph/array-graph.hh"
-#include "ListGraph/ListGraph.hh"
+#include "graph/array-graph.hh"
+#include "graph/list-graph.hh"
 
 void
 print_ids (ConstIds &ids)
@@ -13,8 +13,7 @@ int
 main()
 {
     Graph *g;
-    g = new ListGraph (); // Here to link against both, exchange names to use
-    delete (g);
+    //g = new ListGraph ();
     g = new ArrayGraph ();
 
     NodeId a = g->add_node ();

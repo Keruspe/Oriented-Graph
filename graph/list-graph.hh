@@ -3,7 +3,7 @@
 
 #include <list>
 #include <vector>
-#include "../graph.hh"
+#include "graph.hh"
 
 //TODO : MAKE THEM PRIVATE!
 

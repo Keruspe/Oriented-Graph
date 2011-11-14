@@ -1,4 +1,4 @@
-#include "ListGraph.hh"
+#include "list-graph.hh"
 
 ListGraph::ListGraph()
 {
