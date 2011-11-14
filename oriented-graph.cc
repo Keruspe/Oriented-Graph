@@ -17,22 +17,22 @@ main()
     delete (g);
     g = new ArrayGraph ();
 
-    NodeId e = g->add_node ();
     NodeId a = g->add_node ();
     NodeId b = g->add_node ();
     NodeId c = g->add_node ();
     NodeId d = g->add_node ();
+    NodeId e = g->add_node ();
     NodeId f = g->add_node ();
 
-    ArcId aa = g->add_arc (a, a);
-    ArcId aa_bis = g->add_arc (a, a);
-    ArcId ab = g->add_arc (a, b);
-    ArcId ac = g->add_arc (a, c);
-    ArcId ad = g->add_arc (a, d);
-    ArcId cd = g->add_arc (c, d);
-    g->add_arc (d, e);
-    g->add_arc (e, f);
-    ArcId fd = g->add_arc (f, d);
+    ArcId bb = g->add_arc (b, b);
+    ArcId bb_bis = g->add_arc (b, b);
+    ArcId bc = g->add_arc (b, c);
+    ArcId bd = g->add_arc (b, d);
+    ArcId be = g->add_arc (b, e);
+    ArcId de = g->add_arc (d, e);
+    g->add_arc (e, a);
+    g->add_arc (a, f);
+    ArcId fe = g->add_arc (f, e);
 
     cout << "Graph as matrix:" << endl << g->as_matrix () << endl;
 
@@ -51,32 +51,32 @@ main()
          << "Got:      " << (g->simple () ? "yes" : "no") << endl << endl;
 
     cout << "Nodes:" << endl
-         << "Expected: " << e << " " << a << " " << b << " " << c << " " << d << " " << f << endl
+         << "Expected: " << a << " " << b << " " << c << " " << d << " " << e << " " << f << endl
          << "Got:      ";
     print_ids (g->list_nodes ());
 
-    cout << "Nodes from a:" << endl
-         << "Expected: " << a << " " << b << " " << c << " " << d << endl
+    cout << "Nodes from b:" << endl
+         << "Expected: " << b << " " << c << " " << d << " " << e << endl
          << "Got:      ";
-    print_ids (g->list_successors (a));
+    print_ids (g->list_successors (b));
 
-    cout << "Nodes to d:" << endl
-         << "Expected: " << a << " " << c << " " << f << endl
+    cout << "Nodes to e:" << endl
+         << "Expected: " << b << " " << d << " " << f << endl
          << "Got:      ";
-    print_ids (g->list_ancestors (d));
+    print_ids (g->list_ancestors (e));
 
-    cout << "Arcs from a:" << endl
-         << "Expected: " << aa << " " << aa_bis << " " << ab << " " << ac << " " << ad << endl
+    cout << "Arcs from b:" << endl
+         << "Expected: " << bb << " " << bb_bis << " " << bc << " " << bd << " " << be << endl
          << "Got:      ";
-    print_ids (g->list_arcs_from (a));
+    print_ids (g->list_arcs_from (b));
 
-    cout << "Arcs to d:" << endl
-         << "Expected: " << ad << " " << cd << " " << fd << endl
+    cout << "Arcs to e:" << endl
+         << "Expected: " << be << " " << de << " " << fe << endl
          << "Got:      ";
-    print_ids (g->list_arcs_to (d));
+    print_ids (g->list_arcs_to (e));
 
     cout << "--- Depth-first search ---" << endl << endl;
-    g->depth_first_search (e, true);
+    g->depth_first_search (a, true);
     cout << endl;
 
     cout << "--- Complete depth-first search ---" << endl << endl;
@@ -84,43 +84,43 @@ main()
     cout << endl;
 
     cout << "--- Breadth-first search ---" << endl << endl;
-    g->breadth_first_search (e, true);
+    g->breadth_first_search (a, true);
     cout << endl;
 
     cout << "--- Complete breadth-first search ---" << endl << endl;
     g->breadth_first_search (-1, true);
     cout << endl;
 
-    cout << "--- ab arc removal ---" << endl << endl;
-    g->remove_arc (ab);
+    cout << "--- bc arc removal ---" << endl << endl;
+    g->remove_arc (bc);
 
-    cout << "Arcs from a:" << endl
-         << "Expected: " << aa << " " << aa_bis << " " << ac << " " << ad << endl
+    cout << "Arcs from b:" << endl
+         << "Expected: " << bb << " " << bb_bis << " " << bd << " " << be << endl
          << "Got:      ";
-    print_ids (g->list_arcs_from (a));
+    print_ids (g->list_arcs_from (b));
 
-    cout << "Nodes from a:" << endl
-         << "Expected: " << a << " " << c << " " << d << endl
+    cout << "Nodes from b:" << endl
+         << "Expected: " << b << " " << d << " " << e << endl
          << "Got:      ";
-    print_ids (g->list_successors (a));
+    print_ids (g->list_successors (b));
 
-    cout << "--- c node removal ---" << endl << endl;
-    g->remove_node (c);
+    cout << "--- d node removal ---" << endl << endl;
+    g->remove_node (d);
 
     cout << "Nodes:" << endl
-         << "Expected: " << e << " " << a << " " << b << " " << d << " " << f << endl
+         << "Expected: " << a << " " << b << " " << c << " " << e << " " << f << endl
          << "Got:      ";
     print_ids (g->list_nodes ());
 
-    cout << "Nodes from a:" << endl
-         << "Expected: " << a << " " << d << endl
+    cout << "Nodes from b:" << endl
+         << "Expected: " << b << " " << e << endl
          << "Got:      ";
-    print_ids (g->list_successors (a));
+    print_ids (g->list_successors (b));
 
-    cout << "Nodes to d:" << endl
-         << "Expected: " << a << " " << f << endl
+    cout << "Nodes to e:" << endl
+         << "Expected: " << b << " " << f << endl
          << "Got:      ";
-    print_ids (g->list_ancestors (d));
+    print_ids (g->list_ancestors (e));
 
     cout << "Nodes count:" << endl
          << "Expected: 5" << endl 
