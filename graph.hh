@@ -66,8 +66,8 @@ private:
             this->search_print (nodes, queue <NodeId> (), time, id, colors, ancestors, 0, starts, ends);
         }
     /* Adapted from Dijkstra */
-    bool path_exists_between (NodeId from, NodeId to);
-    bool path_exists_to_self (NodeId id) { return this->path_exists_between (id, id); }
+    bool path_exists_between (NodeIds &nodes, NodeId from, NodeId to);
+    bool path_exists_to_self (NodeIds &nodes, NodeId id) { return this->path_exists_between (nodes, id, id); }
 protected:
     ArcId get_new_arc_id (NodeId from, NodeId to);
     NodeId get_new_node_id () { return this->_next_node_id++; }

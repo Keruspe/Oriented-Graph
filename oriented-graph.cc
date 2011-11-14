@@ -41,7 +41,7 @@ main()
 
     cout << "Acyclicity:" << endl
          << "Expected: no" << endl
-         << "Got:      " << (g.acyclic () ? "yes" : "no") << " (not implemented yet)" << endl << endl;
+         << "Got:      " << (g.acyclic () ? "yes" : "no") << endl << endl;
 
     cout << "Simplicity:" << endl
          << "Expected: no" << endl

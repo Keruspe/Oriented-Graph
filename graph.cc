@@ -274,12 +274,13 @@ Graph::connex ()
 }
 
 bool
-Graph::path_exists_between (NodeId from, NodeId to)
+Graph::path_exists_between (NodeIds &nodes, NodeId from, NodeId to)
 {
     // TODO: use to to exit earlier
     // TODO: nodes.size () is not what we want, same for searches
+    if (from == to && !this->list_arcs_from_to (from, to).empty ())
+        return true;
     queue <NodeId> nexts;
-    NodeIds nodes = this->list_nodes ();
     NodeId *ancestors = new NodeId[nodes.size ()];
     unsigned int *deltas = new unsigned int[nodes.size ()];
     for (NodeIdIter node = nodes.begin (), node_end = nodes.end (); node != node_end; ++node)
@@ -298,7 +299,7 @@ Graph::path_exists_between (NodeId from, NodeId to)
         for (ArcIdIter arc = arcs.begin (), arc_end = arcs.end (); arc != arc_end; ++arc)
         {
             ArcId arc_destination = this->arcs[*arc].second;
-            if (deltas[arc_destination] > deltas[node])
+            if (deltas[arc_destination] > deltas[node] || (arc_destination == from && deltas[from] == 0))
             {
                 ancestors[arc_destination] = node;
                 deltas[arc_destination] = deltas[node] + 1;
@@ -314,7 +315,12 @@ Graph::path_exists_between (NodeId from, NodeId to)
 bool
 Graph::acyclic ()
 {
-    // TODO
+    NodeIds nodes = this->list_nodes ();
+    for (NodeIdIter node = nodes.begin (), node_end = nodes.end (); node != node_end; ++node)
+    {
+        if (this->path_exists_to_self (nodes, *node))
+            return false;
+    }
     return true;
 }
 
