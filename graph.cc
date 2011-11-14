@@ -113,7 +113,7 @@ void
 Graph::depth_first_search (NodeId start, bool print)
 {
     NodeIds nodes = this->list_nodes ();
-    unsigned int count = nodes.size ();
+    unsigned int count = this->next_node_id ();
     map <NodeId, NodeColor> colors;
     NodeId *ancestors = new NodeId[count];
     unsigned int *starts = new unsigned int[count];
@@ -158,7 +158,7 @@ void
 Graph::breadth_first_search (NodeId start, bool print)
 {
     NodeIds nodes = this->list_nodes ();
-    unsigned int count = nodes.size ();
+    unsigned int count = this->next_node_id ();
     map <NodeId, NodeColor> colors;
     std::queue <NodeId> nexts;
     NodeId *ancestors = new NodeId[count];
@@ -277,12 +277,12 @@ bool
 Graph::path_exists_between (NodeIds &nodes, NodeId from, NodeId to)
 {
     // TODO: use to to exit earlier
-    // TODO: nodes.size () is not what we want, same for searches
     if (from == to && !this->list_arcs_from_to (from, to).empty ())
         return true;
     queue <NodeId> nexts;
-    NodeId *ancestors = new NodeId[nodes.size ()];
-    unsigned int *deltas = new unsigned int[nodes.size ()];
+    unsigned int count = this->next_node_id ();
+    NodeId *ancestors = new NodeId[count];
+    unsigned int *deltas = new unsigned int[count];
     for (NodeIdIter node = nodes.begin (), node_end = nodes.end (); node != node_end; ++node)
     {
         ancestors[*node] = -1;
