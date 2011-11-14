@@ -36,7 +36,6 @@ public:
     ArcIds list_arcs_from_to (NodeId from, NodeId to);
     unsigned int nodes_count () { return this->_nodes_count; }
     unsigned int arcs_count () { return this->_arcs_count; }
-    friend ostream &operator<< (ostream &os, ArrayGraph &graph);
 };
 
 #endif /*__ARRAY_GRAPH_HH__*/

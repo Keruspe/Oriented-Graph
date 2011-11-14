@@ -166,35 +166,3 @@ ArrayGraph::list_arcs_from_to (NodeId from, NodeId to)
         return ArcIds ();
     return this->matrix[from][to];
 }
-
-ostream &
-operator<< (ostream &os, ArrayGraph &graph)
-{
-    os << " ";
-    unsigned int index = 0;
-    StartNodeIter start_iter = graph.matrix.begin ();
-    for (StartNodeIter from = start_iter, from_end = graph.matrix.end (); from != from_end; from = start_iter + ++index)
-    {
-        if (!graph.node_exists[index])
-            continue;
-        os << "   " << index;
-    }
-    os << endl;
-    index = 0;
-    for (StartNodeIter from = start_iter, from_end = graph.matrix.end (); from != from_end; from = start_iter + ++index)
-    {
-        if (!graph.node_exists[index])
-            continue;
-        os << index;
-        unsigned int _index = 0;
-        EndNodeIter _start_iter = from->begin ();
-        for (EndNodeIter to = _start_iter, to_end = from->end (); to != to_end; to = _start_iter + ++_index)
-        {
-            if (!graph.node_exists[_index])
-                continue;
-            os << "   " << to->size ();
-        }
-        os << endl;
-    }
-    return os;
-}

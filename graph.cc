@@ -1,5 +1,7 @@
 #include "graph.hh"
 
+#include <sstream>
+
 ArcId
 Graph::get_new_arc_id (NodeId from, NodeId to)
 {
@@ -334,4 +336,31 @@ Graph::simple ()
     }
 
     return true;
+}
+
+string
+Graph::as_matrix ()
+{
+    std::ostringstream out;
+    out << " ";
+    NodeIds nodes = this->list_nodes ();
+    for (NodeIdIter node = nodes.begin (), node_end = nodes.end (); node != node_end; ++node)
+        out << "   " << *node;
+    out << endl;
+    for (NodeIdIter from = nodes.begin (), from_end = nodes.end (); from != from_end; ++from)
+    {
+        out << *from;
+        for (NodeIdIter to = nodes.begin (), to_end = nodes.end (); to != to_end; ++to)
+            out << "   " << this->list_arcs_from_to (*from, *to).size ();
+        out << endl;
+    }
+    return out.str ();
+}
+
+string
+Graph::as_list ()
+{
+    std::ostringstream out;
+    //TODO
+    return out.str ();
 }

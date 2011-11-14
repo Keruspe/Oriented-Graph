@@ -13,6 +13,7 @@ using std::list;
 using std::map;
 using std::pair;
 using std::queue;
+using std::string;
 
 typedef unsigned int NodeId;
 typedef list <NodeId> NodeIds;
@@ -52,6 +53,8 @@ public:
     bool connex ();
     bool acyclic ();
     bool simple ();
+    string as_matrix ();
+    string as_list ();
 private:
     ArcId _next_arc_id;
     NodeId _next_node_id;
