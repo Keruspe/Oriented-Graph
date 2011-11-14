@@ -29,7 +29,7 @@ class Arc
 
 //----------------------------------------------------------------------
 		
-class ListGraph : Graph
+class ListGraph : public Graph
 {
 	public:
 		ListGraph();
