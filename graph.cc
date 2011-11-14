@@ -276,7 +276,6 @@ Graph::connex ()
 bool
 Graph::path_exists_between (NodeIds &nodes, NodeId from, NodeId to)
 {
-    queue <NodeId> nexts;
     unsigned int count = this->next_node_id ();
     NodeId *ancestors = new NodeId[count];
     unsigned int *deltas = new unsigned int[count];
@@ -284,22 +283,19 @@ Graph::path_exists_between (NodeIds &nodes, NodeId from, NodeId to)
     {
         ancestors[*node] = -1;
         deltas[*node] = -1;
-        nexts.push (*node);
     }
     // We do not want to set the ancestor of from to itself yet since we want to detect cycles
     deltas[from] = 0;
-    while (!nexts.empty ())
+    for (NodeIdIter node = nodes.begin (), node_end = nodes.end (); node != node_end; ++node)
     {
-        NodeId node = nexts.front ();
-        nexts.pop ();
-        ArcIds arcs = this->list_arcs_from (node);
+        ArcIds arcs = this->list_arcs_from (*node);
         for (ArcIdIter arc = arcs.begin (), arc_end = arcs.end (); arc != arc_end; ++arc)
         {
             ArcId arc_destination = this->arcs[*arc].second;
-            if (deltas[arc_destination] > deltas[node] || (arc_destination == from && deltas[from] == 0))
+            if (deltas[arc_destination] > deltas[*node] || (arc_destination == from && deltas[from] == 0))
             {
-                ancestors[arc_destination] = node;
-                deltas[arc_destination] = deltas[node] + 1;
+                ancestors[arc_destination] = *node;
+                deltas[arc_destination] = deltas[*node] + 1;
             }
         }
     }
