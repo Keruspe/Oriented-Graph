@@ -276,9 +276,6 @@ Graph::connex ()
 bool
 Graph::path_exists_between (NodeIds &nodes, NodeId from, NodeId to)
 {
-    // TODO: use to to exit earlier
-    if (from == to && !this->list_arcs_from_to (from, to).empty ())
-        return true;
     queue <NodeId> nexts;
     unsigned int count = this->next_node_id ();
     NodeId *ancestors = new NodeId[count];
