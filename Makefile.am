@@ -13,6 +13,7 @@ bin_PROGRAMS = oriented-graph-test
 pkglib_LTLIBRARIES = libgraph.la
 
 CLEANFILES =
+EXTRA_DIST = graph/graph.hh graph/array-graph.hh graph/list-graph.hh
 
 libgraph_la_SOURCES = \
 	graph/graph.cc \
