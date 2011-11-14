@@ -361,6 +361,21 @@ string
 Graph::as_list ()
 {
     std::ostringstream out;
-    //TODO
+    NodeIds nodes = this->list_nodes ();
+    for (NodeIdIter from = nodes.begin (), from_end = nodes.end (); from != from_end; ++from)
+    {
+        out << *from << " -> ";
+        ArcIds arcs = this->list_arcs_from (*from);
+        ArcIdIter arc = arcs.begin (), arc_end = arcs.end ();
+        if (arc == arc_end)
+            out << "-";
+        else
+        {
+            out << this->arcs[*arc].second;
+            for (++arc; arc != arc_end; ++arc)
+                out << "," << this->arcs[*arc].second;
+        }
+        out << endl;
+    }
     return out.str ();
 }

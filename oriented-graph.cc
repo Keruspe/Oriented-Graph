@@ -34,7 +34,9 @@ main()
     g->add_arc (e, f);
     ArcId fd = g->add_arc (f, d);
 
-    cout << "Graph:" << endl << g->as_matrix () << endl;
+    cout << "Graph as matrix:" << endl << g->as_matrix () << endl;
+
+    cout << "Graph as list:" << endl << g->as_list () << endl;
 
     cout << "Connexity:" << endl
          << "Expected: yes" << endl
