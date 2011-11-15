@@ -1,9 +1,9 @@
-#ifndef __LISTGRAPH_HH__
-#define __LISTGRAPH_HH__
+#ifndef __LIST_DIGRAPH_HH__
+#define __LIST_DIGRAPH_HH__
 
 #include <list>
 #include <vector>
-#include "graph.hh"
+#include "digraph.hh"
 
 //TODO : MAKE THEM PRIVATE!
 
@@ -29,11 +29,11 @@ class Arc
 
 //----------------------------------------------------------------------
 		
-class ListGraph : public Graph
+class ListDiGraph : public DiGraph
 {
 	public:
-		ListGraph();
-		~ListGraph();
+		ListDiGraph();
+		~ListDiGraph();
 		virtual unsigned add_node () ;
 		virtual void remove_node (unsigned Nid) ;
 		virtual unsigned add_arc (unsigned NidFrom, unsigned NidTo) ;
@@ -62,4 +62,4 @@ class ListGraph : public Graph
 		unsigned arcs_nb;
 };
 
-#endif /* LISTGRAPH_HH */ 
+#endif /* LIST_DIGRAPH_HH */ 

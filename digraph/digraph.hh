@@ -1,5 +1,5 @@
-#ifndef __GRAPH_HH__
-#define __GRAPH_HH__
+#ifndef __DIGRAPH_HH__
+#define __DIGRAPH_HH__
 
 #include <iostream>
 #include <list>
@@ -31,11 +31,11 @@ typedef enum {
     BLACK = 'b'
 } NodeColor;
 
-class Graph
+class DiGraph
 {
 public:
-    Graph () : _next_arc_id (0), _next_node_id (0) {}
-    virtual ~Graph () {}
+    DiGraph () : _next_arc_id (0), _next_node_id (0) {}
+    virtual ~DiGraph () {}
     virtual NodeId add_node () = 0;
     virtual void remove_node (NodeId id) = 0;
     virtual ArcId add_arc (NodeId from, NodeId to) = 0;
@@ -80,4 +80,4 @@ protected:
     map < ArcId, pair <NodeId, NodeId> > arcs;
 };
 
-#endif /*__GRAPH_HH__*/
+#endif /*__DIGRAPH_HH__*/

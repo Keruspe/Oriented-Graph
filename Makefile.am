@@ -1,36 +1,36 @@
 ACLOCAL_AMFLAGS = -I m4
 
-LIBGRAPH_CURRENT=0
-LIBGRAPH_REVISION=0
-LIBGRAPH_AGE=0
+LIBDIGRAPH_CURRENT=0
+LIBDIGRAPH_REVISION=0
+LIBDIGRAPH_AGE=0
 
 AM_CXXFLAGS = -Wall -Wextra -Wno-unused-but-set-variable -Wno-unused-parameter --include config.hh -O3 -march=native
 AM_LDFLAGS = -Wl,--as-needed -Wl,-O3
 
 bin_PROGRAMS = oriented-graph-test
 
-graph_libdir = $(libdir)/graph
-graph_lib_LTLIBRARIES = libgraph.la
+digraph_libdir = $(libdir)/digraph
+digraph_lib_LTLIBRARIES = libdigraph.la
 
-graph_includedir = $(includedir)/graph
-graph_include_HEADERS = graph/graph.hh graph/array-graph.hh graph/list-graph.hh
+digraph_includedir = $(includedir)/digraph
+digraph_include_HEADERS = digraph/digraph.hh digraph/array-digraph.hh digraph/list-digraph.hh
 
 CLEANFILES =
-EXTRA_DIST = $(graph_include_HEADERS)
+EXTRA_DIST = $(digraph_include_HEADERS)
 
-libgraph_la_SOURCES = \
-	graph/graph.cc \
-	graph/array-graph.cc \
-	graph/list-graph.cc
+libdigraph_la_SOURCES = \
+	digraph/digraph.cc \
+	digraph/array-digraph.cc \
+	digraph/list-digraph.cc
 
-libgraph_la_LDFLAGS = $(AM_LDFLAGS) -shared -version-info $(LIBGRAPH_CURRENT):$(LIBGRAPH_REVISION):$(LIBGRAPH_AGE)
+libdigraph_la_LDFLAGS = $(AM_LDFLAGS) -shared -version-info $(LIBDIGRAPH_CURRENT):$(LIBDIGRAPH_REVISION):$(LIBDIGRAPH_AGE)
 
 oriented_graph_test_SOURCES = src/oriented-graph-test.cc
 
-oriented_graph_test_LDADD = libgraph.la
+oriented_graph_test_LDADD = libdigraph.la
 
 install-data-hook: la-files-removal
 
 la-files-removal:
-	cd $(DESTDIR)/$(graph_libdir) && \
-		rm $(graph_lib_LTLIBRARIES)
+	cd $(DESTDIR)/$(digraph_libdir) && \
+		rm $(digraph_lib_LTLIBRARIES)

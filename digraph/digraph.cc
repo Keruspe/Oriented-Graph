@@ -1,16 +1,16 @@
-#include "graph.hh"
+#include "digraph.hh"
 
 #include <sstream>
 
 ArcId
-Graph::get_new_arc_id (NodeId from, NodeId to)
+DiGraph::get_new_arc_id (NodeId from, NodeId to)
 {
     this->arcs[this->_next_arc_id] = std::make_pair <NodeId, NodeId> (from, to);
     return this->_next_arc_id++;
 }
 
 void
-Graph::print_helper (NodeIds &nodes, unsigned int *data)
+DiGraph::print_helper (NodeIds &nodes, unsigned int *data)
 {
     NodeIdIter node = nodes.begin (), node_end = nodes.end ();
     cout << "{";
@@ -35,7 +35,7 @@ Graph::print_helper (NodeIds &nodes, unsigned int *data)
 }
 
 void
-Graph::search_print (NodeIds &nodes, queue <NodeId> nexts, unsigned int time, NodeId id, map <NodeId, NodeColor> &colors, NodeId *ancestors, NodeId *deltas, NodeId *starts, NodeId *ends)
+DiGraph::search_print (NodeIds &nodes, queue <NodeId> nexts, unsigned int time, NodeId id, map <NodeId, NodeColor> &colors, NodeId *ancestors, NodeId *deltas, NodeId *starts, NodeId *ends)
 {
     cout << " ";
     if (time == (unsigned int) -1)
@@ -84,7 +84,7 @@ Graph::search_print (NodeIds &nodes, queue <NodeId> nexts, unsigned int time, No
 }
 
 void
-Graph::visit (NodeIds &nodes, NodeId id, unsigned int &time, map <NodeId, NodeColor> &colors, NodeId *ancestors, NodeId *starts, NodeId *ends, bool print)
+DiGraph::visit (NodeIds &nodes, NodeId id, unsigned int &time, map <NodeId, NodeColor> &colors, NodeId *ancestors, NodeId *starts, NodeId *ends, bool print)
 {
     colors[id] = GREY;
     starts[id] = time;
@@ -112,7 +112,7 @@ Graph::visit (NodeIds &nodes, NodeId id, unsigned int &time, map <NodeId, NodeCo
 }
 
 void
-Graph::depth_first_search (NodeId start, bool print)
+DiGraph::depth_first_search (NodeId start, bool print)
 {
     NodeIds nodes = this->list_nodes ();
     unsigned int count = this->next_node_id ();
@@ -157,7 +157,7 @@ Graph::depth_first_search (NodeId start, bool print)
 }
 
 void
-Graph::breadth_first_search (NodeId start, bool print)
+DiGraph::breadth_first_search (NodeId start, bool print)
 {
     NodeIds nodes = this->list_nodes ();
     unsigned int count = this->next_node_id ();
@@ -236,7 +236,7 @@ Graph::breadth_first_search (NodeId start, bool print)
 }
 
 bool
-Graph::connex ()
+DiGraph::connex ()
 {
     NodeIds nodes = this->list_nodes ();
     unsigned int unreachable_count = 0; /* 1 is acceptable, if there are no cycle, if some arcs are from here */
@@ -276,7 +276,7 @@ Graph::connex ()
 }
 
 bool
-Graph::path_exists_between (NodeIds &nodes, NodeId from, NodeId to)
+DiGraph::path_exists_between (NodeIds &nodes, NodeId from, NodeId to)
 {
     unsigned int count = this->next_node_id ();
     NodeId *ancestors = new NodeId[count];
@@ -308,7 +308,7 @@ Graph::path_exists_between (NodeIds &nodes, NodeId from, NodeId to)
 }
 
 bool
-Graph::acyclic ()
+DiGraph::acyclic ()
 {
     NodeIds nodes = this->list_nodes ();
     for (NodeIdIter node = nodes.begin (), node_end = nodes.end (); node != node_end; ++node)
@@ -320,7 +320,7 @@ Graph::acyclic ()
 }
 
 bool
-Graph::simple ()
+DiGraph::simple ()
 {
     if (!this->acyclic ())
         return false;
@@ -339,7 +339,7 @@ Graph::simple ()
 }
 
 string
-Graph::as_matrix ()
+DiGraph::as_matrix ()
 {
     std::ostringstream out;
     out << " ";
@@ -358,7 +358,7 @@ Graph::as_matrix ()
 }
 
 string
-Graph::as_list ()
+DiGraph::as_list ()
 {
     std::ostringstream out;
     NodeIds nodes = this->list_nodes ();

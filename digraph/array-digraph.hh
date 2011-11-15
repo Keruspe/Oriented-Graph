@@ -1,7 +1,7 @@
-#ifndef __ARRAY_GRAPH_HH__
-#define __ARRAY_GRAPH_HH__
+#ifndef __ARRAY_DIGRAPH_HH__
+#define __ARRAY_DIGRAPH_HH__
 
-#include "graph.hh"
+#include "digraph.hh"
 
 #include <vector>
 
@@ -12,7 +12,7 @@ typedef vector <EndNodes> StartNodes;
 typedef EndNodes::iterator EndNodeIter;
 typedef StartNodes::iterator StartNodeIter;
 
-class ArrayGraph : public Graph
+class ArrayDiGraph : public DiGraph
 {
 private:
     /* To always get node X at index X (no deletion) */
@@ -22,8 +22,8 @@ private:
     unsigned int _nodes_count;
     unsigned int _arcs_count;
 public:
-    ArrayGraph ();
-    ~ArrayGraph ();
+    ArrayDiGraph ();
+    ~ArrayDiGraph ();
     NodeId add_node ();
     void remove_node (NodeId id);
     ArcId add_arc (NodeId from, NodeId to);
@@ -38,4 +38,4 @@ public:
     unsigned int arcs_count () { return this->_arcs_count; }
 };
 
-#endif /*__ARRAY_GRAPH_HH__*/
+#endif /*__ARRAY_DIGRAPH_HH__*/

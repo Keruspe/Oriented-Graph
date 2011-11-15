@@ -1,8 +1,8 @@
 AC_PREREQ([2.68])
-AC_INIT([libgraph],[0.1],[Marc-Antoine@Perennou.com])
+AC_INIT([libdigraph],[0.1],[Marc-Antoine@Perennou.com])
 
 AC_CONFIG_HEADERS([config.hh])
-AC_CONFIG_SRCDIR([graph/])
+AC_CONFIG_SRCDIR([digraph/])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_AUX_DIR([.aux])
 

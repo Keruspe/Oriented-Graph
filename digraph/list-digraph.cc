@@ -1,6 +1,6 @@
-#include "list-graph.hh"
+#include "list-digraph.hh"
 
-ListGraph::ListGraph()
+ListDiGraph::ListDiGraph()
 {
 	current_node_id = 1;
 	current_arc_id = 1;
@@ -8,13 +8,13 @@ ListGraph::ListGraph()
 	arcs_nb = 0;
 }
 
-ListGraph::~ListGraph() //O(n+m)
+ListDiGraph::~ListDiGraph() //O(n+m)
 {
 	listNodes.clear();
 	listArcs.clear();
 }
 
-unsigned int ListGraph::add_node () //O(1)
+unsigned int ListDiGraph::add_node () //O(1)
 {
 	unsigned tempId = get_new_node_id ();
 	listNodes.at(tempId) = Node(tempId);
@@ -24,7 +24,7 @@ unsigned int ListGraph::add_node () //O(1)
 	return tempId;
 }
 
-void ListGraph::remove_node (unsigned Nid) 
+void ListDiGraph::remove_node (unsigned Nid) 
 {	
 	listNodes.erase(listNodes.begin() + Nid);
 	for(std::vector<Arc>::iterator it= listArcs.begin();it!=listArcs.end();it++)
@@ -36,7 +36,7 @@ void ListGraph::remove_node (unsigned Nid)
 	nodes_nb--;	
 }
 
-unsigned int ListGraph::add_arc (unsigned NidFrom, unsigned NidTo) //O(1) ok
+unsigned int ListDiGraph::add_arc (unsigned NidFrom, unsigned NidTo) //O(1) ok
 {
 	unsigned tempId = get_new_arc_id (NidFrom, NidTo);
 	get_node(NidFrom)->successors.push_back(NidTo);
@@ -47,7 +47,7 @@ unsigned int ListGraph::add_arc (unsigned NidFrom, unsigned NidTo) //O(1) ok
 	return tempId;
 }
 
-void ListGraph::remove_arc (unsigned Aid) //O(1) ok
+void ListDiGraph::remove_arc (unsigned Aid) //O(1) ok
 {
 	get_node(get_arc(Aid)->from)->successors.erase(get_arc(Aid)->itFrom);
 	listArcs.erase(listArcs.begin() + Aid);
@@ -55,12 +55,12 @@ void ListGraph::remove_arc (unsigned Aid) //O(1) ok
 	arcs_nb--;
 }
 
-std::list<unsigned> ListGraph::list_successors (unsigned Nid) //O(1) ok
+std::list<unsigned> ListDiGraph::list_successors (unsigned Nid) //O(1) ok
 {
 	return listNodes.at(Nid).successors;
 }
 
-std::list<unsigned> ListGraph::list_ancestors (unsigned Nid)
+std::list<unsigned> ListDiGraph::list_ancestors (unsigned Nid)
 {
 	std::list<unsigned> r;
 	for(std::vector<Arc>::iterator it= listArcs.begin();it!=listArcs.end();it++)
@@ -72,13 +72,13 @@ std::list<unsigned> ListGraph::list_ancestors (unsigned Nid)
 	return r;
 }
 
-std::list<unsigned> ListGraph::list_nodes ()
+std::list<unsigned> ListDiGraph::list_nodes ()
 {
     // TODO: implement this
     return std::list<unsigned> ();
 }
 
-std::list<unsigned> ListGraph::list_arcs_from (unsigned Nid) //O(m)
+std::list<unsigned> ListDiGraph::list_arcs_from (unsigned Nid) //O(m)
 {
 	std::list<unsigned> lA;
 	for(std::vector<Arc>::iterator it= listArcs.begin();it!=listArcs.end();it++)
@@ -89,7 +89,7 @@ std::list<unsigned> ListGraph::list_arcs_from (unsigned Nid) //O(m)
 	return lA;
 }
 
-std::list<unsigned> ListGraph::list_arcs_to (unsigned Nid) //O(m)
+std::list<unsigned> ListDiGraph::list_arcs_to (unsigned Nid) //O(m)
 {
 	std::list<unsigned> lA;
 	for(std::vector<Arc>::iterator it= listArcs.begin();it!=listArcs.end();it++)
@@ -100,25 +100,25 @@ std::list<unsigned> ListGraph::list_arcs_to (unsigned Nid) //O(m)
 	return lA;
 }
 
-std::list<unsigned> ListGraph::list_arcs_from_to (unsigned NidFrom, unsigned NidTo)
+std::list<unsigned> ListDiGraph::list_arcs_from_to (unsigned NidFrom, unsigned NidTo)
 {
     //TODO: implement this
     return std::list<unsigned> ();
 }
 
-unsigned int ListGraph::nodes_count () //O(1)
+unsigned int ListDiGraph::nodes_count () //O(1)
 {
 	return nodes_nb;
 }
 
-unsigned int ListGraph::arcs_count () //O(1)
+unsigned int ListDiGraph::arcs_count () //O(1)
 {
 	return arcs_nb;
 }
 
 //======================================================================
 
-//~ std::vector<Node>::iterator ListGraph::getNodeIteratorById(unsigned int i)
+//~ std::vector<Node>::iterator ListDiGraph::getNodeIteratorById(unsigned int i)
 //~ {
 	//~ bool found = false;
 	//~ std::vector<Node>::iterator it = listNodes.begin();

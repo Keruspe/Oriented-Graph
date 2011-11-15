@@ -1,5 +1,5 @@
-#include "graph/array-graph.hh"
-#include "graph/list-graph.hh"
+#include "digraph/array-digraph.hh"
+#include "digraph/list-digraph.hh"
 
 void
 print_ids (ConstIds &ids)
@@ -12,9 +12,9 @@ print_ids (ConstIds &ids)
 int
 main()
 {
-    Graph *g;
-    //g = new ListGraph ();
-    g = new ArrayGraph ();
+    DiGraph *g;
+    //g = new ListDiGraph ();
+    g = new ArrayDiGraph ();
 
     NodeId a = g->add_node ();
     NodeId b = g->add_node ();

@@ -1,22 +1,22 @@
-#include "array-graph.hh"
+#include "array-digraph.hh"
 
 #include <queue>
 
 using std::queue;
 
-ArrayGraph::ArrayGraph () :
-    Graph (),
+ArrayDiGraph::ArrayDiGraph () :
+    DiGraph (),
     _nodes_count (0),
     _arcs_count (0)
 {
 }
 
-ArrayGraph::~ArrayGraph ()
+ArrayDiGraph::~ArrayDiGraph ()
 {
 }
 
 NodeId
-ArrayGraph::add_node ()
+ArrayDiGraph::add_node ()
 {
     NodeId id = this->get_new_node_id ();
     this->node_exists[id] = true;
@@ -28,7 +28,7 @@ ArrayGraph::add_node ()
 }
 
 void
-ArrayGraph::remove_node (NodeId id)
+ArrayDiGraph::remove_node (NodeId id)
 {
     if (!this->node_exists[id])
         return;
@@ -42,7 +42,7 @@ ArrayGraph::remove_node (NodeId id)
 }
 
 ArcId
-ArrayGraph::add_arc (NodeId from, NodeId to)
+ArrayDiGraph::add_arc (NodeId from, NodeId to)
 {
     ArcId id = this->get_new_arc_id (from, to);
     this->matrix[from][to].push_back (id);
@@ -51,7 +51,7 @@ ArrayGraph::add_arc (NodeId from, NodeId to)
 }
 
 void
-ArrayGraph::remove_arc (ArcId id)
+ArrayDiGraph::remove_arc (ArcId id)
 {
     pair <NodeId, NodeId> &nodes = this->arcs[id];
     ArcIds &arcs = this->matrix[nodes.first][nodes.second];
@@ -67,7 +67,7 @@ ArrayGraph::remove_arc (ArcId id)
 }
 
 NodeIds
-ArrayGraph::list_successors (NodeId id)
+ArrayDiGraph::list_successors (NodeId id)
 {
     NodeIds successors;
     if (!this->node_exists[id])
@@ -87,7 +87,7 @@ ArrayGraph::list_successors (NodeId id)
 }
 
 NodeIds
-ArrayGraph::list_ancestors (NodeId id)
+ArrayDiGraph::list_ancestors (NodeId id)
 {
     NodeIds ancestors;
     if (!this->node_exists[id])
@@ -106,7 +106,7 @@ ArrayGraph::list_ancestors (NodeId id)
 }
 
 NodeIds
-ArrayGraph::list_nodes ()
+ArrayDiGraph::list_nodes ()
 {
     NodeIds nodes;
     unsigned int index = 0;
@@ -120,7 +120,7 @@ ArrayGraph::list_nodes ()
 }
 
 ArcIds
-ArrayGraph::list_arcs_from (NodeId id)
+ArrayDiGraph::list_arcs_from (NodeId id)
 {
     ArcIds arcs_from;
     if (!this->node_exists[id])
@@ -140,7 +140,7 @@ ArrayGraph::list_arcs_from (NodeId id)
 }
 
 ArcIds
-ArrayGraph::list_arcs_to (NodeId id)
+ArrayDiGraph::list_arcs_to (NodeId id)
 {
     ArcIds arcs_to;
     if (!this->node_exists[id])
@@ -160,7 +160,7 @@ ArrayGraph::list_arcs_to (NodeId id)
 }
 
 ArcIds
-ArrayGraph::list_arcs_from_to (NodeId from, NodeId to)
+ArrayDiGraph::list_arcs_from_to (NodeId from, NodeId to)
 {
     if (!this->node_exists[from] || !this->node_exists[to])
         return ArcIds ();
