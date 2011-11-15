@@ -84,8 +84,9 @@ DiGraph::search_print (NodeIds &nodes, queue <NodeId> nexts, unsigned int time, 
 }
 
 void
-DiGraph::visit (NodeIds &nodes, NodeId id, unsigned int &time, map <NodeId, NodeColor> &colors, NodeId *ancestors, NodeId *starts, NodeId *ends, bool print)
+DiGraph::visit (NodeIds &nodes, NodeId id, unsigned int &time, map <NodeId, NodeColor> &colors, NodeId *ancestors, NodeId *starts, NodeId *ends, bool print, NodeIds &nodes_explored)
 {
+    nodes_explored.push_back (id);
     colors[id] = GREY;
     starts[id] = time;
 
@@ -99,7 +100,7 @@ DiGraph::visit (NodeIds &nodes, NodeId id, unsigned int &time, map <NodeId, Node
         if (colors[*successor] == WHITE)
         {
             ancestors[*successor] = id;
-            this->visit (nodes, *successor, time, colors, ancestors, starts, ends, print);
+            this->visit (nodes, *successor, time, colors, ancestors, starts, ends, print, nodes_explored);
         }
     }
     colors[id] = BLACK;
@@ -134,6 +135,7 @@ DiGraph::depth_first_search (NodeId start, bool print)
     if (explore_all)
         start = *start_iter;
 
+    NodeIds nodes_explored;
     for (NodeIdIter node = start_iter, node_end = nodes.end (); node != node_end;)
     {
         ancestors[start] = start;
@@ -141,7 +143,7 @@ DiGraph::depth_first_search (NodeId start, bool print)
         if (print)
             this->depth_first_search_print (nodes, -1, -1, colors, ancestors, starts, ends);
 
-        this->visit (nodes, start, time, colors, ancestors, starts, ends, print);
+        this->visit (nodes, start, time, colors, ancestors, starts, ends, print, nodes_explored);
 
         if (!explore_all)
             break;
@@ -150,6 +152,11 @@ DiGraph::depth_first_search (NodeId start, bool print)
             break;
         start = *node;
     }
+
+    cout << endl << "Nodes explored:";
+    for (NodeIdIter node = nodes_explored.begin (), node_end = nodes_explored.end (); node != node_end; ++node)
+        cout << " " << *node;
+    cout << endl;
 
     delete[] (ancestors);
     delete[] (starts);
@@ -182,6 +189,7 @@ DiGraph::breadth_first_search (NodeId start, bool print)
     if (explore_all)
         start = *start_iter;
 
+    NodeIds nodes_explored;
     for (NodeIdIter node = start_iter, node_end = nodes.end (); node != node_end;)
     {
         ancestors[start] = start;
@@ -196,6 +204,7 @@ DiGraph::breadth_first_search (NodeId start, bool print)
         {
             NodeId id = nexts.front ();
             nexts.pop ();
+            nodes_explored.push_back (id);
             starts[id] = time;
             NodeIds successors = this->list_successors (id);
             for (NodeIdIter successor = successors.begin (), successor_end = successors.end (); successor != successor_end; ++successor)
@@ -228,6 +237,11 @@ DiGraph::breadth_first_search (NodeId start, bool print)
             break;
         start = *node;
     }
+
+    cout << endl << "Nodes explored:";
+    for (NodeIdIter node = nodes_explored.begin (), node_end = nodes_explored.end (); node != node_end; ++node)
+        cout << " " << *node;
+    cout << endl;
 
     delete[] (ancestors);
     delete[] (deltas);

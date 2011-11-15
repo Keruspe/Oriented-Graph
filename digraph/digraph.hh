@@ -59,7 +59,7 @@ private:
     ArcId _next_arc_id;
     NodeId _next_node_id;
     /* For depth_first_search */
-    void visit (NodeIds &nodes, NodeId id, unsigned int &time, map <NodeId, NodeColor> &colors, NodeId *ancestors, NodeId *starts, NodeId *ends, bool print);
+    void visit (NodeIds &nodes, NodeId id, unsigned int &time, map <NodeId, NodeColor> &colors, NodeId *ancestors, NodeId *starts, NodeId *ends, bool print, NodeIds &nodes_explored);
     /* for search_print */
     void print_helper (NodeIds &nodes, unsigned int *data);
     void search_print (NodeIds &nodes, queue <NodeId> nexts, unsigned int time, NodeId id, map <NodeId, NodeColor> &colors, NodeId *ancestors, NodeId *deltas, NodeId *starts, NodeId *ends);
