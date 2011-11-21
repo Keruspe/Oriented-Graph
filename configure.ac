@@ -1,5 +1,5 @@
 AC_PREREQ([2.68])
-AC_INIT([libdigraph],[0.1],[Marc-Antoine@Perennou.com])
+AC_INIT([digraph],[0.1],[Marc-Antoine@Perennou.com])
 
 AC_CONFIG_HEADERS([config.hh])
 AC_CONFIG_SRCDIR([digraph/])

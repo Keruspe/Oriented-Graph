@@ -6,4 +6,4 @@ config.hh
 libtool
 .libs
 *.la
-oriented-graph-test
+digraph-test
