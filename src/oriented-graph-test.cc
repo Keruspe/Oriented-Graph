@@ -31,6 +31,7 @@ main()
     ArcId de = g->add_arc (d, e);
     g->add_arc (e, a);
     g->add_arc (a, f);
+    g->add_arc (a, d);
     ArcId fe = g->add_arc (f, e);
 
     cout << "Graph as matrix:" << endl << g->as_matrix () << endl;
