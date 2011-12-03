@@ -1,8 +1,10 @@
 #include "gps.hh"
 #include "map-parser.hh"
 
-Gps::Gps (DiGraph *_graph, string path) :
-    graph (_graph)
+Gps::Gps (DiGraph *_graph, string path, int _K, int _A) :
+    graph (_graph),
+    K (_K),
+    A (_A)
 {
     MapParser parser(_graph, path, nodes, cities, roads);
 }

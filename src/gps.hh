@@ -10,7 +10,7 @@ using std::map;
 class Gps
 {
 public:
-    Gps (DiGraph *_graph, string path);
+    Gps (DiGraph *_graph, string path, int _K, int _A);
     virtual ~Gps() {}
 
     void calculate_by_agregation (string start, string dest);
@@ -31,6 +31,8 @@ private:
     map <string, NodeId> nodes;
     map <NodeId, City> cities;
     map <ArcId, Road> roads;
+    int K;
+    int A;
 };
 
 #endif /*__GPS_H__*/

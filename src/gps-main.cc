@@ -52,10 +52,15 @@ main ()
         cerr << "Bad choice: " << answer << endl;
         return -1;
     }
+    int K, A;
+    cout << "Value for K ?" << endl;
+    cin >> K;
+    cout << "Value for A ?" << endl;
+    cin >> A;
     string path;
     cout << "Which file contains the map description ?" << endl;
     cin >> path;
-    Gps gps (graph, path);
+    Gps gps (graph, path, K, A);
     string start;
     cout << "Where do you wanna leave ?" << endl;
     cin >> start;
