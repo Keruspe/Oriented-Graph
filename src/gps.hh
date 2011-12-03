@@ -31,8 +31,8 @@ private:
     map <string, NodeId> nodes;
     map <NodeId, City> cities;
     map <ArcId, Road> roads;
-    int K;
-    int A;
+    double K;
+    double A;
     double dmax;
     int imax;
 };

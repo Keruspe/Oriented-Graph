@@ -52,7 +52,7 @@ main ()
         cerr << "Bad choice: " << answer << endl;
         return -1;
     }
-    int K, A;
+    double K, A;
     switch (method) {
     case BOUNDED_DETOUR:
         cout << "Value for K ?" << endl;
