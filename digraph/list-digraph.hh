@@ -5,30 +5,6 @@
 #include <vector>
 #include "digraph.hh"
 
-//TODO : MAKE THEM PRIVATE!
-
-
-class Node
-{
-	public:
-		Node( unsigned i ){id=i;};
-
-		std::list<unsigned> successors;
-		unsigned id;
-};
-
-class Arc
-{
-	public:
-		Arc(unsigned Aid, unsigned fromNode, unsigned toNode){id = Aid; from=fromNode;to=toNode;};
-		unsigned id; 
-		unsigned from; //ancestor
-		unsigned to;   //successor
-		std::list<unsigned>::iterator itFrom;
-};
-
-//----------------------------------------------------------------------
-		
 class ListDiGraph : public DiGraph
 {
 	public:
@@ -48,6 +24,24 @@ class ListDiGraph : public DiGraph
 		virtual unsigned int arcs_count () ;
 
 	private:
+		class Node
+		{
+			public:
+				Node( unsigned i ): id(i) {};
+
+				std::list<unsigned> successors;
+				unsigned id;
+		};
+
+		class Arc
+		{
+			public:
+				Arc(unsigned Aid, unsigned fromNode, unsigned toNode,std::list<unsigned>::iterator it) : id(Aid), from(fromNode),to(toNode), itFrom(it){};
+				unsigned id; 
+				unsigned from; 
+				unsigned to;
+				std::list<unsigned>::iterator itFrom;
+		};
 		
 		std::vector<Node> listNodes;
 		std::vector<Arc> listArcs;
@@ -60,6 +54,7 @@ class ListDiGraph : public DiGraph
 		
 		unsigned nodes_nb;
 		unsigned arcs_nb;
+
 };
 
 #endif /* LIST_DIGRAPH_HH */ 
