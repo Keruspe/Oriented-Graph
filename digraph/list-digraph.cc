@@ -16,15 +16,10 @@ ListDiGraph::~ListDiGraph() //O(n+m)
 
 unsigned int ListDiGraph::add_node () //O(1)
 {
-	//@debug
 	unsigned tempId = get_new_node_id ();
-	
-	std::cout<< "tempId="<<tempId <<std::endl;
-	
+		
 	listNodes.push_back(Node(tempId));
-	
-	std::cout<< "listNodes assignation ok"<<listNodes.size() <<std::endl;
-	
+		
 	nodes_nb++;
 	
 	return tempId;
