@@ -7,3 +7,4 @@ libtool
 .libs
 *.la
 digraph-test
+gps

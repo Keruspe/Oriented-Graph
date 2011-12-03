@@ -1,0 +1,22 @@
+digraph {
+Nantes [label="Nantes(****)"];
+Cholet [label="Cholet(*)"];
+Angers [label="Angers(***)"];
+Chateaubriand [label="Chateaubriand(**)"];
+Rennes [label="Rennes(****)"];
+Nantes -> Cholet [label="N249e(61.2;*)"];
+Nantes -> Angers [label="A11e(89.6;)"];
+Nantes -> Angers [label="D523e(91.8;**)"];
+Nantes -> Chateaubriand [label="D178n(74.3;****)"];
+Nantes -> Rennes [label="N137n(107;**)"];
+Cholet -> Nantes [label="N249o(61.2;*)"];
+Cholet -> Angers [label="A87n(73.9;*)"];
+Angers -> Nantes [label="D523o(91.8;**)"];
+Angers -> Cholet [label="A87s(73.9;*)"];
+Angers -> Chateaubriand [label="D775n(85.4;***)"];
+Chateaubriand -> Nantes [label="D178s(74.3;****)"];
+Chateaubriand -> Angers [label="D775s(85.4;***)"];
+Chateaubriand -> Rennes [label="D41n(59.3;****)"];
+Rennes -> Nantes [label="N137s(107;**)"];
+Rennes -> Chateaubriand [label="D41s(59.3;****)"];
+}
