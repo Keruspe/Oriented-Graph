@@ -81,5 +81,6 @@ main ()
         gps.calculate_by_bounded_detour (start, dest);
         break;
     }
+    delete (graph);
     return 0;
 }
