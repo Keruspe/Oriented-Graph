@@ -11,7 +11,7 @@ using std::istringstream;
 using std::string;
 using std::vector;
 
-MapParser::MapParser (DiGraph *_graph, string path, map <string, NodeId> &nodes, map <NodeId, Gps::City> cities, map <ArcId, Gps::Road> &roads) :
+MapParser::MapParser (DiGraph *_graph, string path, map <string, NodeId> &nodes, map <NodeId, Gps::City> cities, map <ArcId, Gps::Road> &roads, double *dmax, int *imax) :
     graph (_graph)
 {
     ifstream ifs (path.c_str ());
@@ -37,6 +37,8 @@ MapParser::MapParser (DiGraph *_graph, string path, map <string, NodeId> &nodes,
                 else
                     this->dest = "";
                 this->handle_label ();
+                if (this->interest > *imax)
+                    *imax = this->interest;
                 if (this->name == "")
                 {
                     cout << "New city: " << this->id_or_from << ", with label: " << this->label << " and interest: " << this->interest << endl;
@@ -49,6 +51,8 @@ MapParser::MapParser (DiGraph *_graph, string path, map <string, NodeId> &nodes,
                 }
                 else
                 {
+                    if (this->length > *dmax)
+                        *dmax = this->length;
                     cout << "New road: " << this->name << " from " << this->id_or_from << " to " << this->dest << ", with label: " << this->label << ", interest: " << this->interest << " and length: " << this->length << endl;
                     ArcId aid = graph->add_arc (nodes[this->id_or_from], nodes[this->dest]);
                     nodes[this->name] = aid;

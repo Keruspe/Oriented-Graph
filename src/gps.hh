@@ -33,6 +33,8 @@ private:
     map <ArcId, Road> roads;
     int K;
     int A;
+    double dmax;
+    int imax;
 };
 
 #endif /*__GPS_H__*/

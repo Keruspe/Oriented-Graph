@@ -6,7 +6,7 @@ Gps::Gps (DiGraph *_graph, string path, int _K, int _A) :
     K (_K),
     A (_A)
 {
-    MapParser parser(_graph, path, nodes, cities, roads);
+    MapParser parser(_graph, path, this->nodes, this->cities, this->roads, &this->dmax, &this->imax);
 }
 
 void
