@@ -17,8 +17,9 @@ ListDiGraph::~ListDiGraph() //O(n+m)
 unsigned int ListDiGraph::add_node () //O(1)
 {
 	unsigned tempId = get_new_node_id ();
-	listNodes.at(tempId) = Node(tempId);
-	
+		
+	listNodes.push_back(Node(tempId));
+		
 	nodes_nb++;
 	
 	return tempId;
@@ -27,21 +28,27 @@ unsigned int ListDiGraph::add_node () //O(1)
 void ListDiGraph::remove_node (unsigned Nid) 
 {	
 	listNodes.erase(listNodes.begin() + Nid);
+
+	//Remove now useless arcs
+
 	for(std::vector<Arc>::iterator it= listArcs.begin();it!=listArcs.end();it++)
 	{
-		if(get_node((*it).from)->id == Nid)
-			get_node((*it).from)->successors.erase((*it).itFrom);
+		if(it->from==Nid || it->to==Nid)
+		{
+			remove_arc(it->id);
+		}
 	}
-	
-	nodes_nb--;	
+	nodes_nb--;
 }
 
 unsigned int ListDiGraph::add_arc (unsigned NidFrom, unsigned NidTo) //O(1) ok
 {
 	unsigned tempId = get_new_arc_id (NidFrom, NidTo);
 	get_node(NidFrom)->successors.push_back(NidTo);
-	listArcs.at(current_arc_id) = Arc(tempId,NidFrom,NidTo);
-	
+	std::list<unsigned>::iterator it = get_node(NidFrom)->successors.end();
+	it--;
+	listArcs.push_back(Arc(tempId,NidFrom,NidTo,it));
+		
 	arcs_nb++;
 	
 	return tempId;
@@ -63,10 +70,10 @@ std::list<unsigned> ListDiGraph::list_successors (unsigned Nid) //O(1) ok
 std::list<unsigned> ListDiGraph::list_ancestors (unsigned Nid)
 {
 	std::list<unsigned> r;
+
 	for(std::vector<Arc>::iterator it= listArcs.begin();it!=listArcs.end();it++)
 	{
-		//TODO: check if it's (*it).from instead of (*it).to
-		if((*it).from==Nid)
+		if((*it).to==Nid)
 			r.push_back((*it).from);
 	}
 	return r;
@@ -74,12 +81,17 @@ std::list<unsigned> ListDiGraph::list_ancestors (unsigned Nid)
 
 std::list<unsigned> ListDiGraph::list_nodes ()
 {
-    // TODO: implement this
-    return std::list<unsigned> ();
+    std::list<unsigned> lN;
+	for(std::vector<Node>::iterator it= listNodes.begin();it!=listNodes.end();it++)
+	{
+		lN.push_back((*it).id);
+	}
+    return lN;
 }
 
 std::list<unsigned> ListDiGraph::list_arcs_from (unsigned Nid) //O(m)
 {
+	//@todo: détecter doublons
 	std::list<unsigned> lA;
 	for(std::vector<Arc>::iterator it= listArcs.begin();it!=listArcs.end();it++)
 	{
@@ -102,7 +114,13 @@ std::list<unsigned> ListDiGraph::list_arcs_to (unsigned Nid) //O(m)
 
 std::list<unsigned> ListDiGraph::list_arcs_from_to (unsigned NidFrom, unsigned NidTo)
 {
-    //TODO: implement this
+	std::list<unsigned> lA;
+	for(std::vector<Arc>::iterator it= listArcs.begin();it!=listArcs.end();it++)
+	{
+		if((*it).from==NidFrom && (*it).to==NidTo)
+			lA.push_back((*it).id);
+	}
+	return lA;
     return std::list<unsigned> ();
 }
 
@@ -116,20 +134,3 @@ unsigned int ListDiGraph::arcs_count () //O(1)
 	return arcs_nb;
 }
 
-//======================================================================
-
-//~ std::vector<Node>::iterator ListDiGraph::getNodeIteratorById(unsigned int i)
-//~ {
-	//~ bool found = false;
-	//~ std::vector<Node>::iterator it = listNodes.begin();
-	//~ 
-	//~ while(found == false && it!=listNodes.end())
-	//~ {
-		//~ if(it->id == i)
-			//~ found = true;
-		//~ it++;
-	//~ }
-	//~ if(found==true)
-		//~ return it;
-//~ }
-//~ 
