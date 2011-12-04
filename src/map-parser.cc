@@ -11,7 +11,7 @@ using std::istringstream;
 using std::string;
 using std::vector;
 
-MapParser::MapParser (DiGraph *_graph, string path, map <string, NodeId> &nodes, map <NodeId, Gps::City> cities, map <ArcId, Gps::Road> &roads, double *dmax, int *imax) :
+MapParser::MapParser (DiGraph *_graph, string path, map <string, NodeId> &nodes, map <NodeId, Gps::City> cities, map <ArcId, Gps::Road> &roads, NodeIds &nodes_list, ArcIds &arcs_list, double *dmax, int *imax) :
     graph (_graph)
 {
     ifstream ifs (path.c_str ());
@@ -48,6 +48,7 @@ MapParser::MapParser (DiGraph *_graph, string path, map <string, NodeId> &nodes,
                     city.label = this->label;
                     city.interest = this->interest;
                     cities[nid] = city;
+                    nodes_list.push_back (nid);
                 }
                 else
                 {
@@ -61,6 +62,7 @@ MapParser::MapParser (DiGraph *_graph, string path, map <string, NodeId> &nodes,
                     road.interest = this->interest;
                     road.length = this->length;
                     roads[aid] = road;
+                    arcs_list.push_back (aid);
                 }
             }
         }

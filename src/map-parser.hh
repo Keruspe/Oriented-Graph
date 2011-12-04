@@ -15,7 +15,7 @@ using std::ifstream;
 class MapParser
 {
 public:
-    MapParser (DiGraph *_graph, string pathi, map <string, NodeId> &nodes, map <NodeId, Gps::City> cities, map <ArcId, Gps::Road> &roads, double *dmax, int *imax);
+    MapParser (DiGraph *_graph, string pathi, map <string, NodeId> &nodes, map <NodeId, Gps::City> cities, map <ArcId, Gps::Road> &roads, NodeIds &nodes_list, ArcIds &arcs_list, double *dmax, int *imax);
     virtual ~MapParser () {}
 private:
     DiGraph *graph;
