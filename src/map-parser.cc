@@ -11,7 +11,7 @@ using std::istringstream;
 using std::string;
 using std::vector;
 
-MapParser::MapParser (DiGraph *_graph, string path, map <string, NodeId> &nodes, map <NodeId, Gps::City> cities, map <ArcId, Gps::Road> &roads, double *dmax, int *imax) :
+MapParser::MapParser (DiGraph *_graph, string path, map <string, NodeId> &nodes, map <NodeId, Gps::City> &cities, map <ArcId, Gps::Road> &roads, double *dmax, int *imax) :
     graph (_graph)
 {
     ifstream ifs (path.c_str ());
