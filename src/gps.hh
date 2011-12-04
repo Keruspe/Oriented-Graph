@@ -34,7 +34,7 @@ private:
     } PathElem;
 
     double shortest_path (NodeIds &nodes_list, unsigned int count, NodeId from, NodeId to);
-    void visit (NodeIds &nodes, NodeId id, map <NodeId, NodeColor> &colors, NodeId *ancestors, double distance, double max_allowed, NodeId dest, int current_interest, int *best_interest, list <PathElem> current, list<PathElem> &best);
+    void visit (NodeIds &nodes, NodeId id, map <NodeId, NodeColor> &colors, NodeId *ancestors, double distance, double max_allowed, NodeId dest, int current_interest, int *best_interest, list <PathElem> current, list<PathElem> &best, int *best_distance);
 
     DiGraph *graph;
     map <string, NodeId> nodes;

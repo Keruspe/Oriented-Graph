@@ -57,7 +57,7 @@ main ()
     case BOUNDED_DETOUR:
         cout << "Value for K ?" << endl;
         cin >> K;
-        /* No break */
+        break;
     case AGREGATION:
         cout << "Value for A ?" << endl;
         cin >> A;
