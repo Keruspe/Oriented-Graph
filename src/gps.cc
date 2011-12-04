@@ -10,7 +10,7 @@ Gps::Gps (DiGraph *_graph, string path, double _K, double _A) :
     K (_K),
     A (_A)
 {
-    MapParser parser(_graph, path, this->nodes, this->cities, this->roads, this->nodes_list, this->arcs_list, &this->dmax, &this->imax);
+    MapParser parser(_graph, path, this->nodes, this->cities, this->roads, &this->dmax, &this->imax);
 }
 
 void
@@ -33,12 +33,13 @@ Gps::calculate_by_bounded_detour (string start, string dest)
 double
 Gps::shortest_path (NodeId from, NodeId to)
 {
-    unsigned int count = this->nodes_list.size ();
+    NodeIds nodes_list = this->graph->list_nodes ();
+    unsigned int count = nodes_list.size ();
     NodeId *ancestors = new NodeId[count];
     double *deltas = new double[count];
     queue <NodeId> nexts; // We don't use a priority queue here since we do not ponderate nodes for now.
     map <NodeId, NodeColor> colors; // To track which nodes to explore
-    for (NodeIdIter node = this->nodes_list.begin (), node_end = this->nodes_list.end (); node != node_end; ++node)
+    for (NodeIdIter node = nodes_list.begin (), node_end = nodes_list.end (); node != node_end; ++node)
     {
         deltas[*node] = -1;
         ancestors[*node] = -1;

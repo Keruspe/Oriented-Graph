@@ -34,8 +34,6 @@ private:
     map <string, NodeId> nodes;
     map <NodeId, City> cities;
     map <ArcId, Road> roads;
-    NodeIds nodes_list;
-    ArcIds arcs_list;
     double K;
     double A;
     double dmax;
