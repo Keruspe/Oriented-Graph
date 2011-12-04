@@ -30,10 +30,8 @@ Gps::visit (NodeIds &nodes, NodeId id, map <NodeId, NodeColor> &colors, NodeId *
     {
         NodeId succ = this->graph->get_arc_details (*successor).second;
         double road_length = this->roads[*successor].length;
-        cout << "node_pre: " << succ << endl;
         if (colors[succ] == WHITE && distance + road_length <= max_allowed)
         {
-            cout << "node_in: " << succ << endl;
             ancestors[succ] = id;
             PathElem tmp;
             tmp.road = *successor;
@@ -41,11 +39,10 @@ Gps::visit (NodeIds &nodes, NodeId id, map <NodeId, NodeColor> &colors, NodeId *
             tmp.city = succ;
             current.push_back (tmp);
             if (succ != dest)
-                this->visit (nodes, *successor, colors, ancestors, distance + road_length, max_allowed, dest, current_interest + this->roads[*successor].interest + this->cities[succ].interest, best_interest, current, best);
+                this->visit (nodes, succ, colors, ancestors, distance + road_length, max_allowed, dest, current_interest + this->roads[*successor].interest + this->cities[succ].interest, best_interest, current, best);
             else
             {
                 int cur_interest = current_interest + this->roads[*successor].interest + this->cities[succ].interest;
-                cout << "Got to dest, cur: " << cur_interest << ", best: " << *best_interest << endl;
                 if (cur_interest > *best_interest)
                 {
                     *best_interest = cur_interest;
