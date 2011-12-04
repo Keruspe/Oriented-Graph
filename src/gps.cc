@@ -37,14 +37,17 @@ Gps::shortest_path (NodeId from, NodeId to)
     NodeId *ancestors = new NodeId[count];
     double *deltas = new double[count];
     queue <NodeId> nexts; // We don't use a priority queue here since we do not ponderate nodes for now.
+    map <NodeId, NodeColor> colors; // To track which nodes to explore
     for (NodeIdIter node = this->nodes_list.begin (), node_end = this->nodes_list.end (); node != node_end; ++node)
     {
         deltas[*node] = -1;
         ancestors[*node] = -1;
-        nexts.push (*node);
+        colors[*node] = WHITE;
     }
     deltas[from] = 0;
     ancestors[from] = from;
+    nexts.push (from);
+    colors[from] = BLACK;
     while (!nexts.empty ())
     {
         NodeId node = nexts.front ();
@@ -53,11 +56,14 @@ Gps::shortest_path (NodeId from, NodeId to)
         for (ArcIdIter arc = arcs.begin (), arc_end = arcs.end (); arc != arc_end; ++arc)
         {
             ArcId arc_destination = this->graph->get_arc_details(*arc).second;
+            if (colors[arc_destination] == WHITE)
+            {
+                nexts.push (arc_destination);
+                colors[arc_destination] = BLACK;
+            }
             double distance = this->roads[*arc].length;
             if (deltas[arc_destination] == -1 || deltas[arc_destination] > deltas[node] + distance) 
             {
-                if (arc_destination == to)
-                    cout << "Before: " << deltas[arc_destination] << ", After: " << deltas[node] << " + " << distance << endl;
                 ancestors[arc_destination] = node;
                 deltas[arc_destination] = deltas[node] + distance;
             }
