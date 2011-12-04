@@ -289,6 +289,12 @@ DiGraph::connex ()
     return true;
 }
 
+pair <NodeId, NodeId>
+DiGraph::get_arc_details (ArcId id)
+{
+    return this->arcs[id];
+}
+
 bool
 DiGraph::path_exists_between (NodeIds &nodes, NodeId from, NodeId to)
 {

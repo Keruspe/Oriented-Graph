@@ -53,6 +53,7 @@ public:
     bool connex ();
     bool acyclic ();
     bool simple ();
+    pair <NodeId, NodeId> get_arc_details (ArcId id);
     string as_matrix ();
     string as_list ();
 private:
