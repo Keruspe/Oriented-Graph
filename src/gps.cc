@@ -46,23 +46,30 @@ Gps::calculate_by_agregation (string start, string dest)
     std::cout<< "start:"<<this->nodes[start]<<" dest:"<<this->nodes[dest] <<std::endl;
 	
 	int i, j;
-	std::vector<int> d;
-	std::vector<int> father;
-	std::vector<bool> visit;
+	//TODO : optimize, clean
+	std::vector<int> d(1000);
+	std::vector<int> father(1000);
+	std::vector<bool> visit(1000);
 	
 	std::map<string, NodeId>::iterator it = nodes.begin();
 	
 	std::priority_queue<Elem, vector<Elem>, Compare> pq;
-	
-	for (; it != nodes.end();)
+	std::cout<< "@debug1" <<std::endl;
+	for (; it != nodes.end();it++)
 	{
+		std::cout<< "@debug4" <<std::endl;
 		Elem e(0, (it->second));
 		pq.push(e);
+		std::cout<< "@debug6::"<< it->second <<std::endl;
 		d[it->second]=999;
+		std::cout<< "@debug5" <<std::endl;
 	}
+	
+	std::cout<< "@debug2" <<std::endl;
 	
 	while(!pq.empty())
 	{
+		std::cout<< "@debug31" <<std::endl;
 		NodeId u = pq.top().t;
 		pq.pop();
 		
@@ -79,6 +86,7 @@ Gps::calculate_by_agregation (string start, string dest)
 				}
 			}
 		}
+		std::cout<< "@debug32" <<std::endl;
 	}
 
 }
