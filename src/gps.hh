@@ -11,7 +11,7 @@ using std::vector;
 class Gps
 {
 public:
-    Gps (DiGraph *_graph, string path, int _K, int _A);
+    Gps (DiGraph *_graph, string path, double _K, double _A);
     virtual ~Gps() {}
 
     void calculate_by_agregation (string start, string dest);
@@ -28,6 +28,8 @@ public:
         double length;
     };
 private:
+    double shortest_path (NodeId from, NodeId to);
+
     DiGraph *graph;
     map <string, NodeId> nodes;
     map <NodeId, City> cities;
