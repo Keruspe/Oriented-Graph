@@ -66,19 +66,19 @@ main ()
     string path;
     cout << "Which file contains the map description ?" << endl;
     cin >> path;
-    Gps gps (graph, path, coeff);
     string start;
     cout << "Where do you wanna leave ?" << endl;
     cin >> start;
     string dest;
     cout << "Where do you wanna go ?" << endl;
     cin >> dest;
+    Gps gps (graph, path, coeff, start, dest);
     switch (method) {
     case AGREGATION:
-        gps.calculate_by_agregation (start, dest);
+        gps.calculate_by_agregation ();
         break;
     case BOUNDED_DETOUR:
-        gps.calculate_by_bounded_detour (start, dest);
+        gps.calculate_by_bounded_detour ();
         break;
     }
     delete (graph);

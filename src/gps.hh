@@ -11,11 +11,11 @@ using std::vector;
 class Gps
 {
 public:
-    Gps (DiGraph *_graph, string path, double _coeff);
+    Gps (DiGraph *_graph, string path, double _coeff, string start, string dest);
     virtual ~Gps() {}
 
-    void calculate_by_agregation (string start, string dest);
-    void calculate_by_bounded_detour (string start, string dest);
+    void calculate_by_agregation ();
+    void calculate_by_bounded_detour ();
 
     class MapElem {
     public:

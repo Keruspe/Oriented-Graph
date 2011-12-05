@@ -22,6 +22,7 @@ MapParser::MapParser (DiGraph *_graph, string path, map <string, NodeId> &nodes,
     {
         if (this->expect ("digraph") && this->expect ("{"))
         {
+            cout << endl;
             for (;;)
             {
                 if (this->next_token () == "" || this->token == "}")
@@ -63,6 +64,7 @@ MapParser::MapParser (DiGraph *_graph, string path, map <string, NodeId> &nodes,
                     roads[aid] = road;
                 }
             }
+            cout << endl;
         }
         if (token != "}")
         {

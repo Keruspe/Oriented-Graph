@@ -26,24 +26,25 @@ using std::queue;
 			}
 	};
 
-Gps::Gps (DiGraph *_graph, string path, double _coeff) :
+Gps::Gps (DiGraph *_graph, string path, double _coeff, string start, string dest) :
     graph (_graph),
     coeff (_coeff)
 {
     MapParser parser(_graph, path, this->nodes, this->cities, this->roads, &this->dmax, &this->imax);
+    this->start_node = this->nodes[start];
+    this->end_node = this->nodes[dest];
+    this->nodes_list = this->graph->list_nodes ();
+    this->nodes_count = this->nodes_list.size ();
 }
 
 void
-Gps::calculate_by_agregation (string start, string dest)
+Gps::calculate_by_agregation ()
 {
 	//TODO: nettoyer
 
-    NodeId start_node = this->nodes[start];
-    NodeId end_node = this->nodes[dest];
-    
     //@debug
     //FIXME : e=start
-    std::cout<< "start:"<<this->nodes[start]<<" dest:"<<this->nodes[dest] <<std::endl;
+    std::cout<< "start:"<<this->start_node<<" dest:"<<this->end_node <<std::endl;
 	
 	int i, j;
 	//TODO : optimize, clean
@@ -122,17 +123,12 @@ Gps::visit (NodeId id, map <NodeId, NodeColor> &colors, NodeId *ancestors, doubl
 }
 
 void
-Gps::calculate_by_bounded_detour (string start, string dest)
+Gps::calculate_by_bounded_detour ()
 {
-    this->start_node = this->nodes[start];
-    this->end_node = this->nodes[dest];
-    this->nodes_list = this->graph->list_nodes ();
-    this->nodes_count = this->nodes_list.size ();
     double shortest_path = this->shortest_path (this->start_node, this->end_node);
     this->max_allowed = this->coeff * shortest_path;
 
-    cout << endl
-        << "Shortest distance: " << shortest_path << "km" << endl
+    cout << "Shortest distance: " << shortest_path << "km" << endl
         << "Maximum allowed: " << this->max_allowed << "km" << endl << endl;
 
     map <NodeId, NodeColor> colors;
@@ -144,11 +140,12 @@ Gps::calculate_by_bounded_detour (string start, string dest)
     }
     ancestors[this->start_node] = this->start_node;
     int start_interest = this->best_interest = this->cities[start_node].interest;
+    this->best_distance = 0;
     PathElem tmp;
     tmp.city = this->start_node;
     list <PathElem> current;
     current.push_back (tmp);
-    this->visit (this->start_node, colors, ancestors, 0, start_interest, current);
+    this->visit (this->start_node, colors, ancestors, this->best_distance, start_interest, current);
 
     bool is_city = true;
     for (list <PathElem>::iterator elem = this->best_path.begin (), elem_end = this->best_path.end (); elem != elem_end; ++elem, is_city = !is_city)
@@ -159,7 +156,7 @@ Gps::calculate_by_bounded_detour (string start, string dest)
             cout << "Road: " << this->roads[elem->road].label << endl;
     }
     cout << endl
-        << "Total distance: " << this->best_distance << endl
+        << "Total distance: " << this->best_distance << "km" << endl
         << "Total interest: " << this->best_interest << endl;
 
     delete[] (ancestors);
