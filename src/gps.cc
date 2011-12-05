@@ -40,46 +40,62 @@ Gps::Gps (DiGraph *_graph, string path, double _coeff, string start, string dest
 void
 Gps::calculate_by_agregation ()
 {
-	//TODO: nettoyer
+	
+	//* arraylist = vector
+	std::vector<double> distance;
+	std::vector<NodeId> preds;
+	
+	double pond = 0.0; //* K
+	
+	//!initialisation
+	for (unsigned int i = 0; i < roads.size(); i++) {
+		distance.insert(distance.begin()+i,9999.0);//*max
+    }
+	for (unsigned int i = 0; i < cities.size(); i++) {
+		preds.insert(preds.begin()+i, -1); //*changer -1 pour null ou un truc du genre
+    }
+    distance.at(this->start_node)=0.0;
+    preds.at(this->start_node) = this->start_node;
+    //!fin_init
+    
+    for (NodeIdIter node = nodes_list.begin(), node_end = nodes_list.end (); node != node_end; ++node)
+    {
+		NodeId i = *node; 
+		if (i != (NodeId) -1) {
+			ArcIds arcs_sortants = graph->list_arcs_from(i);
+			
+			map<ArcId, Road>::iterator it;
 
-    //@debug
-    //FIXME : e=start
-    std::cout<< "start:"<<this->start_node<<" dest:"<<this->end_node <<std::endl;
-	
-	int i, j;
-	//TODO : optimize, clean
-	std::vector<int> d(1000);
-	std::vector<int> father(1000);
-	std::vector<bool> visit(1000);
-	
-	std::map<string, NodeId>::iterator it = nodes.begin();
-	
-	std::priority_queue<Elem, vector<Elem>, Compare> pq;
-	for (; it != nodes.end();it++)
-	{
-		Elem e(0, (it->second));
-		pq.push(e);
-		d[it->second]=999;
-	}
-	
-	while(!pq.empty())
-	{
-		NodeId u = pq.top().t;
-		pq.pop();
-		
-		std::list<NodeId> successors = graph->list_successors(u);
-		for(std::list<NodeId>::iterator it = successors.begin();it!=successors.end();it++)
-		{
-			if(visit.at(*it)==false)
-			{
-				visit.at(*it)=true;
-				if(d[*it]>d[u]+1)//FIXME: 1=>fonction de poids a faire
+			for(it = roads.begin(); it != roads.end(); ++it){
+				NodeId source = graph->get_arc_details((*it).first).first;
+				NodeId dest = graph->get_arc_details((*it).first).second;
+				if(distance[source]+it->second.length<distance[dest])
 				{
-					d[*it] = d[u]+1;//FIXME: 1=>fonction de poids a faire
-					father[*it]=u;
+					//~ std::cout<< "arclength: "<<it->second.length <<"distance[dest]="<<distance[dest]<<std::endl;
+					int dummy = distance[source] + it->second.length;
+					if (dummy < distance[dest])
+					{
+						distance[dest] = dummy;
+						preds[dest] = source;
+					}
 				}
 			}
 		}
+	}
+	
+	//~ for (int i=0; i < edgenum; ++i) {
+         //~ if (distance[edges[i].destination] > distance[edges[i].source] + edges[i].weight) {
+             //~ std::cout<<"Negative edge weight cycles detected!\n";
+             //~ free(distance);
+             //~ break;
+         //~ }//end if
+     //~ }//end for
+	
+	int i=0;
+	for(std::vector<NodeId>::iterator it=preds.begin();it!=preds.end();it++)
+	{
+		std::cout<< "predecesseur de "<< i <<":"<<*it<<std::endl;
+		i++;
 	}
 
 }
