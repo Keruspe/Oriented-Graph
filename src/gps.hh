@@ -11,7 +11,7 @@ using std::vector;
 class Gps
 {
 public:
-    Gps (DiGraph *_graph, string path, double _K, double _A);
+    Gps (DiGraph *_graph, string path, double _coeff);
     virtual ~Gps() {}
 
     void calculate_by_agregation (string start, string dest);
@@ -33,15 +33,25 @@ private:
         ArcId road;
     } PathElem;
 
-    double shortest_path (NodeIds &nodes_list, unsigned int count, NodeId from, NodeId to);
-    void visit (NodeIds &nodes, NodeId id, map <NodeId, NodeColor> &colors, NodeId *ancestors, double distance, double max_allowed, NodeId dest, int current_interest, int *best_interest, list <PathElem> current, list<PathElem> &best, int *best_distance);
+    NodeId start_node;
+    NodeId end_node;
+    NodeIds nodes_list;
+    unsigned int nodes_count;
+
+    list <PathElem> best_path;
+    double best_distance;
+    int best_interest;
+
+    double shortest_path (NodeId from, NodeId to);
+    void visit (NodeId id, map <NodeId, NodeColor> &colors, NodeId *ancestors, double current_distance, int current_interest, list <Gps::PathElem> &current_path);
 
     DiGraph *graph;
     map <string, NodeId> nodes;
     map <NodeId, City> cities;
     map <ArcId, Road> roads;
-    double K;
-    double A;
+
+    double coeff;
+    double max_allowed;
     double dmax;
     int imax;
 };

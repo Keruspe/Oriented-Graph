@@ -26,10 +26,9 @@ using std::queue;
 			}
 	};
 
-Gps::Gps (DiGraph *_graph, string path, double _K, double _A) :
+Gps::Gps (DiGraph *_graph, string path, double _coeff) :
     graph (_graph),
-    K (_K),
-    A (_A)
+    coeff (_coeff)
 {
     MapParser parser(_graph, path, this->nodes, this->cities, this->roads, &this->dmax, &this->imax);
 }
@@ -85,34 +84,35 @@ Gps::calculate_by_agregation (string start, string dest)
 }
 
 void
-Gps::visit (NodeIds &nodes, NodeId id, map <NodeId, NodeColor> &colors, NodeId *ancestors, double distance, double max_allowed, NodeId dest, int current_interest, int *best_interest, list <Gps::PathElem> current, list<Gps::PathElem> &best, int *best_distance)
+Gps::visit (NodeId id, map <NodeId, NodeColor> &colors, NodeId *ancestors, double current_distance, int current_interest, list <Gps::PathElem> &current_path)
 {
     colors[id] = GREY;
 
-    ArcIds successors = this->graph->list_arcs_from (id);
-    for (ArcIdIter successor = successors.begin (), successor_end = successors.end (); successor != successor_end; ++successor)
+    ArcIds arcs = this->graph->list_arcs_from (id);
+    for (ArcIdIter arc = arcs.begin (), arc_end = arcs.end (); arc != arc_end; ++arc)
     {
-        NodeId succ = this->graph->get_arc_details (*successor).second;
-        double road_length = this->roads[*successor].length;
-        if (colors[succ] == WHITE && distance + road_length <= max_allowed)
+        NodeId successor = this->graph->get_arc_details (*arc).second;
+        Road road = this->roads[*arc];
+        double road_length = road.length;
+        if (colors[successor] == WHITE && current_distance + road_length <= this->max_allowed)
         {
-            list <Gps::PathElem> current_copy = current;
-            ancestors[succ] = id;
+            list <Gps::PathElem> current_copy = current_path;
+            ancestors[successor] = id;
             PathElem tmp;
-            tmp.road = *successor;
+            tmp.road = *arc;
             current_copy.push_back (tmp);
-            tmp.city = succ;
+            tmp.city = successor;
             current_copy.push_back (tmp);
-            if (succ != dest)
-                this->visit (nodes, succ, colors, ancestors, distance + road_length, max_allowed, dest, current_interest + this->roads[*successor].interest + this->cities[succ].interest, best_interest, current_copy, best, best_distance);
+            if (successor != this->end_node)
+                this->visit (successor, colors, ancestors, current_distance + road_length, current_interest + road.interest + this->cities[successor].interest, current_copy);
             else
             {
-                int cur_interest = current_interest + this->roads[*successor].interest + this->cities[succ].interest;
-                if (cur_interest > *best_interest)
+                int cur_interest = current_interest + road.interest + this->cities[successor].interest;
+                if (cur_interest > this->best_interest)
                 {
-                    *best_interest = cur_interest;
-                    best = current_copy;
-                    *best_distance = distance + road_length;
+                    this->best_interest = cur_interest;
+                    this->best_path = current_copy;
+                    this->best_distance = current_distance + road_length;
                 }
             }
         }
@@ -124,36 +124,34 @@ Gps::visit (NodeIds &nodes, NodeId id, map <NodeId, NodeColor> &colors, NodeId *
 void
 Gps::calculate_by_bounded_detour (string start, string dest)
 {
-    NodeId start_node = this->nodes[start];
-    NodeId end_node = this->nodes[dest];
-    NodeIds nodes_list = this->graph->list_nodes ();
-    unsigned int count = nodes_list.size ();
-    double shortest_path = this->shortest_path (nodes_list, count, start_node, end_node);
-    double max_allowed = this->K * shortest_path;
+    this->start_node = this->nodes[start];
+    this->end_node = this->nodes[dest];
+    this->nodes_list = this->graph->list_nodes ();
+    this->nodes_count = this->nodes_list.size ();
+    double shortest_path = this->shortest_path (this->start_node, this->end_node);
+    this->max_allowed = this->coeff * shortest_path;
+
     cout << endl
         << "Shortest distance: " << shortest_path << "km" << endl
-        << "Maximum allowed: " << max_allowed << "km" << endl << endl;
+        << "Maximum allowed: " << this->max_allowed << "km" << endl << endl;
 
     map <NodeId, NodeColor> colors;
-    NodeId *ancestors = new NodeId[count];
-    for (NodeIdIter node = nodes_list.begin (), node_end = nodes_list.end (); node != node_end; ++node)
+    NodeId *ancestors = new NodeId[this->nodes_count];
+    for (NodeIdIter node = this->nodes_list.begin (), node_end = this->nodes_list.end (); node != node_end; ++node)
     {
         ancestors[*node] = -1;
         colors[*node] = WHITE;
     }
-    ancestors[start_node] = start_node;
-    int start_interest = this->cities[start_node].interest;
-    int best_interest = start_interest;
-    int best_distance = 0;
+    ancestors[this->start_node] = this->start_node;
+    int start_interest = this->best_interest = this->cities[start_node].interest;
     PathElem tmp;
-    tmp.city = start_node;
+    tmp.city = this->start_node;
     list <PathElem> current;
     current.push_back (tmp);
-    list <PathElem> best;
-    this->visit (nodes_list, start_node, colors, ancestors, 0, max_allowed, end_node, start_interest, &best_interest, current, best, &best_distance);
+    this->visit (this->start_node, colors, ancestors, 0, start_interest, current);
 
     bool is_city = true;
-    for (list <PathElem>::iterator elem = best.begin (), elem_end = best.end (); elem != elem_end; ++elem, is_city = !is_city)
+    for (list <PathElem>::iterator elem = this->best_path.begin (), elem_end = this->best_path.end (); elem != elem_end; ++elem, is_city = !is_city)
     {
         if (is_city)
             cout << "City: " << this->cities[elem->city].label << endl;
@@ -161,20 +159,20 @@ Gps::calculate_by_bounded_detour (string start, string dest)
             cout << "Road: " << this->roads[elem->road].label << endl;
     }
     cout << endl
-        << "Total distance: " << best_distance << endl
-        << "Total interest: " << best_interest << endl;
+        << "Total distance: " << this->best_distance << endl
+        << "Total interest: " << this->best_interest << endl;
 
     delete[] (ancestors);
 }
 
 double
-Gps::shortest_path (NodeIds &nodes_list, unsigned int count, NodeId from, NodeId to)
+Gps::shortest_path (NodeId from, NodeId to)
 {
-    NodeId *ancestors = new NodeId[count];
-    double *deltas = new double[count];
+    NodeId *ancestors = new NodeId[this->nodes_count];
+    double *deltas = new double[this->nodes_count];
     queue <NodeId> nexts; // We don't use a priority queue here since we do not ponderate nodes for now.
     map <NodeId, NodeColor> colors; // To track which nodes to explore
-    for (NodeIdIter node = nodes_list.begin (), node_end = nodes_list.end (); node != node_end; ++node)
+    for (NodeIdIter node = this->nodes_list.begin (), node_end = this->nodes_list.end (); node != node_end; ++node)
     {
         deltas[*node] = -1;
         ancestors[*node] = -1;

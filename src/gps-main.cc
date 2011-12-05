@@ -52,21 +52,21 @@ main ()
         cerr << "Bad choice: " << answer << endl;
         return -1;
     }
-    double K, A;
+    double coeff;
     switch (method) {
     case BOUNDED_DETOUR:
         cout << "Value for K ?" << endl;
-        cin >> K;
+        cin >> coeff;
         break;
     case AGREGATION:
         cout << "Value for A ?" << endl;
-        cin >> A;
+        cin >> coeff;
         break;
     }
     string path;
     cout << "Which file contains the map description ?" << endl;
     cin >> path;
-    Gps gps (graph, path, K, A);
+    Gps gps (graph, path, coeff);
     string start;
     cout << "Where do you wanna leave ?" << endl;
     cin >> start;
