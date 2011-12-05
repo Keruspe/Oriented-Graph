@@ -16,6 +16,7 @@ public:
 
     void calculate_by_agregation ();
     void calculate_by_bounded_detour ();
+    void print_result ();
 
     class MapElem {
     public:

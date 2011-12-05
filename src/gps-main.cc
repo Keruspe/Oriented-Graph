@@ -85,8 +85,12 @@ main ()
         break;
     }
     gettimeofday (&end_time, NULL);
+
+    gps.print_result ();
+
     cout << endl
         << "Took " << end_time.tv_usec - start_time.tv_usec << "µs to calculate" << endl;
+
     delete (graph);
     return 0;
 }

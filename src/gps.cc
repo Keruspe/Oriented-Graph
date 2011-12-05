@@ -163,18 +163,6 @@ Gps::calculate_by_bounded_detour ()
     current.push_back (tmp);
     this->visit (this->start_node, colors, ancestors, this->best_distance, start_interest, current);
 
-    bool is_city = true;
-    for (list <PathElem>::iterator elem = this->best_path.begin (), elem_end = this->best_path.end (); elem != elem_end; ++elem, is_city = !is_city)
-    {
-        if (is_city)
-            cout << "City: " << this->cities[elem->city].label << endl;
-        else
-            cout << "Road: " << this->roads[elem->road].label << endl;
-    }
-    cout << endl
-        << "Total distance: " << this->best_distance << "km" << endl
-        << "Total interest: " << this->best_interest << endl;
-
     delete[] (ancestors);
 }
 
@@ -220,4 +208,20 @@ Gps::shortest_path (NodeId from, NodeId to)
     delete[] (ancestors);
     delete[] (deltas);
     return ret;
+}
+
+void
+Gps::print_result ()
+{
+    bool is_city = true;
+    for (list <PathElem>::iterator elem = this->best_path.begin (), elem_end = this->best_path.end (); elem != elem_end; ++elem, is_city = !is_city)
+    {
+        if (is_city)
+            cout << "City: " << this->cities[elem->city].label << endl;
+        else
+            cout << "Road: " << this->roads[elem->road].label << endl;
+    }
+    cout << endl
+        << "Total distance: " << this->best_distance << "km" << endl
+        << "Total interest: " << this->best_interest << endl;
 }
