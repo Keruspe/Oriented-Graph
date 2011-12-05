@@ -1,8 +1,9 @@
-#include <iostream>
-
 #include "digraph/array-digraph.hh"
 #include "digraph/list-digraph.hh"
 #include "gps.hh"
+
+#include <iostream>
+#include <sys/time.h>
 
 using std::cerr;
 using std::cin;
@@ -73,6 +74,8 @@ main ()
     cout << "Where do you wanna go ?" << endl;
     cin >> dest;
     Gps gps (graph, path, coeff, start, dest);
+    struct timeval start_time, end_time;
+    gettimeofday (&start_time, NULL);
     switch (method) {
     case AGREGATION:
         gps.calculate_by_agregation ();
@@ -81,6 +84,9 @@ main ()
         gps.calculate_by_bounded_detour ();
         break;
     }
+    gettimeofday (&end_time, NULL);
+    cout << endl
+        << "Took " << end_time.tv_usec - start_time.tv_usec << "µs to calculate" << endl;
     delete (graph);
     return 0;
 }
