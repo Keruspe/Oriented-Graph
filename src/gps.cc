@@ -40,28 +40,49 @@ Gps::Gps (DiGraph *_graph, string path, double _coeff, string start, string dest
 void
 Gps::calculate_by_agregation ()
 {
+	map<ArcId, Road>::iterator itRoads;
 	
-	//* arraylist = vector
-	std::vector<double> distance;
+	// Calcul des maximums pour la fonction de pondération
+	double maxDistance=0.;
+	int maxInterest=0;
+	for(itRoads = roads.begin(); itRoads != roads.end(); itRoads++){
+		if(maxDistance<itRoads->second.length)
+			maxDistance=itRoads->second.length;
+		if(maxInterest<itRoads->second.interest)
+			maxInterest=itRoads->second.interest;
+	}
+	
+	map<NodeId, City>::iterator itCities;
+	for(itCities = cities.begin(); itCities != cities.end(); itCities++){
+		if(maxInterest<itCities->second.interest)
+			maxInterest=itCities->second.interest;
+	}
+		
+	//initialisation
+	std::vector<double> weight;
 	std::vector<NodeId> preds;
-	
-	double pond = 0.0; //* K
+	std::vector<double> distance;
+	std::vector<ArcId> roadsTaken;
+	std::vector<int> interestsSeen;
 	
 	//!initialisation
-	for (unsigned int i = 0; i < roads.size(); i++) {
-		distance.insert(distance.begin()+i,9999.0);//*max
+	for (int i = 0; i < roads.size(); i++) {
+		weight.insert(weight.begin()+i,9999.0);//*max
     }
-	for (unsigned int i = 0; i < cities.size(); i++) {
+	for (int i = 0; i < cities.size(); i++) {
 		preds.insert(preds.begin()+i, -1); //*changer -1 pour null ou un truc du genre
+		distance.insert(distance.begin()+i, 0);
+		roadsTaken.insert(roadsTaken.begin()+i, -1);
+		interestsSeen.insert(interestsSeen.begin()+i, 0);
     }
-    distance.at(this->start_node)=0.0;
+    weight.at(this->start_node)=0.0;
     preds.at(this->start_node) = this->start_node;
     //!fin_init
     
     for (NodeIdIter node = nodes_list.begin(), node_end = nodes_list.end (); node != node_end; ++node)
     {
 		NodeId i = *node; 
-		if (i != (NodeId) -1) {
+		if (i != -1) {
 			ArcIds arcs_sortants = graph->list_arcs_from(i);
 			
 			map<ArcId, Road>::iterator it;
@@ -69,14 +90,18 @@ Gps::calculate_by_agregation ()
 			for(it = roads.begin(); it != roads.end(); ++it){
 				NodeId source = graph->get_arc_details((*it).first).first;
 				NodeId dest = graph->get_arc_details((*it).first).second;
-				if(distance[source]+it->second.length<distance[dest])
+
+				if(weight[source]+it->second.length<weight[dest])
 				{
 					//~ std::cout<< "arclength: "<<it->second.length <<"distance[dest]="<<distance[dest]<<std::endl;
-					int dummy = distance[source] + it->second.length;
-					if (dummy < distance[dest])
+					double dummy = weight[source] +  coeff*it->second.length/maxDistance-(1-coeff)*(it->second.interest+cities[dest].interest)/(2*maxInterest);
+					if (dummy < weight[dest])
 					{
-						distance[dest] = dummy;
+						weight[dest] = dummy;
 						preds[dest] = source;
+						distance[dest] = it->second.length;
+						roadsTaken[dest] = (*it).first;
+						interestsSeen[dest] = it->second.interest+cities[dest].interest;
 					}
 				}
 			}
@@ -91,13 +116,25 @@ Gps::calculate_by_agregation ()
          //~ }//end if
      //~ }//end for
 	
-	int i=0;
-	for(std::vector<NodeId>::iterator it=preds.begin();it!=preds.end();it++)
+	bool done=false;
+	this->best_distance=0;
+	this->best_interest=0;
+	NodeId current_node = this->end_node;
+	
+	while(done == false)
 	{
-		std::cout<< "predecesseur de "<< i <<":"<<*it<<std::endl;
-		i++;
+		std::cout<< "City:"<<	cities[current_node].label				<<	std::endl;
+		std::cout<< "Road:"<<	roads[roadsTaken[current_node]].label	<<	std::endl;
+		
+		this->best_distance += distance[current_node];
+		this->best_interest += interestsSeen[current_node];
+		current_node = preds[current_node];
+		
+		if(current_node==this->start_node)
+			done=true;
 	}
-
+	std::cout<< 	"City:"<<	cities[current_node].label <<	std::endl;
+		
 }
 
 void
