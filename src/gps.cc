@@ -66,10 +66,10 @@ Gps::calculate_by_agregation ()
 	std::vector<int> interestsSeen;
 	
 	//!initialisation
-	for (int i = 0; i < roads.size(); i++) {
+	for (unsigned int i = 0; i < roads.size(); i++) {
 		weight.insert(weight.begin()+i,9999.0);//*max
     }
-	for (int i = 0; i < cities.size(); i++) {
+	for (unsigned int i = 0; i < cities.size(); i++) {
 		preds.insert(preds.begin()+i, -1); //*changer -1 pour null ou un truc du genre
 		distance.insert(distance.begin()+i, 0);
 		roadsTaken.insert(roadsTaken.begin()+i, -1);
@@ -82,7 +82,7 @@ Gps::calculate_by_agregation ()
     for (NodeIdIter node = nodes_list.begin(), node_end = nodes_list.end (); node != node_end; ++node)
     {
 		NodeId i = *node; 
-		if (i != -1) {
+		if (i != (NodeId) -1) {
 			ArcIds arcs_sortants = graph->list_arcs_from(i);
 			
 			map<ArcId, Road>::iterator it;

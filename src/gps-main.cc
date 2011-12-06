@@ -56,7 +56,7 @@ main ()
     double coeff;
     switch (method) {
     case BOUNDED_DETOUR:
-        cout << "Value for K ?" << endl;
+        cout << "By how much do you wanna multiply the shortest distance to get the maximum distance allowed ?" << endl;
         cin >> coeff;
         break;
     case AGREGATION:
