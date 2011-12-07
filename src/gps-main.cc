@@ -89,7 +89,12 @@ main ()
     gps.print_result ();
 
     cout << endl
-        << "Took " << end_time.tv_usec - start_time.tv_usec << "µs to calculate" << endl;
+        << "Took ";
+    if (end_time.tv_sec - start_time.tv_sec < 1)
+        cout << end_time.tv_usec - start_time.tv_usec << "µ";
+    else
+        cout << end_time.tv_sec - start_time.tv_sec;
+    cout << "s to calculate" << endl;
 
     delete (graph);
     return 0;
