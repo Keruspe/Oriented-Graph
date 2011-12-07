@@ -91,11 +91,11 @@ Gps::calculate_by_agregation ()
 				NodeId source = graph->get_arc_details((*it).first).first;
 				NodeId dest = graph->get_arc_details((*it).first).second;
 
-				int tempWeight = weight[source] +  coeff*it->second.length/maxDistance-(1-coeff)*(it->second.interest+cities[dest].interest)/(2*maxInterest);
-				if(weight[source]+tempWeight<weight[dest])
+				int tempWeight = weight[source]+coeff*it->second.length/maxDistance-(1-coeff)*(it->second.interest+cities[dest].interest)/(2*maxInterest);
+				if(tempWeight<weight[dest])
 				{
 					//~ std::cout<< "arclength: "<<it->second.length <<"distance[dest]="<<distance[dest]<<std::endl;
-					double dummy = weight[source] +  coeff*it->second.length/maxDistance-(1-coeff)*(it->second.interest+cities[dest].interest)/(2*maxInterest);
+					double dummy = tempWeight;
 					if (dummy < weight[dest])
 					{
 						weight[dest] = dummy;
