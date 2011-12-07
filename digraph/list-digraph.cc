@@ -2,8 +2,6 @@
 
 ListDiGraph::ListDiGraph()
 {
-	current_node_id = 1;
-	current_arc_id = 1;
 	nodes_nb = 0;
 	arcs_nb = 0;
 }

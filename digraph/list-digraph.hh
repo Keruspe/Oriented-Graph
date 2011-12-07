@@ -46,11 +46,8 @@ class ListDiGraph : public DiGraph
 		std::vector<Node> listNodes;
 		std::vector<Arc> listArcs;
 
-		unsigned int get_next_node_id()		{ return current_node_id++; };
 		Node* get_node(unsigned Nid)		{ return &listNodes.at(Nid); };
 		Arc* get_arc(unsigned Aid)			{ return &listArcs.at(Aid); };
-		unsigned current_node_id;
-		unsigned current_arc_id;
 		
 		unsigned nodes_nb;
 		unsigned arcs_nb;
