@@ -42,7 +42,7 @@ MapParser::MapParser (DiGraph *_graph, string path, map <string, NodeId> &nodes,
                     *imax = this->interest;
                 if (this->name == "")
                 {
-                    cout << "New city: " << this->id_or_from << ", with label: " << this->label << " and interest: " << this->interest << endl;
+                    //cout << "New city: " << this->id_or_from << ", with label: " << this->label << " and interest: " << this->interest << endl;
                     NodeId nid = graph->add_node ();
                     nodes[this->id_or_from] = nid;
                     Gps::City city;
@@ -54,7 +54,7 @@ MapParser::MapParser (DiGraph *_graph, string path, map <string, NodeId> &nodes,
                 {
                     if (this->length > *dmax)
                         *dmax = this->length;
-                    cout << "New road: " << this->name << " from " << this->id_or_from << " to " << this->dest << ", with label: " << this->label << ", interest: " << this->interest << " and length: " << this->length << endl;
+                    //cout << "New road: " << this->name << " from " << this->id_or_from << " to " << this->dest << ", with label: " << this->label << ", interest: " << this->interest << " and length: " << this->length << endl;
                     ArcId aid = graph->add_arc (nodes[this->id_or_from], nodes[this->dest]);
                     nodes[this->name] = aid;
                     Gps::Road road;
