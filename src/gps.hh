@@ -43,6 +43,7 @@ private:
     double best_distance;
     int best_interest;
 
+    /* For bounded_detour */
     double shortest_path (NodeId from, NodeId to);
     void visit (NodeId id, map <NodeId, NodeColor> &colors, NodeId *ancestors, double current_distance, int current_interest, list <Gps::PathElem> &current_path);
 
@@ -52,7 +53,11 @@ private:
     map <ArcId, Road> roads;
 
     double coeff;
+
+    /* For bounded_detour */
     double max_allowed;
+
+    /* For agregation */
     double dmax;
     int imax;
 };

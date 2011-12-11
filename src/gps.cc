@@ -30,7 +30,9 @@ Gps::Gps (DiGraph *_graph, string path, double _coeff, string start, string dest
     graph (_graph),
     coeff (_coeff)
 {
+    /* Parse the map to get all the data */
     MapParser parser(_graph, path, this->nodes, this->cities, this->roads, &this->dmax, &this->imax);
+
     this->start_node = this->nodes[start];
     this->end_node = this->nodes[dest];
     this->nodes_list = this->graph->list_nodes ();
@@ -131,13 +133,16 @@ Gps::visit (NodeId id, map <NodeId, NodeColor> &colors, NodeId *ancestors, doubl
     colors[id] = GREY;
 
     ArcIds arcs = this->graph->list_arcs_from (id);
+    /* Explore all roads going from the current city */
     for (ArcIdIter arc = arcs.begin (), arc_end = arcs.end (); arc != arc_end; ++arc)
     {
         NodeId successor = this->graph->get_arc_details (*arc).second;
         Road road = this->roads[*arc];
         double road_length = road.length;
+        /* We only give it a chance if it's not too far for the user */
         if (colors[successor] == WHITE && current_distance + road_length <= this->max_allowed)
         {
+            /* Copy the current itinerary to pass it to the next recursion level, add the road and the city to it */
             list <Gps::PathElem> current_copy = current_path;
             ancestors[successor] = id;
             PathElem tmp;
@@ -145,10 +150,12 @@ Gps::visit (NodeId id, map <NodeId, NodeColor> &colors, NodeId *ancestors, doubl
             current_copy.push_back (tmp);
             tmp.city = successor;
             current_copy.push_back (tmp);
+            /* Visit next city if it's not the destination */
             if (successor != this->end_node)
                 this->visit (successor, colors, ancestors, current_distance + road_length, current_interest + road.interest + this->cities[successor].interest, current_copy);
             else
             {
+                /* We're at destination, store as best itinerary or not. */
                 int cur_interest = current_interest + road.interest + this->cities[successor].interest;
                 if (cur_interest > this->best_interest)
                 {
@@ -166,12 +173,14 @@ Gps::visit (NodeId id, map <NodeId, NodeColor> &colors, NodeId *ancestors, doubl
 void
 Gps::calculate_by_bounded_detour ()
 {
+    /* Calculate maximum distance allowed */
     double shortest_path = this->shortest_path (this->start_node, this->end_node);
     this->max_allowed = this->coeff * shortest_path;
 
     cout << "Shortest distance: " << shortest_path << "km" << endl
         << "Maximum allowed: " << this->max_allowed << "km" << endl << endl;
 
+    /* initilization of the algorithm */
     map <NodeId, NodeColor> colors;
     NodeId *ancestors = new NodeId[this->nodes_count];
     for (NodeIdIter node = this->nodes_list.begin (), node_end = this->nodes_list.end (); node != node_end; ++node)
@@ -180,12 +189,14 @@ Gps::calculate_by_bounded_detour ()
         colors[*node] = WHITE;
     }
     ancestors[this->start_node] = this->start_node;
+    /* add the start city's interest to current interest and to current itinerary */
     int start_interest = this->best_interest = this->cities[start_node].interest;
     this->best_distance = 0;
     PathElem tmp;
     tmp.city = this->start_node;
     list <PathElem> current;
     current.push_back (tmp);
+    /* visit the start city */
     this->visit (this->start_node, colors, ancestors, this->best_distance, start_interest, current);
 
     delete[] (ancestors);
@@ -194,13 +205,14 @@ Gps::calculate_by_bounded_detour ()
 double
 Gps::shortest_path (NodeId from, NodeId to)
 {
+    /* Adapted from Dijkstra, see rapport */
     NodeId *ancestors = new NodeId[this->nodes_count];
     double *deltas = new double[this->nodes_count];
     queue <NodeId> nexts; // We don't use a priority queue here since we do not ponderate nodes for now.
     map <NodeId, NodeColor> colors; // To track which nodes to explore
     for (NodeIdIter node = this->nodes_list.begin (), node_end = this->nodes_list.end (); node != node_end; ++node)
     {
-        deltas[*node] = -1;
+        deltas[*node] = -1; /* -1 means infinity */
         ancestors[*node] = -1;
         colors[*node] = WHITE;
     }
@@ -208,20 +220,25 @@ Gps::shortest_path (NodeId from, NodeId to)
     ancestors[from] = from;
     nexts.push (from);
     colors[from] = BLACK;
+    /* There are still nodes to deal with */
     while (!nexts.empty ())
     {
         NodeId node = nexts.front ();
         nexts.pop ();
         ArcIds arcs = this->graph->list_arcs_from (node);
+        /* Go to the next cities */
         for (ArcIdIter arc = arcs.begin (), arc_end = arcs.end (); arc != arc_end; ++arc)
         {
+            /* Add the city to deal with if we didn't go there yet */
             ArcId arc_destination = this->graph->get_arc_details(*arc).second;
             if (colors[arc_destination] == WHITE)
             {
                 nexts.push (arc_destination);
                 colors[arc_destination] = BLACK;
             }
+            /* if we just found a shorter path, register it */
             double distance = this->roads[*arc].length;
+            /* -1 means infinity */
             if (deltas[arc_destination] == -1 || deltas[arc_destination] > deltas[node] + distance) 
             {
                 ancestors[arc_destination] = node;

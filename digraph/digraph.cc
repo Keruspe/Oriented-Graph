@@ -5,6 +5,7 @@
 ArcId
 DiGraph::get_new_arc_id (NodeId from, NodeId to)
 {
+    /* Store arcs details (from, to) */
     this->arcs[this->_next_arc_id] = std::make_pair <NodeId, NodeId> (from, to);
     return this->_next_arc_id++;
 }
@@ -12,6 +13,7 @@ DiGraph::get_new_arc_id (NodeId from, NodeId to)
 void
 DiGraph::print_helper (NodeIds &nodes, unsigned int *data)
 {
+    /* This is just an helper not to duplicate printing code */
     NodeIdIter node = nodes.begin (), node_end = nodes.end ();
     cout << "{";
     if (node != node_end)
@@ -37,6 +39,7 @@ DiGraph::print_helper (NodeIds &nodes, unsigned int *data)
 void
 DiGraph::search_print (NodeIds &nodes, queue <NodeId> nexts, unsigned int time, NodeId id, map <NodeId, NodeColor> &colors, NodeId *ancestors, NodeId *deltas, NodeId *starts, NodeId *ends)
 {
+    /* This function prints each search step as a table line */
     cout << " ";
     if (time == (unsigned int) -1)
         cout << "-";
@@ -86,6 +89,7 @@ DiGraph::search_print (NodeIds &nodes, queue <NodeId> nexts, unsigned int time, 
 void
 DiGraph::visit (NodeIds &nodes, NodeId id, unsigned int &time, map <NodeId, NodeColor> &colors, NodeId *ancestors, NodeId *starts, NodeId *ends, bool print, NodeIds &nodes_explored)
 {
+    /* The recursive method for depth-first search */
     nodes_explored.push_back (id);
     colors[id] = GREY;
     starts[id] = time;
@@ -95,6 +99,7 @@ DiGraph::visit (NodeIds &nodes, NodeId id, unsigned int &time, map <NodeId, Node
 
     ++time;
     NodeIds successors = this->list_successors (id);
+    /* Go through all successors of the current node and visit them */
     for (NodeIdIter successor = successors.begin (), successor_end = successors.end (); successor != successor_end; ++successor)
     {
         if (colors[*successor] == WHITE)
@@ -115,6 +120,7 @@ DiGraph::visit (NodeIds &nodes, NodeId id, unsigned int &time, map <NodeId, Node
 void
 DiGraph::depth_first_search (NodeId start, bool print)
 {
+    /* Basic initialization of the algorithm */
     NodeIds nodes = this->list_nodes ();
     unsigned int count = this->next_node_id ();
     map <NodeId, NodeColor> colors;
@@ -130,12 +136,14 @@ DiGraph::depth_first_search (NodeId start, bool print)
     }
     unsigned int time = 0;
 
+    /* if we're given -1 as the start node, then we'll do an exhaustive depth-first search */
     bool explore_all = (start == (NodeId) -1);
     NodeIdIter start_iter = nodes.begin ();
     if (explore_all)
         start = *start_iter;
 
     NodeIds nodes_explored;
+    /* loop across all the nodes, for explore_all */
     for (NodeIdIter node = start_iter, node_end = nodes.end (); node != node_end;)
     {
         ancestors[start] = start;
@@ -145,8 +153,10 @@ DiGraph::depth_first_search (NodeId start, bool print)
 
         this->visit (nodes, start, time, colors, ancestors, starts, ends, print, nodes_explored);
 
+        /* If we're not doing an exhaustive search, we're done */
         if (!explore_all)
             break;
+        /* find next WHITE node */
         while (++node != node_end && colors[*node] == BLACK);
         if (node == node_end)
             break;
@@ -166,6 +176,7 @@ DiGraph::depth_first_search (NodeId start, bool print)
 void
 DiGraph::breadth_first_search (NodeId start, bool print)
 {
+    /* Basic initialization of the algorithm */
     NodeIds nodes = this->list_nodes ();
     unsigned int count = this->next_node_id ();
     map <NodeId, NodeColor> colors;
@@ -184,12 +195,14 @@ DiGraph::breadth_first_search (NodeId start, bool print)
     }
     unsigned int time = 0;
 
+    /* if we're given -1 as the start node, then we'll do an exhaustive depth-first search */
     bool explore_all = (start == (NodeId) -1);
     NodeIdIter start_iter = nodes.begin ();
     if (explore_all)
         start = *start_iter;
 
     NodeIds nodes_explored;
+    /* loop across all the nodes, for explore_all */
     for (NodeIdIter node = start_iter, node_end = nodes.end (); node != node_end;)
     {
         ancestors[start] = start;
@@ -200,6 +213,7 @@ DiGraph::breadth_first_search (NodeId start, bool print)
         if (print)
             this->search_print (nodes, nexts, -1, -1, colors, ancestors, deltas, starts, ends);
 
+        /* Loop while we still have nodes to deal with */
         while (!nexts.empty ())
         {
             NodeId id = nexts.front ();
@@ -207,6 +221,7 @@ DiGraph::breadth_first_search (NodeId start, bool print)
             nodes_explored.push_back (id);
             starts[id] = time;
             NodeIds successors = this->list_successors (id);
+            /* Mark all WHITE successors as nodes we have to deal with */
             for (NodeIdIter successor = successors.begin (), successor_end = successors.end (); successor != successor_end; ++successor)
             {
                 if (colors[*successor] == WHITE)
@@ -230,8 +245,10 @@ DiGraph::breadth_first_search (NodeId start, bool print)
 
             ++time;
         }
+        /* If we're not doing an exhaustive search, we're done */
         if (!explore_all)
             break;
+        /* find next WHITE node */
         while (++node != node_end && colors[*node] == BLACK);
         if (node == node_end)
             break;
@@ -253,13 +270,12 @@ bool
 DiGraph::connex ()
 {
     NodeIds nodes = this->list_nodes ();
-    unsigned int unreachable_count = 0; /* 1 is acceptable, if there are no cycle, if some arcs are from here */
+    /* Go through all nodes */
     for (NodeIdIter node = nodes.begin (), node_end = nodes.end (); node != node_end; ++node)
     {
         ArcIds arcs = this->list_arcs_to (*node);
-        if (arcs.empty () && ++unreachable_count > 1)
-            return false;
         bool reachable = false;
+        /* Check if the arcs (if any) are not just loops a->a */
         for (ArcIdIter arc = arcs.begin (), arc_end = arcs.end (); arc != arc_end; ++arc)
         {
             if (this->arcs[*arc].first != *node)
@@ -270,8 +286,7 @@ DiGraph::connex ()
         }
         if (!reachable)
         {
-            if (++unreachable_count > 1)
-                return false;
+            /* If arc is not reachable, it has to reach other nodes */
             arcs = this->list_arcs_from (*node);
             bool ok = false;
             for (ArcIdIter arc = arcs.begin (), arc_end = arcs.end (); arc != arc_end; ++arc)
@@ -292,12 +307,14 @@ DiGraph::connex ()
 pair <NodeId, NodeId>
 DiGraph::get_arc_details (ArcId id)
 {
+    /* returns (from, to) */
     return this->arcs[id];
 }
 
 bool
 DiGraph::path_exists_between (NodeIds &nodes, NodeId from, NodeId to)
 {
+    /* Helper to check if there is a path between 2 nodes. */
     unsigned int count = this->next_node_id ();
     NodeId *ancestors = new NodeId[count];
     unsigned int *deltas = new unsigned int[count];
@@ -308,6 +325,7 @@ DiGraph::path_exists_between (NodeIds &nodes, NodeId from, NodeId to)
     }
     // We do not want to set the ancestor of from to itself yet since we want to detect cycles
     deltas[from] = 0;
+    /* Go through the nodes to store their more direct ancestors */
     for (NodeIdIter node = nodes.begin (), node_end = nodes.end (); node != node_end; ++node)
     {
         ArcIds arcs = this->list_arcs_from (*node);
@@ -321,6 +339,7 @@ DiGraph::path_exists_between (NodeIds &nodes, NodeId from, NodeId to)
             }
         }
     }
+    /* go back through the ancestors history to try to find the "from" node */
     while ((to = ancestors[to]) != (NodeId) -1 && to != from);
     delete[] (ancestors);
     delete[] (deltas);
@@ -330,6 +349,7 @@ DiGraph::path_exists_between (NodeIds &nodes, NodeId from, NodeId to)
 bool
 DiGraph::acyclic ()
 {
+    /* We check if a node can reach itself, or none */
     NodeIds nodes = this->list_nodes ();
     for (NodeIdIter node = nodes.begin (), node_end = nodes.end (); node != node_end; ++node)
     {
@@ -345,6 +365,7 @@ DiGraph::simple ()
     if (!this->acyclic ())
         return false;
 
+    /* Check if there are 2 nodes with more than 1 arc between them */
     NodeIds nodes = this->list_nodes ();
     for (NodeIdIter from = nodes.begin (), from_end = nodes.end (); from != from_end; ++from)
     {
@@ -361,6 +382,7 @@ DiGraph::simple ()
 string
 DiGraph::as_matrix ()
 {
+    /* display as adjacency matrix */
     std::ostringstream out;
     out << " ";
     NodeIds nodes = this->list_nodes ();
@@ -380,6 +402,7 @@ DiGraph::as_matrix ()
 string
 DiGraph::as_list ()
 {
+    /* display as adjacency list */
     std::ostringstream out;
     NodeIds nodes = this->list_nodes ();
     for (NodeIdIter from = nodes.begin (), from_end = nodes.end (); from != from_end; ++from)

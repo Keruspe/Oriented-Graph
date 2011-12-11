@@ -15,7 +15,7 @@ typedef StartNodes::iterator StartNodeIter;
 class ArrayDiGraph : public DiGraph
 {
 private:
-    /* To always get node X at index X (no deletion) */
+    /* To always get node X at index X (no real deletion) */
     map <NodeId, bool> node_exists;
     /* Start node, end node, arcs */
     StartNodes matrix;
