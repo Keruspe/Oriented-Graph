@@ -6,26 +6,6 @@
 
 using std::queue;
 
-	// Type des données stockées dans la file :
-	class Elem
-	{
-		public:
-		int k;         // Priorité
-		NodeId t; // Valeur
-		Elem() : k(0), t(0) {}
-		Elem(int k, const NodeId t) : k(k), t(t) {}
-	};
-
-	// Foncteur de comparaison selon les priorités :
-	class Compare
-	{
-		public:
-			bool operator()(const Elem &a1, const Elem &a2)
-			{
-				return a1.k < a2.k ;
-			}
-	};
-
 Gps::Gps (DiGraph *_graph, string path, double _coeff, string start, string dest) :
     graph (_graph),
     coeff (_coeff)
@@ -43,50 +23,56 @@ void
 Gps::calculate_by_agregation ()
 {
 	map<ArcId, Road>::iterator itRoads;
-	
+
 	// Calcul des maximums pour la fonction de pondération
 	double maxDistance=this->dmax;
 	int maxInterest=this->imax;
-		
+
 	//initialisation
 	std::vector<double> weight;
 	std::vector<NodeId> preds;
 	std::vector<double> distance;
 	std::vector<ArcId> roadsTaken;
 	std::vector<int> interestsSeen;
-	
-	//!initialisation
+
+	//initialization begins
 	for (unsigned int i = 0; i < roads.size(); i++) {
-		weight.insert(weight.begin()+i,9999.0);//*max
+		weight.insert(weight.begin()+i,9999999.0);
     }
 	for (unsigned int i = 0; i < cities.size(); i++) {
-		preds.insert(preds.begin()+i, -1); //*changer -1 pour null ou un truc du genre
+		preds.insert(preds.begin()+i, -1); 
 		distance.insert(distance.begin()+i, 0);
 		roadsTaken.insert(roadsTaken.begin()+i, -1);
 		interestsSeen.insert(interestsSeen.begin()+i, 0);
     }
     weight.at(this->start_node)=0.0;
     preds.at(this->start_node) = this->start_node;
-    //!fin_init
+    //initialization ends
     
+	/* nodes iteration */
     for (NodeIdIter node = nodes_list.begin(), node_end = nodes_list.end (); node != node_end; ++node)
     {
 		NodeId i = *node; 
 		if (i != (NodeId) -1) {
 			ArcIds arcs_sortants = graph->list_arcs_from(i);
-			
+
 			map<ArcId, Road>::iterator it;
 
 			for(it = roads.begin(); it != roads.end(); ++it){
 				NodeId source = graph->get_arc_details((*it).first).first;
 				NodeId dest = graph->get_arc_details((*it).first).second;
-
-				if(weight[source]+it->second.length<weight[dest])
+				
+				/* weight function */
+				double tempweight = coeff*it->second.length/maxDistance-(1-coeff)*(it->second.interest+cities[dest].interest)/(2*maxInterest);
+				
+				/* weight comparison */
+				if(weight[source]+tempweight<weight[dest])
 				{
-					//~ std::cout<< "arclength: "<<it->second.length <<"distance[dest]="<<distance[dest]<<std::endl;
-					double dummy = weight[source] +  coeff*it->second.length/maxDistance-(1-coeff)*(it->second.interest+cities[dest].interest)/(2*maxInterest);
+					
+					double dummy = weight[source] +  tempweight;
 					if (dummy < weight[dest])
 					{
+						/* tables updates */
 						weight[dest] = dummy;
 						preds[dest] = source;
 						distance[dest] = it->second.length;
@@ -98,33 +84,35 @@ Gps::calculate_by_agregation ()
 		}
 	}
 	
-	//~ for (int i=0; i < edgenum; ++i) {
-         //~ if (distance[edges[i].destination] > distance[edges[i].source] + edges[i].weight) {
-             //~ std::cout<<"Negative edge weight cycles detected!\n";
-             //~ free(distance);
-             //~ break;
-         //~ }//end if
-     //~ }//end for
-	
+	/* printing initialization */
 	bool done=false;
 	this->best_distance=0;
 	this->best_interest=0;
 	NodeId current_node = this->end_node;
-	
+
+	/* prepare for printing */
+	std::list<MapElem> outList;
 	while(done == false)
 	{
-		std::cout<< "City:"<<	cities[current_node].label				<<	std::endl;
-		std::cout<< "Road:"<<	roads[roadsTaken[current_node]].label	<<	std::endl;
-		
+		outList.push_front(cities[current_node]);
+		outList.push_front(roads[roadsTaken[current_node]]);
 		this->best_distance += distance[current_node];
 		this->best_interest += interestsSeen[current_node];
 		current_node = preds[current_node];
-		
+
 		if(current_node==this->start_node)
 			done=true;
 	}
-	std::cout<< 	"City:"<<	cities[current_node].label <<	std::endl;
-		
+	
+	/* let's print */
+	bool is_city = false;
+	for(std::list<MapElem>::iterator it=outList.begin();it!=outList.end();it++,is_city = !is_city)
+	{
+		if(is_city)
+			std::cout<< "City:"<<	(*it).label	<<	std::endl;
+		else
+			std::cout<< "Road:"<<	(*it).label	<<	std::endl;
+	}
 }
 
 void
